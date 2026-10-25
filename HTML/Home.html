@@ -6,8 +6,11 @@
         <title>COZero Home</title>
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/home.js"></script>
     </head>
     <body>
        <!-- <header>
@@ -74,6 +77,10 @@
                     <a href="Login.html" class="logButton">Log In</a> 
                     <a href="Register.html" class="registerButton">Create Account</a>
                     <a href="Carbon_Emission_Calculator.html" class="emissionButton">Take Emission Questionnaire</a>
+                </div>
+                <div id="userWelcome" style="display: none">
+                    <h2 id="welcomeMessage"></h2>
+                    <p>Good to see you again</p>
                 </div>
             </section>
         </main>
