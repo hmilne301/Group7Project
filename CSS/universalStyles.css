@@ -42,6 +42,14 @@ li {
     text-align: center;
 }
 
+#logout {
+    background-color: red;
+    border-radius: 8px;
+    color: white;
+    padding: 12px 20px;
+    margin: 10px;
+}
+
 .logButton {
     background-color: #4CAF50;
     color: white;

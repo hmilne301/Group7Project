@@ -7,7 +7,7 @@
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
         <link rel="stylesheet" href="/CSS/forms.css">
-        <link rel="stylesheet" href="/CSS/login.css">
+        <link rel="stylesheet" href="/CSS/register.css">
         <!-- Scripts: defer means they run after the HTML has been parsed -->
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <script defer src="/JS_Files/supabase_client.js"></script>
@@ -42,11 +42,11 @@
             </nav>
         </header>
 
-        <main class="login_page">
-            <section class="login_card" aria-labelledby="register_title">
+        <main class="register_page">
+            <section class="register_card" aria-labelledby="register_title">
                 <h1 id="register_title">Create an account</h1>
 
-                <form class="login_form register_form" id="registerForm" action="#">
+                <form class="register_form" id="registerForm" action="#">
                     <label for="username">Choose a username</label>
                     <input type="text" id="username" name="username"
                            placeholder="Username"
@@ -84,12 +84,12 @@
                     <p class="match_message" aria-live="polite"></p>
 
                     <p id="registerMessage" class="register_message" role="alert"></p>
-                    <div class="login_actions">
+                    <div class="register_actions">
                         <p class="signup_prompt">
                             Already have an account?<br>
                             <a href="Login.html">Sign in</a>
                         </p>
-                        <button type="submit" class="logButton login_submit">Sign up</button>
+                        <button type="submit" class="registerButton register_submit">Sign up</button>
                     </div>
                 </form>
             </section>
