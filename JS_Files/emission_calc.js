@@ -9,8 +9,8 @@ const PTRANSPORT_KG_PER_KM = 0.05;
 const GAS_KG_PER_KWH = 0.182;
 const ELECTRIC_KG_PER_KWH = 0.131;
 
-// average of medium gas (860 kWh/month) and medium electric (216 kWh/month) use
-const OTHER_HEATING_KG = ((860 * GAS_KG_PER_KWH + 216 * ELECTRIC_KG_PER_KWH) / 2) * 12; //=1109kg/year
+// other covers heating types such as LPG and Oil - 4000kg per year is an inbetween value
+const OTHER_HEATING_KG = 4000;
 
 // simplified estimate of UK average based on the categories
 const AVERAGE_UK_CO2 = 6800
@@ -99,12 +99,13 @@ function calculateTransport(car, transport, plane) {
   // Calc for car and public 
   let total = (Number(car) * CAR_KG_PER_KM * 52) + (Number(transport) * PTRANSPORT_KG_PER_KM * 52)
 
+  // https://www.evertreen.com/news/how-much-co2-does-a-flight-emit
   if (plane === "1/2") {
-    total += 300;
+    total += 450; // about 1 and a half short-haul return flights
   } else if (plane === "3") {
-    total += 750;
-  } else if (plane == "longHaul"){
-    total += 1800;
+    total += 1200; // 3 to 4 short-haul returns
+  } else if (plane === "longHaul"){
+    total += 1800; // a typical long-haul
   }
   return total;
 }
@@ -113,22 +114,23 @@ function calculateTransport(car, transport, plane) {
 function calculateEnergy(heating, usage){
   let kwh = 0;
 
+  // https://www.britishgas.co.uk/energy/guides/average-bill.html
   if (heating === "Gas") {
     if (usage === "Low") {
       kwh = 500;
     } else if (usage === "Medium") {
-      kwh = 860;
+      kwh = 800;
     } else if (usage === "High") {
-      kwh = 1250;
+      kwh = 1200;
     }
     return kwh * 12 * GAS_KG_PER_KWH;
   } else if (heating === "Electricity") {
     if (usage === "Low") {
       kwh = 133;
     } else if (usage === "Medium") {
-      kwh = 216;
+      kwh = 208;
     } else if (usage === "High") {
-      kwh = 326;
+      kwh = 317;
     }
     return kwh * 12 * ELECTRIC_KG_PER_KWH;
   } else if (heating === "Other") {
@@ -141,14 +143,15 @@ function calculateEnergy(heating, usage){
 
 //food
 function calculateFood(diet) {
+  // https://pmc.ncbi.nlm.nih.gov/articles/PMC12030518/
   if (diet === "Vegan") {
-    return 1000;
+    return 900;
   } else if (diet === "Veg") {
-    return 1300;
+    return 1500;
   } else if (diet === "SomeMeat") {
-    return 1800;
+    return 2600; // medium meat
   } else if (diet === "Meat") {
-    return 2500;
+    return 3800; // high meat
   }
   return 0;
 }
@@ -157,14 +160,16 @@ function calculateFood(diet) {
 function calculateLifestyle(clothes, recycle) {
   let total = 0;
   
+  // https://www.carbontrust.com/sites/default/files/documents/resource/public/International%20Carbon%20Flows%20-%20Clothing%20-%20REPORT.pdf
   if (clothes === "Rarely") {
-    total = 200;
+    total = 60; // 0 to 1 items
   } else if (clothes === "Sometimes") {
-    total = 500;
+    total = 300; // 2 to 3 items
   } else if (clothes === "Often") {
-    total = 1000;
+    total = 600; // 4 or more items
   }
 
+  // rough estimates since there is no single number on recycling
   if (recycle === "Sometimes") {
     total += 100;
   } else if (recycle === "Never") {
@@ -187,7 +192,7 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   resultContainer.classList.add("result_container");
 
   let resultHeading = document.createElement("h2");
-  resultHeading.textContent = "Carbon Footprint:";
+  resultHeading.textContent = "Carbon Footprint Estimate:";
   resultHeading.classList.add("result_heading");
 
   let emissionTotalDisplay = document.createElement("p");
@@ -236,5 +241,5 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   result.appendChild(resultContainer);
 
   // displaying the result section
-  result.style.display = "block";
+  result.style.display = "flex";
 }

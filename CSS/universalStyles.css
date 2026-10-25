@@ -12,6 +12,8 @@ body {
 main {
     /* tells main to grow into leftover space*/
     flex: 1;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 h2 {
