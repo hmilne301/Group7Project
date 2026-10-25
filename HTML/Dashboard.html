@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+
+        <!-- Linking CSS -->
+        <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <!-- Linking JS navbar -->
+        <script defer src="/JS_Files/navbar.js"></script>
+    </head>
+
+    <body>
+        <header>
+            <div class="top_bar">
+                <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="nav_menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>   
+                </button>
+                <a href="Home.html" class="brand">COZero</a>  
+            </div>
+
+            <!-- Navbar-->
+            <nav class="navflex" id="main_nav">
+                <ul>
+                    <li><a href="Home.html">Home</a></li>
+                    <li><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
+                    <li><a href="Emission_Activity.html">Emission Activity</a></li>
+                    <li><a href="Leaderboard.html">Leaderboard</a></li>
+                    <li><a href="Achievements.html">Achievements</a></li>
+                    <li><a href="Goals.html">Goals</a></li>
+                    <li><a href="Friends.html">Friends</a></li>
+                    <li><a href="Emissions_Info.html">Emissions Info</a></li>
+                    <li class="active"><a href="Contact_Us.html">Contact Us</a></li>
+                </ul>
+            </nav>
+            <section class="dashboard_container">
+                <h1>Dashboard</h1>
+                <p>Welcome to your dashboard! Here you can view your carbon emissions, track your progress, and set goals for a more sustainable future.</p>
+            </section>
+        </header>
+        <main>
+            <!-- Summary-->
+            <section class="summary">
+                <h2 id="summary-title">Summary</h2>
+                <p>Here is a summary of your recent activities and achievements related to carbon emissions.</p>
+                <!-- Add summary content here -->
+                <ul>
+                    <li><strong>Last 7 days (KG CO2e) </strong> <span id="change-7d" ></span></li>
+                    <li><strong>Goals on track:</strong> <span id="goals-on-track"></span></li>
+                    <li><strong>Leaderboard rank:</strong> <span id="leaderboard-rank"></span></li>
+                    <li><strong>Activity streak (days):</strong> <span id="streak-days"></span> <a href="Achievements.html">Badges →</a></li>
+                </ul>
+            </section>
+
+            <section aria-labelledby="trend-title">
+                <h2 id="trend-title">Footprint over time</h2>
+                <p><a href="Emission_Activity.html">View all →</a></p>
+                <table>
+                    <caption>Weekly footprint, last 8 weeks</caption>
+                    <thead>
+                        <tr><th scope="col">7 days to</th><th scope="col">kg CO₂e</th></tr>
+                    </thead>
+                    <tbody id="trend-rows"></tbody>
+                </table>
+            </section>
+
+            <section aria-labelledby="categories-title">
+                <h2 id="categories-title">Where it comes from</h2>
+                <p><a href="Emission_Activity.html">View all →</a></p>
+                <table>
+                    <caption>Last 7 days, by category</caption>
+                    <thead>
+                        <tr><th scope="col">Category</th><th scope="col">kg CO₂e</th><th scope="col">Share</th></tr>
+                    </thead>
+                    <tbody id="category-rows"></tbody>
+                </table>
+            </section>
+
+            <section aria-labelledby="goals-title">
+                <h2 id="goals-title">Goals</h2>
+                <p><a href="Goals.html">View all →</a></p>
+                <ul id="goals-list"></ul>
+            </section>
+
+            <section aria-labelledby="leaderboard-title">
+                <h2 id="leaderboard-title">Leaderboard</h2>
+                <p><a href="Leaderboard.html">View all →</a></p>
+                <ol id="leaderboard-list"></ol>
+            </section>
+
+            <section aria-labelledby="friends-title">
+                    <h2 id="friends-title">Friends activity</h2>
+                    <p><a href="Friends.html">View all →</a></p>
+                    <ul id="friends-list"></ul>
+            </section>    
+
+        </main>
+        <footer>
+            <hr>
+            <span id="copyright">">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
+            <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
+            <a href="https://www.instagram.com/c0zero1" target="_blank">
+                <img src="/Images/instagram_icon.png" 
+                     alt="Instagram" 
+                     class"instaiconimg"
+                     style="width: 20px; height: 20px;"> 
+        </a>
+        </footer>
+
+
+    </body>
+</html>
