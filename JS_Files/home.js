@@ -1,7 +1,7 @@
 'use strict'
 
 const links = document.getElementById("links")
-const welcomeContent = document.getElementById("welcomeContent")
+const welcomeContent = document.getElementById("userWelcome")
 const welcomeMessage = document.getElementById("welcomeMessage")
 
 // checks if anyone is logged in

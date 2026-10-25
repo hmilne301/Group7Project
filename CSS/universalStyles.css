@@ -38,6 +38,10 @@ li {
     padding: 12px 20px;
 }
 
+#userWelcome {
+    text-align: center;
+}
+
 .logButton {
     background-color: #4CAF50;
     color: white;
