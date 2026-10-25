@@ -1,0 +1,24 @@
+#boardTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#boardTable th {
+    background-color: #238B45;
+    color: white;
+}
+
+#boardTable td {
+    background-color: #E5EBDD;
+}
+
+.my_row {
+    font-weight: bold;
+}
+
+#boardTable th,
+#boardTable td {
+    text-align: left;
+    border: 1px solid black;
+    padding: 10px;
+}
