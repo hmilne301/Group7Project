@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="/CSS/forms.css">
         <link rel="stylesheet" href="/CSS/login.css">
         <!-- Scripts: defer means they run after the HTML has been parsed -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
         <script defer src="/JS_Files/navbar.js"></script>
         <script defer src="/JS_Files/register.js"></script>
     </head>
@@ -44,11 +46,21 @@
             <section class="login_card" aria-labelledby="register_title">
                 <h1 id="register_title">Create an account</h1>
 
-                <form class="login_form register_form" action="#" method="post">
+                <form class="login_form register_form" id="registerForm" action="#" method="post">
                     <label for="username">Choose a username</label>
                     <input type="text" id="username" name="username"
                            placeholder="Username"
                            autocomplete="username" required>
+
+                    <label for="fname">Enter your first name</label>
+                    <input type="text" id="fname" name="fname"
+                           placeholder="John"
+                           autocomplete="given-name" required>
+
+                    <label for="lname">Enter your last name</label>
+                    <input type="text" id="lname" name="lname"
+                           placeholder="Smith"
+                           autocomplete="family-name" required>
 
                     <label for="email">Enter your email address</label>
                     <input type="email" id="email" name="email"
@@ -66,11 +78,12 @@
                     </div>
 
                     <label for="confirm_password">Confirm your password</label>
-                    <input type="password" id="confirm_password" name="confirm_password"
+                    <input type="password" id="confirmPassword" name="confirm_password"
                            placeholder="Re-enter password"
                            autocomplete="new-password" required>
                     <p class="match_message" aria-live="polite"></p>
 
+                    <p id="registerMessage" class="register_message" role="alert"></p>
                     <div class="login_actions">
                         <p class="signup_prompt">
                             Already have an account?<br>
