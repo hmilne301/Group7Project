@@ -43,18 +43,27 @@
 
         </header>
         <main>
-            <h1>Leaderboard</h1>
+            <div class="leaderboard_info">
+                <h2>Leaderboard</h2>
 
-            <p id="yourRank" aria-live="polite"></p>
-            <p id="leaderboardMessage" role="status"></p>
+                <div class="leaderboard_tabs">
+                    <button type="button" id="globalTab" aria-pressed="true">Global</button>
+                    <button type="button" id="friendsTab" aria-pressed="false">Friends</button>
+                </div>
 
-            <table id="boardTable">
-                <caption>Ranked by emission points</caption>
-                <thead>
-                    <tr><th scope="col">Rank</th><th scope="col">Username</th><th scope="col">Points</th></tr>
-                </thead>
-                <tbody id="leaderboardBody"></tbody>
-            </table>
+                <p id="yourRank" aria-live="polite"></p>
+                <p id="leaderboardMessage" role="status"></p>
+
+            </div>
+            <div class="leaderboard_container">
+                <table id="boardTable">
+                    <caption>Ranked by emission points</caption>
+                    <thead>
+                        <tr><th scope="col">Rank</th><th scope="col">Username</th><th scope="col">Points</th></tr>
+                    </thead>
+                    <tbody id="leaderboardBody"></tbody>
+                </table>
+            </div>
         </main>
         <footer>
             <hr>
