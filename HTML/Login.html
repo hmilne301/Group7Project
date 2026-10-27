@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="/CSS/forms.css">
         <link rel="stylesheet" href="/CSS/login.css">
         <!-- JS file which won't load after rest of page has that customises the navbar -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
         <script defer src="/JS_Files/navbar.js"></script>
         <script defer src="/JS_Files/login.js"></script>
     </head>
@@ -44,23 +46,24 @@
             <section class="login_card" aria-labelledby="login_title">
                 <h1 id="login_title">Sign in</h1>
 
-                <form class="login_form" action="#" method="post">
-                    <label for="username">Enter your email address</label>
-                    <input type="text" id="username" name="username"
+                <form class="login_form" id="loginForm" action="#">
+                    <label for="email">Enter your email address</label>
+                    <input type="text" id="email" name="email"
                            placeholder="Email address"
-                           autocomplete="username" required>
+                           autocomplete="email" required>
 
                     <label for="password">Enter your password</label>
-<div class="password_wrapper">
-    <input type="password" id="password" name="password"
-           placeholder="Password"
-           autocomplete="current-password" required>
-    <button type="button" class="toggle_password"
-            aria-label="Show password" aria-pressed="false">Show</button>
-</div>
+                    <div class="password_wrapper">
+                        <input type="password" id="password" name="password"
+                            placeholder="Password"
+                            autocomplete="current-password" required>
+                        <button type="button" class="toggle_password"
+                                aria-label="Show password" aria-pressed="false">Show</button>
+                    </div>
 
                     <a href="Forgot_Password.html" class="forgot_link">Forgot password?</a>
 
+                    <p id="loginMessage" class="login_message" role="alert"></p>
                     <div class="login_actions">
                         <p class="signup_prompt">
                             No account?<br>
