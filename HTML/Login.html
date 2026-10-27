@@ -7,10 +7,12 @@
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
         <link rel="stylesheet" href="/CSS/forms.css">
+        <link rel="stylesheet" href="/CSS/login.css">
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/login.js"></script>
     </head>
-    <body>
+    <body class="login_body">
         <header>
             <div class="top_bar">
                 <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
@@ -36,15 +38,40 @@
                 </ul>
 
             </nav>
-            
-            <section class="header_container">
-                <h1>Login</h1>
-            </section>
         </header>
 
-        <main>
+        <main class="login_page">
+            <section class="login_card" aria-labelledby="login_title">
+                <h1 id="login_title">Sign in</h1>
 
+                <form class="login_form" action="#" method="post">
+                    <label for="username">Enter your email address</label>
+                    <input type="text" id="username" name="username"
+                           placeholder="Email address"
+                           autocomplete="username" required>
+
+                    <label for="password">Enter your password</label>
+<div class="password_wrapper">
+    <input type="password" id="password" name="password"
+           placeholder="Password"
+           autocomplete="current-password" required>
+    <button type="button" class="toggle_password"
+            aria-label="Show password" aria-pressed="false">Show</button>
+</div>
+
+                    <a href="Forgot_Password.html" class="forgot_link">Forgot password?</a>
+
+                    <div class="login_actions">
+                        <p class="signup_prompt">
+                            No account?<br>
+                            <a href="Register.html">Sign up</a>
+                        </p>
+                        <button type="submit" class="logButton login_submit">Sign in</button>
+                    </div>
+                </form>
+            </section>
         </main>
+
         <footer>
             <hr>
             <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.

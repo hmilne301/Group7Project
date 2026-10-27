@@ -7,10 +7,14 @@
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
         <link rel="stylesheet" href="/CSS/forms.css">
-        <!-- JS file which won't load after rest of page has that customises the navbar -->
+        <link rel="stylesheet" href="/CSS/register.css">
+        <!-- Scripts: defer means they run after the HTML has been parsed -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
         <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/register.js"></script>
     </head>
-    <body>
+    <body class="login_body">
         <header>
             <div class="top_bar">
                 <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
@@ -36,20 +40,66 @@
                 </ul>
 
             </nav>
-            
-            <section class="header_container">
-                <h1>Register</h1>
-            </section>
         </header>
 
-        <main>
+        <main class="register_page">
+            <section class="register_card" aria-labelledby="register_title">
+                <h1 id="register_title">Create an account</h1>
 
+                <form class="register_form" id="registerForm" action="#">
+                    <label for="username">Choose a username</label>
+                    <input type="text" id="username" name="username"
+                           placeholder="Username"
+                           autocomplete="username" required>
+
+                    <label for="fname">Enter your first name</label>
+                    <input type="text" id="fname" name="fname"
+                           placeholder="John"
+                           autocomplete="given-name" required>
+
+                    <label for="lname">Enter your last name</label>
+                    <input type="text" id="lname" name="lname"
+                           placeholder="Smith"
+                           autocomplete="family-name" required>
+
+                    <label for="email">Enter your email address</label>
+                    <input type="email" id="email" name="email"
+                           placeholder="Email address"
+                           autocomplete="email" required>
+
+                    <label for="password">Create a password</label>
+                    <div class="password_wrapper">
+                        <input type="password" id="password" name="password"
+                               placeholder="Password"
+                               autocomplete="new-password" minlength="8" required>
+                        <button type="button" class="toggle_password"
+                        
+                                aria-label="Show passwords" aria-pressed="false">Show</button>
+                    </div>
+
+                    <label for="confirm_password">Confirm your password</label>
+                    <input type="password" id="confirm_password" name="confirm_password"
+                           placeholder="Re-enter password"
+                           autocomplete="new-password" required>
+                    <p class="match_message" aria-live="polite"></p>
+
+                    <p id="registerMessage" class="register_message" role="alert"></p>
+                    <div class="register_actions">
+                        <p class="signup_prompt">
+                            Already have an account?<br>
+                            <a href="Login.html">Sign in</a>
+                        </p>
+                        <button type="submit" class="registerButton register_submit">Sign up</button>
+                    </div>
+                </form>
+            </section>
         </main>
+
         <footer>
             <hr>
             <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
             <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
-            <a href="https://www.instagram.com/c0zero1" target="_blank">
+            <a href="https://www.instagram.com/c0zero1" target="_blank" rel="noopener noreferrer">
                 <img src="/Images/instagram_icon.png" alt="Instagram" class="instaiconimg">
             </a>
         </footer>
