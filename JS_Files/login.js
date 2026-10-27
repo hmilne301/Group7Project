@@ -5,6 +5,7 @@ const toggleBtn = document.querySelector(".toggle_password");
 const loginForm = document.getElementById("loginForm");
 const loginMessage = document.getElementById("loginMessage")
 
+// shows password when clicked
 toggleBtn.addEventListener("click", () => {
     const isHidden = passwordInput.type === "password";
     passwordInput.type = isHidden ? "text" : "password";
@@ -22,7 +23,7 @@ function loginUser(evt) {
 
     const email = document.getElementById("email").value.trim();
 
-    // creates the account and runs Supabase replies
+    // logs in to account and runs Supabase replies
     db.auth.signInWithPassword({
         email: email,
         password: password.value
