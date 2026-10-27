@@ -89,7 +89,7 @@ function loadFriendsLeaderboard() {
                         message.textContent = "Could not load the leaderboard.";
                         return;
                     }
-                    showLeaderboard(result.data);
+                    showLeaderboard(result.data, "Your rank among friends");
                 
                     // no friends yet
                     if (ids.length === 1) {
@@ -100,7 +100,7 @@ function loadFriendsLeaderboard() {
 }
 
 // builds table
-function showLeaderboard(users) {
+function showLeaderboard(users, rankMessage = "Your rank") {
     body.replaceChildren();
     yourRank.textContent = "";
     message.textContent = "";
@@ -138,7 +138,7 @@ function showLeaderboard(users) {
         if (user.user_id === myId) {
             row.classList.add("my_row");
             nameCell.textContent = user.username + " (you)";
-            yourRank.textContent = "Your rank: #" + rank + " with " + user.emission_points + " points";
+            yourRank.textContent = rankMessage + ": #" + rank + " with " + user.emission_points + " points";
         }
 
         body.appendChild(row);
