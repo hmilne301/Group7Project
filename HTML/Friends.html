@@ -6,12 +6,14 @@
         <title>Friends</title>
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <link rel="stylesheet" href="/CSS/friends.css">
         <!-- External Supabase library -->
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <!-- Linking JS files -->
         <script defer src="/JS_Files/supabase_client.js"></script>
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/friends.js"></script>
     </head>
     <body>
         <header>
@@ -42,12 +44,33 @@
             </nav>
             
             <section class="header_container">
-                <h1></h1>
+                <h1>Friends</h1>
             </section>
 
         </header>
         <main>
-          
+            <section class="friends_layout">
+                <div id="friendsSection" class="friends_card">
+                    <h2>Your Friends</h2>
+                    <ul id="friendsList"></ul>
+                    <p id="friendsMessage" role="status"></p>
+                </div>
+
+                <div id="addFriendsSection" class="friends_card">
+                    <h2>Add Friends</h2>
+                    <form class ="add_friend_form" id ="addFriendForm" action="#">
+                        <label for="username">Enter username</label>
+                        <input type="text" id="username" name="username" required>
+                        <button type="submit" id="addFriendButton" class="add_friend_button">Add Friend</button>
+                    </form>
+                    <p id="addMessage" role="alert"></p>
+                </div>
+
+                <div id="friendRequestsSection" class="friends_card">
+                    <h2>Friend Requests</h2>
+                    <p id="requestsMessage" role="status"></p>
+                </div>
+            </section>
         </main>
         <footer>
             <hr>

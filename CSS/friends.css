@@ -1,0 +1,66 @@
+.friends_layout {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 24px auto;
+    padding: 0 16px;
+    gap: 24px;
+}
+
+.friends_card {
+    background-color: #EBF0E1;
+    padding: 20px 24px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+}
+
+.friends_card h2 {
+    margin-top: 0;
+    font-size: 21px;
+    color: #228b4a;
+    border-bottom: 2px solid #e4ecdd;
+    padding-bottom: 8px;
+}
+
+.friends_card ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.friends_card li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e4ecdd;
+}
+
+#friendsMessage {
+    color: #555;
+}
+
+.add_friend_form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.add_friend_form input {
+    flex: 1 1 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.add_friend_form button[type=submit]{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin: 10px;
+    padding: 10px 24px;
+}
