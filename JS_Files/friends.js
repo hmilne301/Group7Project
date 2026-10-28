@@ -1,9 +1,11 @@
 'use strict';
 
 const message = document.getElementById("friendsMessage");
-const addFriendMessage = document.getElementById("addMessage")
+const addFriendMessage = document.getElementById("addMessage");
 const friendsList = document.getElementById("friendsList");
-const friendForm = document.getElementById("addFriendForm")
+const friendForm = document.getElementById("addFriendForm");
+const requestList = document.getElementById("requestList");
+const requestMessage = document.getElementById("requestsMessage");
 
 // setting id as null initially
 let myId = null;
@@ -20,6 +22,7 @@ db.auth.getSession().then(function(result) {
     // storing user id and calling loadFriends function
     myId = result.data.session.user.id;
     loadFriends();
+    loadRequests();
 });
 
 function loadFriends() {
@@ -180,9 +183,79 @@ function addFriends(evt){
         })
     }
 
-// displays requests
-function showRequests(){
+// gets requests
+function loadRequests(){
+    // finds the pending friendship which involves logged in user
+    db.from("friends")
+        .select("requester_id, receiver_id")
+        .eq("status", "pending")
+        .or("requester_id.eq." + myId + ",receiver_id.eq." + myId)
+        .then(function(result) {
+            if (result.error) {
+                message.textContent = "Could not load requests.";
+                return;
+            }
+            
+            // builds list of ids which includes the other person in the pending friendship
+            const ids = [];
+            for (let i = 0; i < result.data.length; i++) {
+                const row = result.data[i];
+                if (row.requester_id === myId) {
+                    ids.push(row.receiver_id);
+                } else {
+                    ids.push(row.requester_id);
+                }
+            }
 
+            // no friends requests yet
+            if (ids.length === 0) {
+                friendsList.replaceChildren();
+                message.textContent = "You have no requests.";
+                return;
+            }
+
+            // gets just those users
+            db.from("userinfo")
+                .select("user_id, username")
+                .in("user_id", ids)
+                .then(function(result) {
+                    if (result.error) {
+                        message.textContent = "Could not load the friends list.";
+                        return;
+                    }
+                    showRequests(result.data);
+            });
+        });
+}
+
+// shows requests
+function showRequests(users){
+    requestList.replaceChildren();
+    requestMessage.textContent = "";
+
+    // checking if any users are found
+    if (users.length === 0) {
+        message.textContent = "No Requests";
+        return;
+    }
+
+    for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        const li = document.createElement("li");
+        const acceptButton = document.createElement("button");
+        const rejectButton = document.createElement("button");
+
+        acceptButton.textContent = "Accept";
+        acceptButton.className = "accept_request_button";
+
+        rejectButton.textContent = "Reject";
+        rejectButton.className = "reject_request_button";
+
+        li.textContent = user.username;
+        li.appendChild(acceptButton);
+        li.appendChild(rejectButton);
+        requestList.appendChild(li);
+    }
 }
 
 // allows users to accept requests
@@ -192,5 +265,10 @@ function acceptRequest(){
 
 // allows users to reject requests
 function rejectRequest(){
+
+}
+
+// allows users to remove friends
+function removeFriend(){
 
 }
