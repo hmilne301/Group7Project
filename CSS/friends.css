@@ -64,3 +64,12 @@
     margin: 10px;
     padding: 10px 24px;
 }
+
+.remove_friend_button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin: 10px;
+    padding: 10px 24px;
+}

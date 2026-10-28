@@ -1,7 +1,9 @@
 'use strict';
 
 const message = document.getElementById("friendsMessage");
+const addFriendMessage = document.getElementById("addMessage")
 const friendsList = document.getElementById("friendsList");
+const friendForm = document.getElementById("addFriendForm")
 
 // setting id as null initially
 let myId = null;
@@ -77,16 +79,106 @@ function showFriends(users){
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
         const li = document.createElement("li");
+        const removeButton = document.createElement("button");
+
+        removeButton.textContent = "Remove Friend";
+        removeButton.className = "remove_friend_button";
 
         li.textContent = user.username;
+        li.appendChild(removeButton);
         friendsList.appendChild(li);
     }
 }
 
-// allows users to send a friend request to other user
-function addFriends(){
+// creates event listener for when the add friends form is submitted
+friendForm.addEventListener("submit", addFriends)
 
-}
+// allows users to send a friend request to other user
+function addFriends(evt){
+    // stops page from reloading
+    evt.preventDefault();
+    addFriendMessage.textContent = "";
+
+    const username = document.getElementById("username").value.trim();
+
+    if (username === ""){
+        addFriendMessage.textContent = "Please enter a username.";
+        return;
+    }
+
+    db.from("userinfo")
+        .select("user_id, username")
+        .ilike("username", username) // ignores capitalisation
+        .maybeSingle() // returns a single row or null if nobody matches search
+        .then(function(result) {
+            if(result.error) {
+                addFriendMessage.textContent = "Could not look up that user.";
+                return;
+            }
+
+            // checks if no one has that username and if so message is returned
+            if (result.data === null) {
+                addFriendMessage.textContent = "No user found with that username."
+                return;
+            }
+
+            // storing the found users details
+            const foundUser = result.data;
+
+            // checking if friend requested user is the logged in user
+            if (foundUser.user_id === myId){
+                addFriendMessage.textContent = "Cannot add yourself"
+                return;
+            }
+
+            // 
+            db.from("friends")
+                .select("status, requester_id")
+                .or(
+                    "and(requester_id.eq." + myId + ",receiver_id.eq." + foundUser.user_id + ")," +
+                    "and(requester_id.eq." + foundUser.user_id + ",receiver_id.eq." + myId + ")"
+                )
+                .maybeSingle()
+                .then(function(existing) {
+                    if(existing.error) {
+                        addFriendMessage.textContent = "Could not check existing friends.";
+                        return;
+                    }
+
+                if (existing.data !== null) {
+                    const row = existing.data;
+
+                    if (row.status === "accepted") {
+                        addFriendMessage.textContent = "You are already Friends."
+                    } else if (row.status === "pending" && row.requester_id === myId) {
+                        addFriendMessage.textContent = "A request has already been sent."
+                    } else if (row.status === "pending") {
+                        addFriendMessage.textContent = "This user has already sent you a friend, check below."
+                    } else {
+                        addFriendMessage.textContent = "You can't send a request to this user."
+                    }
+                    return;
+                }
+
+                db.from("friends")
+                    .insert({ requester_id:  myId, receiver_id: foundUser.user_id})
+                    .then(function(result) {
+                        if(result.error) {
+                            addFriendMessage.textContent = "Could not send friend request.";
+                            return;
+                        }
+
+                        addFriendMessage.textContent = "Request Sent to " + username;
+                        friendForm.reset();
+                    })
+
+                    return;
+                });
+            })
+        .catch(function() {
+            addFriendMessage.textContent = "Could not connect, please try again later";
+        })
+    }
 
 // displays requests
 function showRequests(){
