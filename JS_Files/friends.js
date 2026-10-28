@@ -83,11 +83,17 @@ function showFriends(users){
         const user = users[i];
         const li = document.createElement("li");
         const removeButton = document.createElement("button");
+        const span = document.createElement("span");
 
         removeButton.textContent = "Remove Friend";
         removeButton.className = "remove_friend_button";
 
-        li.textContent = user.username;
+        removeButton.addEventListener("click", function() {
+            removeFriend(users.user_id, li)
+        })
+
+        span.textContent = user.username;
+        li.appendChild(span);
         li.appendChild(removeButton);
         friendsList.appendChild(li);
     }
@@ -244,14 +250,27 @@ function showRequests(users){
         const li = document.createElement("li");
         const acceptButton = document.createElement("button");
         const rejectButton = document.createElement("button");
+        const span = document.createElement("span");
 
         acceptButton.textContent = "Accept";
         acceptButton.className = "accept_request_button";
+        
+        // creating event listener for each accept button
+        acceptButton.addEventListener("click", function() {
+            acceptRequest(users.user_id, li)
+        })
 
         rejectButton.textContent = "Reject";
         rejectButton.className = "reject_request_button";
 
-        li.textContent = user.username;
+        // creating event listener for each reject button
+        rejectButton.addEventListener("click", function() {
+            rejectRequest(users.user_id, li)
+        })
+
+        span.textContent = user.username;
+
+        li.appendChild(span)
         li.appendChild(acceptButton);
         li.appendChild(rejectButton);
         requestList.appendChild(li);
@@ -259,13 +278,37 @@ function showRequests(users){
 }
 
 // allows users to accept requests
-function acceptRequest(){
-
+function acceptRequest(requesterId, listItem){
+    db.from("friends")
+        .update({ status: "accepted", response_date: now() })
+        .eq("requester_id", requesterId)
+        .eq("receiver_id", myId)
+        .then(function(result) {
+            if (result.error) {
+                requestMessage.textContent = "Could not accept request."
+                return;
+            }
+            // remove the pending list
+            listItem.remove();
+            // refreshs the active friends
+            loadFriends();
+        })
 }
 
 // allows users to reject requests
 function rejectRequest(){
-
+    db.from("friends")
+        .update({ status: "rejected", response_date: now() })
+        .eq("requester_id", requesterId)
+        .eq("receiver_id", myId)
+        .then(function(result) {
+            if (result.error) {
+                requestMessage.textContent = "Could not reject request."
+                return;
+            }
+            // remove the pending list
+            listItem.remove();
+        })
 }
 
 // allows users to remove friends

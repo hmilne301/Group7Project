@@ -32,10 +32,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
     padding: 12px 0;
     border-bottom: 1px solid #e4ecdd;
+}
+
+.friends_card li span {
+  flex-grow: 1; 
+  text-align: left;
 }
 
 #friendsMessage {
@@ -56,7 +59,8 @@
     border-radius: 8px;
 }
 
-.add_friend_form button[type=submit]{
+.add_friend_form button[type=submit],
+.accept_request_button {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -65,7 +69,8 @@
     padding: 10px 24px;
 }
 
-.remove_friend_button {
+.remove_friend_button, 
+.reject_request_button {
     background-color: red;
     color: white;
     border: none;
