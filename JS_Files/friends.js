@@ -89,7 +89,7 @@ function showFriends(users){
         removeButton.className = "remove_friend_button";
 
         removeButton.addEventListener("click", function() {
-            removeFriend(user.user_id, li)
+            removeFriend(user.user_id, li);
         })
 
         span.textContent = user.username;
@@ -100,7 +100,7 @@ function showFriends(users){
 }
 
 // creates event listener for when the add friends form is submitted
-friendForm.addEventListener("submit", addFriends)
+friendForm.addEventListener("submit", addFriends);
 
 // allows users to send a friend request to other user
 function addFriends(evt){
@@ -127,7 +127,7 @@ function addFriends(evt){
 
             // checks if no one has that username and if so message is returned
             if (result.data === null) {
-                addFriendMessage.textContent = "No user found with that username."
+                addFriendMessage.textContent = "No user found with that username.";
                 return;
             }
 
@@ -136,7 +136,7 @@ function addFriends(evt){
 
             // checking if friend requested user is the logged in user
             if (foundUser.user_id === myId){
-                addFriendMessage.textContent = "Cannot add yourself"
+                addFriendMessage.textContent = "Cannot add yourself";
                 return;
             }
 
@@ -157,13 +157,13 @@ function addFriends(evt){
                     const row = existing.data;
 
                     if (row.status === "accepted") {
-                        addFriendMessage.textContent = "You are already Friends."
+                        addFriendMessage.textContent = "You are already Friends.";
                     } else if (row.status === "pending" && row.requester_id === myId) {
-                        addFriendMessage.textContent = "A request has already been sent."
+                        addFriendMessage.textContent = "A request has already been sent.";
                     } else if (row.status === "pending") {
-                        addFriendMessage.textContent = "This user has already sent you a friend request, check below."
+                        addFriendMessage.textContent = "This user has already sent you a friend request, check below.";
                     } else {
-                        addFriendMessage.textContent = "You can't send a request to this user."
+                        addFriendMessage.textContent = "You can't send a request to this user.";
                     }
                     return;
                 }
@@ -250,7 +250,7 @@ function showRequests(users){
         
         // creating event listener for each accept button
         acceptButton.addEventListener("click", function() {
-            acceptRequest(user.user_id, li)
+            acceptRequest(user.user_id, li);
         })
 
         rejectButton.textContent = "Reject";
@@ -258,12 +258,12 @@ function showRequests(users){
 
         // creating event listener for each reject button
         rejectButton.addEventListener("click", function() {
-            rejectRequest(user.user_id, li)
+            rejectRequest(user.user_id, li);
         })
 
         span.textContent = user.username;
 
-        li.appendChild(span)
+        li.appendChild(span);
         li.appendChild(acceptButton);
         li.appendChild(rejectButton);
         requestList.appendChild(li);
@@ -273,7 +273,7 @@ function showRequests(users){
 // allows users to accept requests
 function acceptRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "accepted", response_date: new Date().toISOString })
+        .update({ status: "accepted", response_date: new Date().toISOString() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
         .then(function(result) {
@@ -285,6 +285,7 @@ function acceptRequest(requesterId, listItem){
             listItem.remove();
             // refreshs the active friends
             loadFriends();
+            loadRequests();
         })
 }
 
@@ -296,15 +297,40 @@ function rejectRequest(requesterId, listItem){
         .eq("receiver_id", myId)
         .then(function(result) {
             if (result.error) {
-                requestMessage.textContent = "Could not reject request."
+                requestMessage.textContent = "Could not reject request.";
                 return;
             }
             // remove the pending list
             listItem.remove();
+            loadRequests();
         })
 }
 
 // allows users to remove friends
 function removeFriend(friendId, listItem){
+    let userConfirmed = window.confirm("Are you sure?")
 
+    if (!userConfirmed) {
+        return;
+    }
+
+    db.from("friends")
+        .delete()
+        .or(
+            "and(requester_id.eq." + myId + ",receiver_id.eq." + friendId + ")," +
+            "and(requester_id.eq." + friendId + ",receiver_id.eq." + myId + ")"
+            )
+        .then(function(result) {
+            if(result.error) {
+                message.textContent = "Could not remove friend.";
+                return;
+            }
+
+            if (listItem) {
+                listItem.remove();
+            }
+
+            message.textContent = "Friend removed successfully.";
+
+        })
 }
