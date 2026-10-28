@@ -52,6 +52,60 @@ goalFrom.addEventListener("submit", function (event) {
         goalCard.appendChild(goalDescription);
     }
 
+    //Add Progress Label
+    const progressLabel = document.createElement("p");
+    progressLabel.className = "progress-label";
+    progressLabel.textContent = "Progress: 0%";
+    goalCard.appendChild(progressLabel);
+
+    //Create the progress bar
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar";
+
+    const progressFill = document.createElement("div");
+    progressFill.className = "progress-fill";
+
+    progressBar.appendChild(progressFill);
+    goalCard.appendChild(progressBar);
+
+    //Range Slider for increments of 25
+
+    const progressSlider = document.createElement("input");
+    progressSlider.type = "range";
+    progressSlider.min = "0";
+    progressSlider.max = "100";
+    progressSlider.step = "25";
+    progressSlider.value = "0";
+    progressSlider.className = "goal-slider"
+    progressSlider.setAttribute("aria-label", "Goal Progress")
+
+    //Update the slider when the slider moves
+
+    progressSlider.addEventListener("input", function () {
+        const progress = Number(progressSlider.value);
+
+        progressLabel.textContent = `Progress: ${progress}%`;
+        progressFill.style.width = `${progress}%`;
+    });
+
+    //Adds slider to the goal card
+    goalCard.appendChild(progressSlider)
+
+    //Add option to delete via a button
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete Goal";
+    deleteButton.className = "goal-delete";
+
+    //Delete the goal after confirmation through window
+
+    deleteButton.addEventListener("click", function () {
+        goalCard.remove();
+      
+    });
+
+    goalCard.appendChild(deleteButton)
+
     //Displays the new created goal
     goalsList.appendChild(goalCard);
 

@@ -253,6 +253,50 @@ textarea {
     margin-bottom: 0;
 }
 
+.progress-bar {
+    width: 0%;
+    height: 12px;
+    background-color:#D8D8D8;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background-color: #71B340;
+    border-radius: 10px;
+}
+
+.goal-slider {
+    display: block;
+    width: 100%;
+    margin: 0 0 8px;
+    cursor: pointer;
+    accent-color: #71B340;
+}
+
+.progress-label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.goal-delete {
+    display: block;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.goal-delete:hover {
+    background-color: #EA3546;
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:480px){
