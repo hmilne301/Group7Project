@@ -10,6 +10,8 @@
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
         <script defer src="/JS_Files/emission_menu.js"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     </head>
     <body>
         <header>
@@ -53,6 +55,8 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Emission Name</th>
+                            <th>Emission Category</th>
                             <th>Emission Amount</th>
                             <th>Actions</th>
                         </tr>
@@ -60,12 +64,12 @@
                     <tbody id="emissionTableBody"></tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2"><b>Total Emission Amount</b></td>
+                            <td colspan="3"><b>Total Emission Amount</b></td>
                             <td id="emissionTotal">0</td>
                         </tr>
                     </tfoot>
                 </table>
-                <a href="Emission_Activity.html" class="activityButton activityRecordsButton">Add Emission</a>
+                <a href="Emission_Activity.html" class="activityButton activityRecordsButton">Add emission amount</a>
             </div>     
     </section>
         </main>

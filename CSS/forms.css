@@ -340,6 +340,10 @@ textarea {
     color: #ffffff;
 }
 
+.tableButton{
+    margin-right: 4px;
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:480px){

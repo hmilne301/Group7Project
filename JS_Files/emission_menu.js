@@ -2,11 +2,15 @@ let emissions = [];        // the list of emission amounts
 let editingIndex = null;   // set intial editing index to null so it can be switched on and off when a user clicks edit button
 
 // data for testing the table, will be removed when the database is connected to the table and the user can add their own emissions
-emissions = [3,4,123,5,12,451,142,34,234,2,432]
+emissions = [3, 4, 123, 5, 12, 451, 142, 34, 234, 2, 432].map((amount, i) => ({
+    name: `Test ${i + 1}`,
+    category: "Other",
+    amount
+}));
 
 // function to add a new emission amount
-function addEmission(amount) {
-    emissions.push(amount);
+function addEmission(entry) {
+    emissions.push(entry);
     renderTable();
 }
 
@@ -34,7 +38,7 @@ function saveEdit(index) {
     }
 
     // update the emission amount in the array and reset editing index
-    emissions[index] = newAmount;
+    emissions[index].amount = newAmount;
     editingIndex = null;
     renderTable();
 }
@@ -63,26 +67,28 @@ function renderTable() {
     // if no emissions has been entered then show message 
     if (emissions.length === 0) {
         const cell = body.insertRow().insertCell();
-        cell.colSpan = 3;
+        cell.colSpan = 5;
         cell.textContent = "No emissions added yet.";
     }
 
     // loops through each emissions entry from the sample array and adds them to the table 
-    emissions.forEach((amount, i) => {
+    emissions.forEach((entry, i) => {
         const row = body.insertRow();
         row.insertCell().textContent = i + 1;
+        row.insertCell().textContent = entry.name;
+        row.insertCell().textContent = entry.category;
         const amountCell = row.insertCell();
         const actionsCell = row.insertCell();
 
         // if the index equals the editing index then show input box and save and cancel button otherwise show the edit and remove buttons as default
         if (i === editingIndex) {
-            amountCell.innerHTML = `<input type="number" id="editInput" class="editInput" value="${amount}" min="0" step="any">`;
+            amountCell.innerHTML = `<input type="number" id="editInput" class="editInput" value="${entry.amount}" min="0" step="any">`;
             actionsCell.append(
                 makeButton("Save", "tableButton saveButton", () => saveEdit(i)),
                 makeButton("Cancel", "tableButton", cancelEdit)
             );
         } else {
-            amountCell.textContent = amount;
+            amountCell.textContent = entry.amount;
             actionsCell.append(
                 makeButton("Edit", "tableButton", () => startEdit(i)),
                 makeButton("Remove", "tableButton removeButton", () => removeEmission(i))
@@ -90,9 +96,22 @@ function renderTable() {
         }
     });
 
-    const total = emissions.reduce((sum, value) => sum + value, 0);
+    const total = emissions.reduce((sum, entry) => sum + entry.amount, 0);
     document.getElementById("emissionTotal").textContent = total;
 }
 
-// create table when the page loads
-renderTable();
+async function loadEmissions() {
+    const { data, error } = await db
+    .from("activity")
+    .select("*")
+    .order("activity_date", { ascending: true });
+
+    if (error) {
+        console.error("Error loading emissions:", error);
+        return;
+    }
+
+    emissions = data;
+    // create table when the page loads
+    renderTable();
+}
