@@ -41,7 +41,9 @@
   text-align: left;
 }
 
-#friendsMessage {
+#friendsMessage,
+#addMessage,
+#requestsMessage {
     color: #555;
 }
 
