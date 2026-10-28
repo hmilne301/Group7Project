@@ -61,7 +61,7 @@ function loadFriends() {
                 .in("user_id", ids)
                 .then(function(result) {
                     if (result.error) {
-                        message.textContent = "Could not load the friends list.";
+                        message.textContent = "Could not load the requests list.";
                         return;
                     }
                     showFriends(result.data);
@@ -89,7 +89,7 @@ function showFriends(users){
         removeButton.className = "remove_friend_button";
 
         removeButton.addEventListener("click", function() {
-            removeFriend(users.user_id, li)
+            removeFriend(user.user_id, li)
         })
 
         span.textContent = user.username;
@@ -139,7 +139,7 @@ function addFriends(evt){
                 addFriendMessage.textContent = "Cannot add yourself"
                 return;
             }
-            
+
             db.from("friends")
                 .select("status, requester_id")
                 .or(
@@ -161,7 +161,7 @@ function addFriends(evt){
                     } else if (row.status === "pending" && row.requester_id === myId) {
                         addFriendMessage.textContent = "A request has already been sent."
                     } else if (row.status === "pending") {
-                        addFriendMessage.textContent = "This user has already sent you a friend, check below."
+                        addFriendMessage.textContent = "This user has already sent you a friend request, check below."
                     } else {
                         addFriendMessage.textContent = "You can't send a request to this user."
                     }
@@ -179,8 +179,6 @@ function addFriends(evt){
                         addFriendMessage.textContent = "Request Sent to " + username;
                         friendForm.reset();
                     })
-
-                    return;
                 });
             })
         .catch(function() {
@@ -192,12 +190,12 @@ function addFriends(evt){
 function loadRequests(){
     // finds the pending friendship which involves logged in user
     db.from("friends")
-        .select("requester_id, receiver_id")
+        .select("requester_id")
         .eq("status", "pending")
-        .or("requester_id.eq." + myId + ",receiver_id.eq." + myId)
+        .eq("receiver_id", myId)
         .then(function(result) {
             if (result.error) {
-                message.textContent = "Could not load requests.";
+                requestMessage.textContent = "Could not load requests.";
                 return;
             }
             
@@ -205,17 +203,13 @@ function loadRequests(){
             const ids = [];
             for (let i = 0; i < result.data.length; i++) {
                 const row = result.data[i];
-                if (row.requester_id === myId) {
-                    ids.push(row.receiver_id);
-                } else {
-                    ids.push(row.requester_id);
-                }
+                ids.push(row.requester_id);
             }
 
             // no friends requests yet
             if (ids.length === 0) {
-                friendsList.replaceChildren();
-                message.textContent = "You have no requests.";
+                requestList.replaceChildren();
+                requestMessage.textContent = "You have no requests.";
                 return;
             }
 
@@ -225,7 +219,7 @@ function loadRequests(){
                 .in("user_id", ids)
                 .then(function(result) {
                     if (result.error) {
-                        message.textContent = "Could not load the friends list.";
+                        requestMessage.textContent = "Could not load the friends list.";
                         return;
                     }
                     showRequests(result.data);
@@ -256,7 +250,7 @@ function showRequests(users){
         
         // creating event listener for each accept button
         acceptButton.addEventListener("click", function() {
-            acceptRequest(users.user_id, li)
+            acceptRequest(user.user_id, li)
         })
 
         rejectButton.textContent = "Reject";
@@ -264,7 +258,7 @@ function showRequests(users){
 
         // creating event listener for each reject button
         rejectButton.addEventListener("click", function() {
-            rejectRequest(users.user_id, li)
+            rejectRequest(user.user_id, li)
         })
 
         span.textContent = user.username;
@@ -279,7 +273,7 @@ function showRequests(users){
 // allows users to accept requests
 function acceptRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "accepted", response_date: Date.now() })
+        .update({ status: "accepted", response_date: new Date().toISOString })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
         .then(function(result) {
@@ -297,7 +291,7 @@ function acceptRequest(requesterId, listItem){
 // allows users to reject requests
 function rejectRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "rejected", response_date: Date.now() })
+        .update({ status: "rejected", response_date: new Date().toISOString })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
         .then(function(result) {
@@ -311,6 +305,6 @@ function rejectRequest(requesterId, listItem){
 }
 
 // allows users to remove friends
-function removeFriend(){
+function removeFriend(friendId, listItem){
 
 }
