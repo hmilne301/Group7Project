@@ -139,8 +139,7 @@ function addFriends(evt){
                 addFriendMessage.textContent = "Cannot add yourself"
                 return;
             }
-
-            // 
+            
             db.from("friends")
                 .select("status, requester_id")
                 .or(
@@ -280,7 +279,7 @@ function showRequests(users){
 // allows users to accept requests
 function acceptRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "accepted", response_date: now() })
+        .update({ status: "accepted", response_date: Date.now() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
         .then(function(result) {
@@ -296,9 +295,9 @@ function acceptRequest(requesterId, listItem){
 }
 
 // allows users to reject requests
-function rejectRequest(){
+function rejectRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "rejected", response_date: now() })
+        .update({ status: "rejected", response_date: Date.now() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
         .then(function(result) {
