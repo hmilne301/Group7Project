@@ -7,10 +7,6 @@
 
         <!-- Linking CSS -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
-        <!-- External Supabase library -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-        <!-- Linking JS files -->
-        <script defer src="/JS_Files/supabase_client.js"></script>
         <!-- Linking JS navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
     </head>
@@ -47,6 +43,7 @@
         </header>
         <main>
             <!-- Summary-->
+            <div class="summary">
             <section class="summary">
                 <h2 id="summary-title">Summary</h2>
                 <p>Here is a summary of your recent activities and achievements related to carbon emissions.</p>
@@ -58,7 +55,9 @@
                     <li><strong>Activity streak (days):</strong> <span id="streak-days"></span> <a href="Achievements.html">Badges →</a></li>
                 </ul>
             </section>
-
+            </div>
+            
+            <div class="overTime">
             <section aria-labelledby="trend-title">
                 <h2 id="trend-title">Footprint over time</h2>
                 <p><a href="Emission_Activity.html">View all →</a></p>
@@ -70,7 +69,9 @@
                     <tbody id="trend-rows"></tbody>
                 </table>
             </section>
+            </div>
 
+            <div class="categories">
             <section aria-labelledby="categories-title">
                 <h2 id="categories-title">Where it comes from</h2>
                 <p><a href="Emission_Activity.html">View all →</a></p>
@@ -82,6 +83,8 @@
                     <tbody id="category-rows"></tbody>
                 </table>
             </section>
+
+            </div>
 
             <section aria-labelledby="goals-title">
                 <h2 id="goals-title">Goals</h2>
@@ -104,7 +107,7 @@
         </main>
         <footer>
             <hr>
-            <span id="copyright">">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
+            <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
             <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
             <a href="https://www.instagram.com/c0zero1" target="_blank">
                 <img src="/Images/instagram_icon.png" 
