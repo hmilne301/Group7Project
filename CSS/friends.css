@@ -1,0 +1,96 @@
+/* General CSS for Friends Page */
+.friends_layout {
+    display: flex;
+    flex-direction: column;
+    max-width: 700px;
+    margin: 24px auto;
+    padding: 0 16px;
+    gap: 24px;
+}
+
+.friends_card {
+    background-color: #EBF0E1;
+    padding: 20px 24px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+}
+
+.friends_card h2 {
+    margin-top: 0;
+    font-size: 21px;
+    color: #228b4a;
+    border-bottom: 2px solid #e4ecdd;
+    padding-bottom: 8px;
+}
+
+.friends_card ul {
+    /* Hiding bullet points or dashes */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.friends_card li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e4ecdd;
+}
+
+.friends_card li span {
+  flex-grow: 1; 
+  text-align: left;
+}
+
+#friendsMessage,
+#addMessage,
+#requestsMessage {
+    color: #555;
+}
+
+/* Add Friend Page Form CSS */
+.add_friend_form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.add_friend_form input {
+    flex: 1 1 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Friends Page Button CSS*/
+.add_friend_form button[type=submit],
+.accept_request_button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin: 10px;
+    padding: 10px 24px;
+}
+
+.add_friend_form button[type=submit]:hover,
+.accept_request_button:hover {
+    background-color: #1E4620;
+}
+
+.remove_friend_button, 
+.reject_request_button {
+    background-color: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin: 10px;
+    padding: 10px 24px;
+}
+
+.remove_friend_button:hover, 
+.reject_request_button:hover {
+    background-color: #7b241c;
+}
