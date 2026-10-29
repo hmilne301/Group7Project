@@ -26,6 +26,11 @@
     text-align: center;
 }
 
+#estimationMessage {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 #questionnaireSection legend {
     font-size: 15px;
     font-weight: bold;
@@ -41,12 +46,28 @@
     width: 30%;
 }
 
+#calcResult {
+    display: none;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #FFFFFF;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid black;
+    border-radius: 8px;
+    width: fit-content;
+    min-width: 320px;
+}
+
 .result_container {
     text-align: center;
     border: 1px solid black;
     border-radius: 8px;
-    margin-top: 15px;
-    background-color: #FFFFFF;
+    background-color: #E5EBDD;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
 }
 
 .result_heading {
@@ -56,6 +77,7 @@
 
 .total {
     font-size: 25px;
+    text-decoration: underline;
 }
 
 #contactFormSection legend {
@@ -121,6 +143,10 @@
     margin-top: 0.5em;
 }
 
+#buttonCenter {
+    display: flex;
+    justify-content: center;
+}
 
 /* Styling submit buttons for forms */
 input[type=submit] {
@@ -129,7 +155,6 @@ input[type=submit] {
   padding: 22px 30px;
   border: none;
   border-radius: 4px;
-  margin: 5px;
   margin-top: 10px;
   font-size: 20px;
 }
@@ -350,17 +375,22 @@ textarea {
 
     /* changing display type when on smaller screen */
     .form_sections {
-        display: block;
+        grid-template-columns: 1fr;
     }
 
     #contactForm,
     .success_message {
         width: 80%;
     }
-/* activity resizing for smaller screens */
+
+    /* activity resizing for smaller screens */
 @media (max-width: 700px){
     .activityContainer{
         max-width: 40%;
     }
 }
+
+    #questionnaireForm input[type=submit] {
+        width: 100%;
+    }
 }

@@ -1,0 +1,70 @@
+.leaderboard_info {
+    text-align: center;
+}
+
+.leaderboard_info p {
+    font-size: 20px;
+}
+
+.leaderboard_tabs {
+    /* displaying buttons in the center side by side */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* creating small section around buttons */
+    background-color: #e0e6e3;
+    padding: 6px;
+    border-radius: 30px;
+    width: fit-content;
+    margin: 20px auto;
+}
+
+.leaderboard_tabs button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin: 10px;
+    padding: 10px 24px;
+}
+
+.leaderboard_tabs button[aria-pressed="true"] {
+    background-color: #238B45;
+}
+
+.leaderboard_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#boardTable {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#boardTable th {
+    background-color: #238B45;
+    color: white;
+    font-weight: 600;
+}
+
+#boardTable td {
+    background-color: #E5EBDD;
+    border-bottom: 1px solid #eef2f0;
+}
+
+.my_row td {
+    font-weight: bold;
+    /* overrides general td css */
+    background-color: #DCFCE7 !important;
+    color: #1E4620;
+}
+
+#boardTable th,
+#boardTable td {
+    text-align: left;
+    padding: 16px;
+}

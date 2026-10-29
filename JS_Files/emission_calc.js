@@ -1,19 +1,29 @@
 'use strict';
 
-// Placeholder emission factors
+// 0.17 is the average for petrol and diesels
 const CAR_KG_PER_KM = 0.17;
+// 0.05 per passenger
 const PTRANSPORT_KG_PER_KM = 0.05;
-const GAS_KG_PER_KWH = 0.18;
-const ELECTRIC_KG_PER_KWH = 0.2;
+
+// 0.182 and 0.131 are the gas and electric values according to https://carbonrecycling.co.uk/guides/conversion-factors-2026
+const GAS_KG_PER_KWH = 0.182;
+const ELECTRIC_KG_PER_KWH = 0.131;
+
+// other covers heating types such as LPG and Oil - 4000kg per year is an inbetween value
+const OTHER_HEATING_KG = 4000;
+
+// simplified estimate of UK average based on the categories
+const AVERAGE_UK_CO2 = 6800
 
 let form = document.getElementById("questionnaireForm");
 
 // run calculation when form is submitted
 form.addEventListener("submit", emissionCalcUpdate);
 
-// shows or hides section depending on delivery method selected
+// shows or hides section depending on heating method selected
 document.getElementById("gas").addEventListener("change", showGas)
 document.getElementById("electricity").addEventListener("change", showElectricity)
+document.getElementById("other").addEventListener("change", hideHeatingSections)
 
 function getCheckedValue(radioBtnName) {
   // returns value of radio button checked
@@ -27,8 +37,17 @@ function getCheckedValue(radioBtnName) {
   return null
 }
 
+// Clears the energy usage answer
+function clearUsage(){
+  const usageBtns = document.getElementsByName("energy_usage");
+  for (let i = 0; i < usageBtns.length; i++) {
+    usageBtns[i].checked = false;
+  }
+}
+
 // show gas section in Carbon_Emission_Calculator.html
 function showGas(){
+  clearUsage();
   const gas = document.getElementById("gasHeating");
   const electricity = document.getElementById("electricHeating"); 
   gas.style.display = "block";
@@ -37,10 +56,20 @@ function showGas(){
 
 // shows electricity section in Carbon_Emission_Calculator.html
 function showElectricity(){
+  clearUsage();
   const gas = document.getElementById("gasHeating");
   const electricity = document.getElementById("electricHeating"); 
   gas.style.display = "none";
   electricity.style.display = "block";
+}
+
+// hides both gas and electric sections when other is selected
+function hideHeatingSections(){
+  clearUsage();
+  const gas = document.getElementById("gasHeating");
+  const electricity = document.getElementById("electricHeating"); 
+  gas.style.display = "none";
+  electricity.style.display = "none";
 }
 
 function emissionCalcUpdate(evt) {
@@ -70,12 +99,13 @@ function calculateTransport(car, transport, plane) {
   // Calc for car and public 
   let total = (Number(car) * CAR_KG_PER_KM * 52) + (Number(transport) * PTRANSPORT_KG_PER_KM * 52)
 
+  // https://www.evertreen.com/news/how-much-co2-does-a-flight-emit
   if (plane === "1/2") {
-    total += 300;
+    total += 450; // about 1 and a half short-haul return flights
   } else if (plane === "3") {
-    total += 750;
-  } else if (plane == "longHaul"){
-    total += 1800;
+    total += 1200; // 3 to 4 short-haul returns
+  } else if (plane === "longHaul"){
+    total += 1800; // a typical long-haul
   }
   return total;
 }
@@ -84,40 +114,44 @@ function calculateTransport(car, transport, plane) {
 function calculateEnergy(heating, usage){
   let kwh = 0;
 
+  // https://www.britishgas.co.uk/energy/guides/average-bill.html
   if (heating === "Gas") {
     if (usage === "Low") {
       kwh = 500;
     } else if (usage === "Medium") {
-      kwh = 860;
+      kwh = 800;
     } else if (usage === "High") {
-      kwh = 1250;
+      kwh = 1200;
     }
     return kwh * 12 * GAS_KG_PER_KWH;
   } else if (heating === "Electricity") {
     if (usage === "Low") {
       kwh = 133;
     } else if (usage === "Medium") {
-      kwh = 216;
+      kwh = 208;
     } else if (usage === "High") {
-      kwh = 326;
+      kwh = 317;
     }
     return kwh * 12 * ELECTRIC_KG_PER_KWH;
   } else if (heating === "Other") {
-    // placeholder average for other heating types
-    return 1000;
+    // since there is no other choices, uses average of gas and electric
+    return OTHER_HEATING_KG;
   }
+  // when nothing is selected
+  return 0;
 }
 
 //food
 function calculateFood(diet) {
+  // https://pmc.ncbi.nlm.nih.gov/articles/PMC12030518/
   if (diet === "Vegan") {
-    return 1000;
+    return 900;
   } else if (diet === "Veg") {
-    return 1300;
+    return 1500;
   } else if (diet === "SomeMeat") {
-    return 1800;
+    return 2600; // medium meat
   } else if (diet === "Meat") {
-    return 2500;
+    return 3800; // high meat
   }
   return 0;
 }
@@ -126,14 +160,16 @@ function calculateFood(diet) {
 function calculateLifestyle(clothes, recycle) {
   let total = 0;
   
+  // https://www.carbontrust.com/sites/default/files/documents/resource/public/International%20Carbon%20Flows%20-%20Clothing%20-%20REPORT.pdf
   if (clothes === "Rarely") {
-    total = 200;
+    total = 60; // 0 to 1 items
   } else if (clothes === "Sometimes") {
-    total = 500;
+    total = 300; // 2 to 3 items
   } else if (clothes === "Often") {
-    total = 1000;
+    total = 600; // 4 or more items
   }
 
+  // rough estimates since there is no single number on recycling
   if (recycle === "Sometimes") {
     total += 100;
   } else if (recycle === "Never") {
@@ -156,12 +192,25 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   resultContainer.classList.add("result_container");
 
   let resultHeading = document.createElement("h2");
-  resultHeading.textContent = "Carbon Footprint:";
+  resultHeading.textContent = "Carbon Footprint Estimate:";
   resultHeading.classList.add("result_heading");
 
   let emissionTotalDisplay = document.createElement("p");
   emissionTotalDisplay.textContent = "Estimated Total: " + total.toFixed(0) + " kg CO2 per year";
   emissionTotalDisplay.classList.add("total");
+
+  // comparison with UK average
+  let comparisonDisplay = document.createElement("p");
+  let diff = total - AVERAGE_UK_CO2;
+  let percent = Math.abs(diff / AVERAGE_UK_CO2 * 100).toFixed(0);
+
+  // displaying message if user is above or below UK average
+  if (diff > 0) {
+    comparisonDisplay.textContent = "That's " + percent + "% above the UK average of " + AVERAGE_UK_CO2 + " kg per year.";
+  } else {
+    comparisonDisplay.textContent = "That's " + percent + "% below the UK average of " + AVERAGE_UK_CO2 + " kg per year.";
+  }
+  comparisonDisplay.classList.add("result_details");
 
   let transportDisplay = document.createElement("p");
   transportDisplay.textContent = "Transport: " + transportTotal.toFixed(0) + " kg CO2 per Year";
@@ -182,6 +231,7 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   // appending attributes to result container
   resultContainer.appendChild(resultHeading);
   resultContainer.appendChild(emissionTotalDisplay);
+  resultContainer.appendChild(comparisonDisplay);
   resultContainer.appendChild(transportDisplay);
   resultContainer.appendChild(energyDisplay);
   resultContainer.appendChild(foodDisplay);
@@ -191,5 +241,5 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   result.appendChild(resultContainer);
 
   // displaying the result section
-  result.style.display = "block";
+  result.style.display = "flex";
 }
