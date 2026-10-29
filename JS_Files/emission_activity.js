@@ -39,10 +39,10 @@ async function addEmissionActivity(event) {
     // insert the new emission activity into the database
     const { error } = await db.from("activity").insert([{
         activity_name: name,
-        activity_date: new Date().toISOString().slice(0, 10),  // date only, e.g. 2026-10-29
+        activity_date: new Date().toISOString().slice(0, 10), 
         quantity: amount,
         co2_kg_emitted: amount,
-        category_id: category,   // must be the category's UUID (see below)
+        category_id: category, 
         user_id: user.id
     }]);
 
