@@ -25,11 +25,25 @@ async function addEmissionActivity(event) {
         message.style.display = "block";
         return;
     }
+
+    // get the signed in user so the row belongs to them
+    const { data: { user } } = await db.auth.getUser();
+
+    // if the user is not signed in show an alert to user and return
+    if (!user) {
+    message.textContent = "Please sign in first.";
+    message.style.display = "block";
+    return;
+    }
    
+    // insert the new emission activity into the database
     const { error } = await db.from("activity").insert([{
-        activity_date: new Date().toISOString(),
+        activity_name: name,
+        activity_date: new Date().toISOString().slice(0, 10),  // date only, e.g. 2026-10-29
         quantity: amount,
-        co2_kg_emitted: amount
+        co2_kg_emitted: amount,
+        category_id: category,   // must be the category's UUID (see below)
+        user_id: user.id
     }]);
 
     if (error) {
@@ -43,6 +57,7 @@ async function addEmissionActivity(event) {
     message.textContent = `Added emission: ${amount}`;
     message.style.display = "block";
     input.value = "";
+    nameInput.value = "";
 }   
 
 // hides the message if the user starts typing in the input box 
