@@ -25,6 +25,7 @@ db.auth.getSession().then(function(result) {
     loadRequests();
 });
 
+// finds what users are friends with signed in user
 function loadFriends() {
     // finds the accepted friendship which involves logged in user
     db.from("friends")
@@ -69,6 +70,7 @@ function loadFriends() {
         });
 }
 
+// shows what other users are "friends" with the logged in user
 function showFriends(users){
     friendsList.replaceChildren();
     message.textContent = "";
@@ -79,17 +81,19 @@ function showFriends(users){
         return;
     }
 
+    // looping for each user in the data
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
         const li = document.createElement("li");
         const removeButton = document.createElement("button");
         const span = document.createElement("span");
 
+        // making each li have a remove button
         removeButton.textContent = "Remove Friend";
         removeButton.className = "remove_friend_button";
 
         removeButton.addEventListener("click", function() {
-            removeFriend(user.user_id, li);
+            removeFriend(user.user_id, user.username, li);
         })
 
         span.textContent = user.username;
@@ -108,13 +112,16 @@ function addFriends(evt){
     evt.preventDefault();
     addFriendMessage.textContent = "";
 
+    // cleans and stores user input
     const username = document.getElementById("username").value.trim();
 
+    // checks if input box has been left blank
     if (username === ""){
         addFriendMessage.textContent = "Please enter a username.";
         return;
     }
 
+    // using the userinfo supabase table
     db.from("userinfo")
         .select("user_id, username")
         .ilike("username", username) // ignores capitalisation
@@ -140,6 +147,7 @@ function addFriends(evt){
                 return;
             }
 
+            // using the friends supabase table
             db.from("friends")
                 .select("status, requester_id")
                 .or(
@@ -152,7 +160,8 @@ function addFriends(evt){
                         addFriendMessage.textContent = "Could not check existing friends.";
                         return;
                     }
-
+                
+                // checking if relationship already exists between users
                 if (existing.data !== null) {
                     const row = existing.data;
 
@@ -168,6 +177,7 @@ function addFriends(evt){
                     return;
                 }
 
+                // inserting the friends request into the friends table
                 return db.from("friends")
                     .insert({ requester_id:  myId, receiver_id: foundUser.user_id})
                     .then(function(result) {
@@ -177,7 +187,7 @@ function addFriends(evt){
                         }
 
                         addFriendMessage.textContent = "Request Sent to " + username;
-                        friendForm.reset();
+                        friendForm.reset(); // resets the form
                     });
                 });
             })
@@ -308,16 +318,17 @@ function rejectRequest(requesterId, listItem){
 }
 
 // allows users to remove friends
-function removeFriend(friendId, listItem){
+function removeFriend(friendId, friendName, listItem){
 
     // sending a warning to the user's UI
-    let userConfirmed = window.confirm("Are you sure?")
+    let userConfirmed = window.confirm("Are you sure you want to remove " + friendName + "?")
 
     // Checking if user has confirmed or not
     if (!userConfirmed) {
         return;
     }
 
+    // accessing friends database to remove relationship between users
     db.from("friends")
         .delete()
         .or(
@@ -335,7 +346,7 @@ function removeFriend(friendId, listItem){
             listItem.remove();
 
             if (friendsList.children.length === 0) {
-                loadFriends();
+                loadFriends(); // reloads friends page when user no longer has any friends
             } else {
                 message.textContent = "Friend removed successfully.";
             }
