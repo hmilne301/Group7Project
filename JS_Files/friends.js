@@ -276,7 +276,7 @@ function acceptRequest(requesterId, listItem){
         .update({ status: "accepted", response_date: new Date().toISOString() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
-        .eq("status", "pending")
+        .eq("status", "pending") // only answers pending request
         .select()
         .then(function(result) {
             if (result.error || result.data.length === 0) {
@@ -295,7 +295,7 @@ function rejectRequest(requesterId, listItem){
         .update({ status: "rejected", response_date: new Date().toISOString() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
-        .eq("status", "pending")
+        .eq("status", "pending") // only answers pending request
         .select()
         .then(function(result) {
             if (result.error) {
@@ -309,8 +309,11 @@ function rejectRequest(requesterId, listItem){
 
 // allows users to remove friends
 function removeFriend(friendId, listItem){
+
+    // sending a warning to the user's UI
     let userConfirmed = window.confirm("Are you sure?")
 
+    // Checking if user has confirmed or not
     if (!userConfirmed) {
         return;
     }
@@ -328,6 +331,7 @@ function removeFriend(friendId, listItem){
                 return;
             }
 
+            // removing ListItem from 
             listItem.remove();
 
             if (friendsList.children.length === 0) {
