@@ -61,7 +61,7 @@ function loadFriends() {
                 .in("user_id", ids)
                 .then(function(result) {
                     if (result.error) {
-                        message.textContent = "Could not load the requests list.";
+                        message.textContent = "Could not load the friends list.";
                         return;
                     }
                     showFriends(result.data);
@@ -168,7 +168,7 @@ function addFriends(evt){
                     return;
                 }
 
-                db.from("friends")
+                return db.from("friends")
                     .insert({ requester_id:  myId, receiver_id: foundUser.user_id})
                     .then(function(result) {
                         if(result.error) {
@@ -178,7 +178,7 @@ function addFriends(evt){
 
                         addFriendMessage.textContent = "Request Sent to " + username;
                         friendForm.reset();
-                    })
+                    });
                 });
             })
         .catch(function() {
@@ -219,7 +219,7 @@ function loadRequests(){
                 .in("user_id", ids)
                 .then(function(result) {
                     if (result.error) {
-                        requestMessage.textContent = "Could not load the friends list.";
+                        requestMessage.textContent = "Could not load the requests list.";
                         return;
                     }
                     showRequests(result.data);
@@ -234,7 +234,7 @@ function showRequests(users){
 
     // checking if any users are found
     if (users.length === 0) {
-        message.textContent = "No Requests";
+        requestMessage.textContent = "No Requests";
         return;
     }
 
@@ -276,13 +276,13 @@ function acceptRequest(requesterId, listItem){
         .update({ status: "accepted", response_date: new Date().toISOString() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
+        .eq("status", "pending")
+        .select()
         .then(function(result) {
-            if (result.error) {
+            if (result.error || result.data.length === 0) {
                 requestMessage.textContent = "Could not accept request."
                 return;
             }
-            // remove the pending list
-            listItem.remove();
             // refreshs the active friends
             loadFriends();
             loadRequests();
@@ -292,16 +292,17 @@ function acceptRequest(requesterId, listItem){
 // allows users to reject requests
 function rejectRequest(requesterId, listItem){
     db.from("friends")
-        .update({ status: "rejected", response_date: new Date().toISOString })
+        .update({ status: "rejected", response_date: new Date().toISOString() })
         .eq("requester_id", requesterId)
         .eq("receiver_id", myId)
+        .eq("status", "pending")
+        .select()
         .then(function(result) {
             if (result.error) {
                 requestMessage.textContent = "Could not reject request.";
                 return;
             }
-            // remove the pending list
-            listItem.remove();
+            // refreshs requests list
             loadRequests();
         })
 }
@@ -320,17 +321,19 @@ function removeFriend(friendId, listItem){
             "and(requester_id.eq." + myId + ",receiver_id.eq." + friendId + ")," +
             "and(requester_id.eq." + friendId + ",receiver_id.eq." + myId + ")"
             )
+        .select()
         .then(function(result) {
-            if(result.error) {
+            if(result.error || result.data.length === 0) {
                 message.textContent = "Could not remove friend.";
                 return;
             }
 
-            if (listItem) {
-                listItem.remove();
+            listItem.remove();
+
+            if (friendsList.children.length === 0) {
+                loadFriends();
+            } else {
+                message.textContent = "Friend removed successfully.";
             }
-
-            message.textContent = "Friend removed successfully.";
-
-        })
+        });
 }

@@ -73,7 +73,7 @@
 
 .remove_friend_button, 
 .reject_request_button {
-    background-color: red;
+    background-color: #c0392b;
     color: white;
     border: none;
     border-radius: 25px;
