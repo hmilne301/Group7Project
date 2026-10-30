@@ -1,0 +1,173 @@
+/*--Heading under navbar--*/
+.dashboard_container{
+    text-align: center;
+    padding: 10px 15px;
+}
+
+.dashboard_container h1{
+    color: darkgreen;
+    margin-bottom: 5px;
+}
+
+/*--Page Layout--*/
+main {
+    display:grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 20px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto 40px;
+}
+
+/*--Card Layout--*/
+#summary,
+#overTime,
+#categories,
+main > section {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 0;
+}
+
+#summary {
+    grid-column: span 6;
+}
+
+#overTime,
+#categories {
+    grid-column: span 3;
+}
+
+main > section {
+    grid-column: span 2;
+}
+
+/*--text in cards--*/
+main h2 {
+    color: darkgreen;
+    margin-top: 0;
+}
+
+main p {
+    margin-top: 0;
+}
+
+main a {
+    color: darkgreen;
+    font-weight: bold;  
+}
+
+main a:hover,
+main a:focus-visible {
+    text-decoration: underline;
+}
+
+/*--Summary one tile per figure--*/
+.summary ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.summary li {
+    background-color: #E5EBDD;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.summary li string {
+    font: size 1.25em;
+}
+
+/*--Tables--*/
+main table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+main caption {
+    text-align: left;
+    font: size 0.9em;;
+    margin-bottom: 8px;
+}
+
+main th,
+main td {
+    border-bottom: 1px solid #D3D2C7;
+    padding: 8px;
+    text-align: left;
+}
+
+main th {
+    background-color: #E5EBDD;
+}
+
+/*-- number alignment--*/
+main th:not(:first-child),
+main td:not(:first-child) {
+    text-align: right;
+}
+
+main tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/*--Goals,leaderboard,friends list--*/
+main > section ul,
+main > section ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+main > section li + li {
+    margin-top: 8px;
+}
+
+/*--smaller screens--*/
+@media screen and (max-width: 900px) {
+    #overTime,
+    #categories,
+    main > section {
+        grid-column: span 6;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #summary,
+    #overTime,
+    #categories,
+    main > section {
+        padding: 12px;
+    }
+}
+
+/*--View all button--*/
+.view_all {
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 15px;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.view_all:hover,
+.view_all:focus-visible {
+    background-color: #006400;
+}
+
+/*--Chart box--*/
+.chart_box {
+    position: relative;
+    height: 250px;
+    margin-bottom: 15px;
+}
