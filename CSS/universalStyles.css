@@ -32,7 +32,8 @@ li {
     text-align: center;
 }
 
-#links a {
+#links a,
+#dashboardButton {
     border: 1px solid black;
     border-radius: 10px;
     display: inline-block;
@@ -44,25 +45,23 @@ li {
     text-align: center;
 }
 
-#welcomeMessage {
-    text-shadow: 2px 2px darkgreen;
-}
-
-#logout {
-    background-color: red;
-    border-radius: 8px;
-    color: white;
+#logoutButton {
+    border-radius: 10px;
     padding: 12px 20px;
     margin: 10px;
+    border: 1px solid black;
+    background-color: red;
+    color: white;
 }
 
-.logButton,
-.registerButton {
+#logButton,
+#registerButton {
     background-color: #4CAF50;
     color: white;
 }
 
-.emissionButton {
+#emissionButton,
+#dashboardButton {
     background-color: white;
     color: black;
 }
@@ -174,10 +173,11 @@ li {
     justify-content: space-around;
     text-align: center;
     color: white;
-    background-image: url("/Images/BelLomond.jpg");
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("../Images/BelLomond.jpg");
     background-attachment: fixed;
-    background-size: 100% 100%;
-    height: 600px;
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
 }
 
 #copyright {
@@ -339,8 +339,8 @@ li {
     }
 
     .header_container {
-        height: 350px;
         flex-direction: column;
+        background-attachment: scroll;
     }
 }
 
