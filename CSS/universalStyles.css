@@ -44,6 +44,10 @@ li {
     text-align: center;
 }
 
+#welcomeMessage {
+    text-shadow: 2px 2px darkgreen;
+}
+
 #logout {
     background-color: red;
     border-radius: 8px;
@@ -52,19 +56,15 @@ li {
     margin: 10px;
 }
 
-.logButton {
+.logButton,
+.registerButton {
     background-color: #4CAF50;
     color: white;
 }
 
-.registerButton {
+.emissionButton {
     background-color: white;
     color: black;
-}
-
-.emissionButton {
-    background-color: black;
-    color: aqua;
 }
 
 /* Emission Info Page Styling */
@@ -169,8 +169,15 @@ li {
 
 /* Across Pages CSS */
 .header_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
     text-align: center;
-    color: #238B45;
+    color: white;
+    background-image: url("/Images/BelLomond.jpg");
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    height: 600px;
 }
 
 #copyright {
@@ -204,7 +211,7 @@ li {
     padding: 0;
     list-style: none;
     font-weight: bold;
-    background-color: #779341;
+    background-color: darkgreen;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
@@ -233,7 +240,7 @@ li {
 .navflex li.active a,
 .navflex a:hover,
 .navflex a:focus-visible {
-    background-color: darkgreen;
+    background-color: #238B45;
 }
 
 /* hamburger button (hidden on bigger screens) */
@@ -329,6 +336,11 @@ li {
 
     .emission_info_container {
         padding: 10px;
+    }
+
+    .header_container {
+        height: 350px;
+        flex-direction: column;
     }
 }
 

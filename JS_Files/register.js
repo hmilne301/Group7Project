@@ -96,6 +96,10 @@ function registerUser(evt) {
         return;
     }
 
+    if (password.isUpperCase){
+        
+    }
+
 
     // creates the account and runs Supabase replies
     db.auth.signUp({
