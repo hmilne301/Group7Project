@@ -297,6 +297,72 @@ textarea {
     background-color: #EA3546;
 }
 
+/* Edit Goal Form */
+.edit-goal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.edit-goal[hidden] {
+    display: none;
+}
+
+.edit-goal input,
+.edit-goal select,
+.edit-goal textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+    padding: 8px 12px;
+    border: 1px solid;
+    border-radius: 6px;
+}
+
+.edit-message {
+    font-size: 12px;
+    color: black;
+    margin: 0;
+}
+
+/* Edit Goal Buttons*/
+
+.goal-edit-button,
+.save-goal,
+.cancel-goal-edit {
+    font-size: 12px;
+    padding: 6px 12px;
+    border: 1px solid;
+    background: #FFFFFF;
+    cursor: pointer;
+}
+
+.goal-edit-button:hover,
+.cancel-goal-edit:hover {
+    background: #F8F272;
+}
+
+.save-goal {
+    background: #185fa5;
+    color: #FFFFFF;
+    border-color: #185fa5;
+}
+
+.save-goal:hover {
+    background: #0c447c;
+}
+
+.goal-card .goal-edit-button,
+.goal-card .goal-delete {
+    display: inline-block;
+    width: auto;
+    margin: 12px 16px 0 0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:480px){
