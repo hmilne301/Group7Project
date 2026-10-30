@@ -7,11 +7,13 @@
 
         <!-- Linking CSS -->
         <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <link rel="stylesheet" href="/CSS/dashboard.css">
         <!-- External Supabase library -->
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <!-- Linking JS files -->
         <script defer src="/JS_Files/supabase_client.js"></script>
         <script defer src="/JS_Files/dashboard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
         <!-- Linking JS navbar -->
         <script defer src="/JS_Files/navbar.js"></script>
     </head>
@@ -65,7 +67,10 @@
             <div id="overTime">
             <section aria-labelledby="trend-title">
                 <h2 id="trend-title">Footprint over time</h2>
-                <p><a href="Emission_Activity.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Emission_Activity.html">View all →</button>
+                <div class="chart_box">
+                    <canvas id="trend-chart" role="img" aria-label="Line chart showing your carbon footprint over the last 8 weeks" width="400" height="200"></canvas>
+                </div>
                 <table>
                     <caption>Weekly footprint, last 8 weeks</caption>
                     <thead>
@@ -79,7 +84,7 @@
             <div id="categories">
             <section aria-labelledby="categories-title">
                 <h2 id="categories-title">Where it comes from</h2>
-                <p><a href="Emission_Activity.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Emission_Activity.html">View all →</button>
                 <table>
                     <caption>Last 7 days, by category</caption>
                     <thead>
@@ -93,19 +98,19 @@
 
             <section aria-labelledby="goals-title">
                 <h2 id="goals-title">Goals</h2>
-                <p><a href="Goals.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Goals.html">View all →</button>
                 <ul id="goals-list"></ul>
             </section>
 
             <section aria-labelledby="leaderboard-title">
                 <h2 id="leaderboard-title">Leaderboard</h2>
-                <p><a href="Leaderboard.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Leaderboard.html">View all →</button>
                 <ol id="leaderboard-list"></ol>
             </section>
 
             <section aria-labelledby="friends-title">
                     <h2 id="friends-title">Friends activity</h2>
-                    <p><a href="Friends.html">View all →</a></p>
+                    <button type="button" class="view_all" data-href="Friends.html">View all →</button>
                     <ul id="friends-list"></ul>
             </section>    
 
