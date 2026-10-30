@@ -48,7 +48,7 @@
                 </p>
             </div>
             <div id="questionnaireSection">
-                <form id="questionnaireForm" action="#">
+                <form id="questionnaireForm" action="#" novalidate>
                     <div class="form_sections">
                         <!-- Transport - car and public transport values are based on weekly km while plane travel is yearly -->
                         <section class="transport_section">
@@ -66,6 +66,7 @@
                                 <label for="car_high">Between 150 and 300 km</label><br>
                                 <input type="radio" id="car_vhigh" name="car_travel" value="400">
                                 <label for="car_vhigh">Over 300 km</label>
+                                <p id="carError" class="validation_error"></p>
 
                                 <h3> How Far Did You Travel by Public Transport in the Last Week? </h3>
                                 <input type="radio" id="transport_none" name="public_transport" value="0" required>
@@ -78,6 +79,7 @@
                                 <label for="transport_high">Between 150 and 300 km</label><br>
                                 <input type="radio" id="transport_vhigh" name="public_transport" value="400">
                                 <label for="transport_vhigh">Over 300 km</label>
+                                <p id="transportError" class="validation_error"></p>
 
                                 <h3> How Often Did You Travel by Plane in the Last Year? </h3>
                                 <input type="radio" id="plane_none" name="plane_travel" value="0" required>
@@ -88,6 +90,7 @@
                                 <label for="plane_short_many">3 or More Short Returns</label><br>
                                 <input type="radio" id="plane_long" name="plane_travel" value="longHaul">
                                 <label for="plane_long">Any Long-haul Return</label>
+                                <p id="planeError" class="validation_error"></p>
                             </fieldset>
                         </section>
                         <!-- Energy - users choose between gas, electricity and other with the first two expanding sections where the user can select usage -->
@@ -102,6 +105,7 @@
                                 <label for="electricity">Electricity</label><br>
                                 <input type="radio" id="other" name="heating_type" value="Other">
                                 <label for="other">Other</label><br>
+                                <p id="heatingTypeError" class="validation_error"></p>
                                 <!-- Hidden until Gas is selected -->
                                 <div id="gasHeating" style="display: none;">
                                     <h3> How much Energy do You Use per Month? (Gas Heating) </h3>
@@ -122,6 +126,7 @@
                                     <input type="radio" id="high" name="energy_usage" value="High">
                                     <label for="high">High (Around 317 kWh) </label><br>
                                 </div>
+                                <p id="usageError" class="validation_error"></p>
                             </fieldset>
                         </section>
                     </div>
@@ -140,6 +145,7 @@
                                 <label for="somemeat">Some Meat</label><br>
                                 <input type="radio" id="meat" name="diet" value="Meat">
                                 <label for="meat">Meat Daily</label>
+                                <p id="dietError" class="validation_error"></p>
                             </fieldset>
                         </section>
                         <!-- Lifestyle - Users choose how often they buy clothes and if they recycle or not -->
@@ -154,6 +160,8 @@
                                 <label for="sometimes">Sometimes</label><br>
                                 <input type="radio" id="often" name="clothes" value="Often">
                                 <label for="often">Often</label><br>
+                                <p id="clothesError" class="validation_error"></p>
+
                                 <h3> Do You Recycle? </h3>
                                 <input type="radio" id="always" name="recycle" value="Always" required>
                                 <label for="always">Always</label><br>
@@ -161,16 +169,17 @@
                                 <label for="sometimes">Sometimes</label><br>
                                 <input type="radio" id="never" name="recycle" value="Never">
                                 <label for="never">Never</label><br>
+                                <p id="recycleError" class="validation_error"></p>
                             </fieldset>
                         </section>
                     </div>
                     <div id="buttonCenter">
                         <input type="submit" value="Calculate">
                     </div>
-                    <!-- Tells user questionnaire is not a guaranteed estimation -->
-                    <p id="estimationMessage"> Questionnaire acts as an rough estimate not a guaranteed estimation </p>
                 </form>
             </div>
+            <!-- Tells user questionnaire is not a guaranteed estimation -->
+            <p id="estimationMessage"> Questionnaire acts as an rough estimate not a guaranteed estimation </p>
             <!-- Where result is displayed once its calculated -->
             <div id="calcResult" aria-live="polite">
             </div>

@@ -125,6 +125,13 @@
     margin-top: 3px;
 }
 
+/* Styling error messages of Questionnaire */
+.validation_error {
+    color: red;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
 /* Displays 2 sections side by side */
 .form_sections {
     display: grid;

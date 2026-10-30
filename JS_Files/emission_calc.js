@@ -76,6 +76,11 @@ function emissionCalcUpdate(evt) {
   // stops page from being reloaded when form is submitted
   evt.preventDefault();
 
+  let result = document.getElementById("calcResult");
+
+  // clears the previous results
+  result.innerHTML = "";
+
   // getting user inputs
   let car = getCheckedValue("car_travel");
   let transport = getCheckedValue("public_transport");
@@ -85,10 +90,52 @@ function emissionCalcUpdate(evt) {
   let diet = getCheckedValue("diet");
   let clothes = getCheckedValue("clothes");
   let recycle = getCheckedValue("recycle");
-  let result = document.getElementById("calcResult");
 
-  // clears the previous results
-  result.innerHTML = "";
+  // clears previous error messages
+  document.querySelectorAll(".validation_error").forEach(function(error) {
+    error.textContent = "";
+  });
+
+  // checks for unanswered questions
+  if (car === null) {
+    document.getElementById("carError").textContent = "Please select your car travel distance.";
+    return;
+  }
+
+  if (transport === null) {
+    document.getElementById("transportError").textContent = "Please select your public transport distance.";
+    return;
+  }
+
+  if (plane === null) {
+    document.getElementById("planeError").textContent = "Please select your flight frequency.";
+    return;
+  }
+
+  if (heating === null) {
+    document.getElementById("heatingError").textContent = "Please select your heating type.";
+    return;
+  }
+
+  if ((heating === "Gas" || heating === "Electricity") && usage === null) {
+    document.getElementById("usageError").textContent = "Please select your energy usage.";
+    return;
+  }
+
+  if (diet === null) {
+    document.getElementById("dietError").textContent = "Please select your diet.";
+    return;
+  }
+
+  if (clothes === null) {
+    document.getElementById("clothesError").textContent = "Please select how often you buy clothes.";
+    return;
+  }
+
+  if (recycle === null) {
+    document.getElementById("recycleError").textContent = "Please select your recycling frequency.";
+    return;
+  }
 
   // calling the emissionCalculator function and passing parameters
   emissionCalculator(car, transport, plane, heating, usage, diet, clothes, recycle, result);
