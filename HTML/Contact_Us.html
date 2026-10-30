@@ -52,23 +52,26 @@
             </div>
             <!-- Seperating the form part of the page into a seperate div -->
             <div id="contactFormSection">
-                <form id="contactForm" action="https://formspree.io/f/mnpjeyzb" method="POST">
+                <form id="contactForm" novalidate action="https://formspree.io/f/mnpjeyzb" method="POST">
                     <!-- fieldsets and legends allow screenreaders to tell the user what the infornation relates to-->
                     <fieldset>
                         <legend>Fill out Form Below to Get in Contact</legend>
                         <!-- putting inputs in a seperate div -->
                         <div class="contact_inputs">
                             <label for="name">Name:</label>
-                            <input type="text" id="name" name="name" placeholder="Your name" required>
+                            <input type="text" id="name" name="name" placeholder="Your name">
+                            <p id="nameError"></p>
                             <br>
 
                             <label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" placeholder="Your email" required>
+                            <input type="email" id="email" name="email" placeholder="Your email">
+                            <p id="emailError"></p>
                             <br>
 
                             <div class="message_group">
                                 <label for="message">Enter your questions/issues:</label>
-                                <textarea id="message" name="message" placeholder="Write a message" style="height:200px" required></textarea>
+                                <textarea id="message" name="message" placeholder="Write a message" style="height:200px"></textarea>
+                                <p id="messageError"></p>
                             </div>
                         </div>
                         <input type="submit" value="Send Message">

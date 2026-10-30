@@ -14,6 +14,40 @@ async function sendContact(event) {
     successMessage.style.display = "none";
     errorMessage.style.display = "none";
 
+    // gets inputs
+    let name = document.getElementById("name").value.trim()
+    let email = document.getElementById("email").value.trim()
+    let message = document.getElementById("message").value.trim()
+
+    // error message elements
+    let nameError = document.getElementById("nameError");
+    let emailError = document.getElementById("emailError");
+    let messageError = document.getElementById("messageError");
+
+    let validInput = true;
+
+    // checking name input
+    if (name === "") {
+        nameError.textContent = "Please enter your name."
+        valid = false;
+    }
+
+    // checking email input
+    if (email === "") {
+        emailError.textContent = "Please enter your email address."
+        valid = false;
+    }
+
+    // checking message input
+    if (message === "") {
+        messageError.textContent = "Please enter a message."
+        valid = false;
+    }
+
+    if (!valid) {
+        return;
+    }
+
     // tries to run code that could fail
     try {
         // sends form data to Formspree, await pauses until reply is found
