@@ -26,7 +26,7 @@ function loginUser(evt) {
     // logs in to account and runs Supabase replies
     db.auth.signInWithPassword({
         email: email,
-        password: password.value
+        password: passwordInput.value
     }).then(function(result) {
         if (result.error) {
             loginMessage.textContent = "Incorrect email or password.";
