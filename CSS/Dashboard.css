@@ -130,7 +130,7 @@ main > section li + li {
 }
 
 /*--smaller screens--*/
-@media screen and (max width: 900px) {
+@media screen and (max-width: 900px) {
     #overTime,
     #categories,
     main > section {
