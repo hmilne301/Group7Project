@@ -29,22 +29,27 @@ async function sendContact(event) {
     // checking name input
     if (name === "") {
         nameError.textContent = "Please enter your name."
-        valid = false;
+        validInput = false;
     }
 
     // checking email input
     if (email === "") {
         emailError.textContent = "Please enter your email address."
-        valid = false;
+        validInput = false;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        validInput = false;
     }
 
     // checking message input
     if (message === "") {
         messageError.textContent = "Please enter a message."
-        valid = false;
+        validInput = false;
     }
 
-    if (!valid) {
+    if (!validInput) {
         return;
     }
 
@@ -62,6 +67,9 @@ async function sendContact(event) {
         if (response.ok) {
             // only shown if the message was actually sent
             successMessage.style.display = "block";
+            nameError.textContent = "";
+            emailError.textContent = "";
+            messageError.textContent = "";
             contactForm.reset();
         } else {
             // Formspree replied but rejected message

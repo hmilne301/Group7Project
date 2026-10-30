@@ -129,7 +129,12 @@
 .validation_error {
     color: red;
     font-size: 14px;
-    margin: 5px 0;
+    margin-bottom: 5px;
+    margin-top: 2px;
+}
+
+#registerForm input {
+    margin-bottom: 10px;
 }
 
 /* Displays 2 sections side by side */

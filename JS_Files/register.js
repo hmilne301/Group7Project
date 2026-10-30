@@ -51,6 +51,52 @@ function registerUser(evt) {
     const lname = document.getElementById("lname").value.trim();
     const email = document.getElementById("email").value.trim();
 
+    // clears previous error messages
+    document.querySelectorAll(".validation_error").forEach(function(error) {
+        error.textContent = "";
+    });
+
+    // checks username input
+    if (username === "") {
+        document.getElementById("usernameError").textContent = "Please enter a username";
+        return;
+    }
+
+    // checks first name input
+    if (fname === "") {
+        document.getElementById("fnameError").textContent = "Please enter your first name";
+        return;
+    }
+
+    // checks last name input
+    if (lname === "") {
+        document.getElementById("lnameError").textContent = "Please enter your last name";
+        return;
+    }
+
+    // checks email input
+    if (email === "") {
+        document.getElementById("emailError").textContent = "Please enter your email address";
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        return;
+    }
+
+    // checks password
+    if (password.value === "") {
+        document.getElementById("passwordError").textContent = "Please create a password";
+        return;
+    }
+
+    if (password.value.length < 8) {
+        document.getElementById("passwordError").textContent = "Password must be at least 8 characters long.";
+        return;
+    }
+
+
     // creates the account and runs Supabase replies
     db.auth.signUp({
         email: email,
