@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My Account</title>
+        <!-- Linking in stylesheets -->
+        <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <link rel="stylesheet" href="/CSS/forms.css">
+        <link rel="stylesheet" href="/CSS/my_account.css">
+        <!-- Linking in JavaScript  -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
+        <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/my_account.js"></script>
+    </head>
+    <body class="login_body">
+        <header>
+            <div class="top_bar">
+                <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <a href="Home.html" class="brand">COZERO</a>
+            </div>
+            <!--Navbar-->
+            <nav class="navflex" id="main_nav">
+
+                <ul>
+                    <li><a href="Home.html">Home</a></li>
+                    <li><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
+                    <li><a href="Emission_Activity.html">Emission Activity</a></li>
+                    <li><a href="Leaderboard.html">Leaderboard</a></li>
+                    <li><a href="Achievements.html">Achievements</a></li>
+                    <li><a href="Goals.html">Goals</a></li>
+                    <li><a href="Friends.html">Friends</a></li>
+                    <li><a href="Emissions_Info.html">Emissions Info</a></li>
+                    <li><a href="Contact_Us.html">Contact Us</a></li>
+                </ul>
+
+            </nav>
+        </header>
+
+        <main class="account_page">
+
+            <!-- Shown while we check whether the user is logged in (stops the wrong view flashing up) -->
+            <section id="accountLoading" class="account_card account_loading" aria-live="polite">
+                <p>Loading your account...</p>
+            </section>
+
+            <!-- Shown ONLY when the user is NOT logged in -->
+            <section id="loggedOutView" class="account_card logged_out_card" aria-labelledby="logged_out_title" hidden>
+                <h1 id="logged_out_title" class="visually_hidden">My Account</h1>
+                <p class="logged_out_message">You don't seem to be logged in, please sign up or log in now</p>
+                <div class="logged_out_buttons">
+                    <a href="Register.html" class="account_button account_button_primary">Sign up</a>
+                    <a href="Login.html" class="account_button account_button_secondary">Log in</a>
+                </div>
+            </section>
+
+            <!-- Shown ONLY when the user IS logged in -->
+            <section id="loggedInView" class="account_card" aria-labelledby="account_title" hidden>
+                <div class="account_heading">
+                    <h1 id="account_title">My Account</h1>
+                    <button type="button" id="editButton" class="account_button account_button_secondary">Edit details</button>
+                </div>
+
+                <!-- Account details: inputs are read-only until the user clicks "Edit details" -->
+                <form id="detailsForm" class="account_form" action="#" novalidate>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username"
+                           autocomplete="username" readonly required>
+
+                    <label for="fname">First name</label>
+                    <input type="text" id="fname" name="fname"
+                           autocomplete="given-name" readonly required>
+
+                    <label for="lname">Last name</label>
+                    <input type="text" id="lname" name="lname"
+                           autocomplete="family-name" readonly required>
+
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email"
+                           autocomplete="email" readonly required>
+                    <p class="field_hint" id="emailHint" hidden>
+                        Changing your email will send a confirmation link to the new address.
+                    </p>
+
+                    <p class="member_since">Emission points: <span id="emissionPoints">0</span></p>
+                    <p class="member_since">Member since: <span id="memberSince">-</span></p>
+
+                    <p id="detailsMessage" class="account_message" role="alert"></p>
+
+                    <div class="account_actions" id="editActions" hidden>
+                        <button type="button" id="cancelButton" class="account_button account_button_secondary">Cancel</button>
+                        <button type="submit" id="saveButton" class="account_button account_button_primary">Save changes</button>
+                    </div>
+                </form>
+
+                <hr class="account_divider">
+
+                <!-- Change password -->
+                <h2>Change password</h2>
+                <form id="passwordForm" class="account_form" action="#" novalidate>
+                    <label for="new_password">New password</label>
+                    <div class="password_wrapper">
+                        <input type="password" id="new_password" name="new_password"
+                               placeholder="New password"
+                               autocomplete="new-password" minlength="8" required>
+                        <button type="button" class="toggle_password"
+                                aria-label="Show passwords" aria-pressed="false">Show</button>
+                    </div>
+
+                    <label for="confirm_new_password">Confirm new password</label>
+                    <input type="password" id="confirm_new_password" name="confirm_new_password"
+                           placeholder="Re-enter new password"
+                           autocomplete="new-password" required>
+
+                    <p id="passwordMessage" class="account_message" role="alert"></p>
+
+                    <div class="account_actions">
+                        <button type="submit" class="account_button account_button_primary">Update password</button>
+                    </div>
+                </form>
+
+                <hr class="account_divider">
+
+                <div class="account_actions account_logout">
+                    <button type="button" id="logoutButton" class="account_button account_button_danger">Log out</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <hr>
+            <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
+            <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
+            <a href="https://www.instagram.com/c0zero1" target="_blank" rel="noopener noreferrer">
+                <img src="/Images/instagram_icon.png" alt="Instagram" class="instaiconimg">
+            </a>
+        </footer>
+    </body>
+</html>
