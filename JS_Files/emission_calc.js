@@ -96,44 +96,50 @@ function emissionCalcUpdate(evt) {
     error.textContent = "";
   });
 
+  let validInput = true;
+
   // checks for unanswered questions
   if (car === null) {
     document.getElementById("carError").textContent = "Please select your car travel distance.";
-    return;
+    validInput = false;
   }
 
   if (transport === null) {
     document.getElementById("transportError").textContent = "Please select your public transport distance.";
-    return;
+    validInput = false;
   }
 
   if (plane === null) {
     document.getElementById("planeError").textContent = "Please select your flight frequency.";
-    return;
+    validInput = false;
   }
 
   if (heating === null) {
-    document.getElementById("heatingError").textContent = "Please select your heating type.";
-    return;
+    document.getElementById("heatingTypeError").textContent = "Please select your heating type.";
+    validInput = false;
   }
 
   if ((heating === "Gas" || heating === "Electricity") && usage === null) {
     document.getElementById("usageError").textContent = "Please select your energy usage.";
-    return;
+    validInput = false;
   }
 
   if (diet === null) {
     document.getElementById("dietError").textContent = "Please select your diet.";
-    return;
+    validInput = false;
   }
 
   if (clothes === null) {
     document.getElementById("clothesError").textContent = "Please select how often you buy clothes.";
-    return;
+    validInput = false;
   }
 
   if (recycle === null) {
     document.getElementById("recycleError").textContent = "Please select your recycling frequency.";
+    validInput = false;
+  }
+
+  if (!validInput) {
     return;
   }
 
