@@ -54,6 +54,10 @@ li {
     color: white;
 }
 
+#logoutButton:hover {
+    background-color: #b71c1c;
+}
+
 #logButton,
 #registerButton {
     background-color: #4CAF50;
@@ -62,8 +66,13 @@ li {
 
 #emissionButton,
 #dashboardButton {
-    background-color: white;
-    color: black;
+    background-color: #2e7d32;
+    color: white;
+}
+
+#emissionButton:hover,
+#dashboardButton:hover {
+    background-color: #1b5e20;
 }
 
 /* Emission Info Page Styling */
