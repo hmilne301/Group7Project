@@ -266,7 +266,7 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   comparisonDisplay.classList.add("result_details");
 
   let transportDisplay = document.createElement("p");
-  transportDisplay.textContent = "Transport: " + transportTotal.toFixed(0) + " kg CO2 per Year";
+  transportDisplay.textContent = "Transport: " + transportTotal.toFixed(0) + " kg CO2 per year";
   transportDisplay.classList.add("result_details");
 
   let energyDisplay = document.createElement("p");

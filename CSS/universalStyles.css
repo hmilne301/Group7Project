@@ -68,6 +68,7 @@ li {
 #dashboardButton {
     background-color: #2e7d32;
     color: white;
+    text-decoration: none;
 }
 
 #emissionButton:hover,

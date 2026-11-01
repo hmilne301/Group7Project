@@ -72,7 +72,6 @@
 
 .result_heading {
     font-size: 30px;
-    text-decoration: underline;
 }
 
 .total {
@@ -151,7 +150,16 @@
     display: flex;
     flex-wrap: wrap;
     /* adds a margin between each child element of form_row class */
-    gap: 1em ;
+    gap: 16px ;
+}
+
+.contact_inputs input {
+    flex: 1 1 200px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #238B45;
+    border-radius: 4px;
 }
 
 /* Forces the message block to span the full width and stack vertically */
@@ -187,10 +195,10 @@ input[type=submit]:hover {
 /* modifying the textboxes */
 textarea {
   width: 100%;
-  height: 150px;
-  padding: 12px;
+  padding: 10px;
+  font-family: inherit;
   box-sizing: border-box;
-  border: 2px solid #ccc;
+  border: 1px solid #238B45;
   border-radius: 4px;
   font-size: 16px;
   resize: none;
@@ -275,7 +283,7 @@ textarea {
 
 /* Media Queries */
 /* Mobile/Smart Phones */
-@media screen and (max-width:480px){
+@media screen and (max-width:426px){
 
     /* changing display type when on smaller screen */
     .form_sections {
@@ -293,7 +301,21 @@ textarea {
 
     .contact_inputs {
         flex-direction: column;
-        align-items: flex-start;
+    }
+
+    .contact_inputs input {
+        flex: 0 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    fieldset {
+        padding: 10px;
     }
 
     .contact_inputs br {
