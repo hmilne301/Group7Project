@@ -360,3 +360,60 @@ li {
         transition: none;
     }
 }
+
+
+
+/* Making the new profile icon CSS for every page */
+
+
+
+.top_bar {
+    position: relative;   /* lets the icon be placed relative to the header bar */
+}
+
+.profile_link {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.15s;
+}
+
+.profile_link:hover,
+.profile_link:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.profile_link:hover,
+.profile_link:focus-visible {
+    background-color: rgba(0, 0, 0, 0.08);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.profile_icon {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.profile_initials {
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Makes sure [hidden] always hides the element */
+[hidden] {
+    display: none !important;
+}
