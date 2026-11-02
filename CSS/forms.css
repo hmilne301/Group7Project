@@ -284,9 +284,8 @@ textarea {
     max-width: 600px;   
     width: 80%;          
     min-height: 500px;   
-    margin: 60px auto;   
     width: 100%;
-    margin: 0 auto;
+    margin: 60px auto;
 }
 
 /* activity container heading */
@@ -362,7 +361,7 @@ textarea {
     margin-top: 20px;
     font-size: 22px;
     font-weight: bold;
-    color: #006400;        
+    color: #238B45;        
 }
 
 /* emission table */
@@ -381,7 +380,7 @@ textarea {
 }
 
 .emissionTable th {
-    background: #779341;
+    background: #238B45;
     color: #ffffff;
 }
 
