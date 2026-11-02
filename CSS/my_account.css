@@ -3,6 +3,7 @@
 .account_page {
     display: flex;
     justify-content: center;
+    align-items: flex-start;  
     padding: 2.5rem 1rem;
 }
 

@@ -8,9 +8,7 @@
 // Everything is wrapped in a function so these variable names can't clash
 // with ones declared in supabase_client.js or navbar.js
 (() => {
-    // ---------- SETTINGS: change these to match your Supabase database ----------
-    // If you store usernames/names in a table (e.g. "profiles"), put its name and
-    // column names here. If the table can't be read, the page falls back to the
+   
     // details saved in the user's auth metadata (options.data at sign-up).
     const PROFILE_TABLE = "userinfo";
     const PROFILE_COLUMNS = {
