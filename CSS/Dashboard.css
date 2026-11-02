@@ -36,7 +36,10 @@ main > section {
 #summary {
     grid-column: span 6;
 }
-
+#summary li span {
+    font-weight: bold;
+    color: darkgreen;
+}
 #overTime {
     grid-column: span 3;
 }
