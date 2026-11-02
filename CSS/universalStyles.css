@@ -1,3 +1,10 @@
+/* make sure header always appears at top*/
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
 body {
     background-color: #D3D2C7;
     font-family: 'Segoe UI', Roboto, Arial, sans-serif;
@@ -15,6 +22,7 @@ main {
     padding-left: 15px;
     padding-right: 15px;
 }
+
 
 h2 {
     font-size: 1.5em
@@ -59,11 +67,7 @@ li {
 }
 
 #logButton,
-#registerButton {
-    background-color: #4CAF50;
-    color: white;
-}
-
+#registerButton,
 #emissionButton,
 #dashboardButton {
     background-color: #2e7d32;
@@ -71,6 +75,8 @@ li {
     text-decoration: none;
 }
 
+#logButton:hover,
+#registerButton:hover,
 #emissionButton:hover,
 #dashboardButton:hover {
     background-color: #1b5e20;
@@ -180,7 +186,8 @@ li {
 .header_container {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 60px;
     text-align: center;
     color: white;
     background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("../Images/BelLomond.jpg");
@@ -188,6 +195,13 @@ li {
     background-size: cover;
     background-position: center;
     height: 60vh;
+}
+
+.header_container h1,
+#userWelcome,
+#links {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 #copyright {
@@ -245,6 +259,12 @@ li {
     padding: 0.6em 1em;
     white-space: nowrap;
     transition: background-color 0.2s;
+}
+
+.navflex a i {
+    margin-right: 8px;
+    width: 18px;
+    text-align: center;
 }
 
 .navflex li.active a,
@@ -350,6 +370,10 @@ li {
 
     .header_container {
         flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        padding: 0 20px;
+        text-align: center;
         background-attachment: scroll;
     }
 }
