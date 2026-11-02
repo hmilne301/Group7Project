@@ -14,40 +14,26 @@
         <script defer src="/JS_Files/logout.js"></script>
     </head>
     <body>
-       <!-- <header>
-            !-- only displayed on phone screens  --
-            !-- allows user to toggle navbar  --
-            <div class="nav_collapse">
-                <img src="/Images/burger-bar.png" alt="burger-bar" class="collapse_img">
-            </div>
-            !-- navbar which allows users to navigate pages --
-            <nav class="navflex">
-                <ul>
-                    <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
-                    <li><a href="Emission_Activity.html">Emission Activity</a></li>
-                    <li><a href="Leaderboard.html">Leaderboard</a></li>
-                    <li><a href="Achievements.html">Achievements</a></li>
-                    <li><a href="Goals.html">Goals</a></li>
-                    <li><a href="Friends.html">Friends</a></li>
-                    <li><a href="Emissions_Info.html">Emissions Info</a></li>
-                    <li><a href="Contact_Us.html">Contact Us</a></li>
-                </ul>
-            </nav>
-            <section class="header_container">
-                <h1> COZero </h1>
-            </section>
-        </header> -->
 
         <header>
 
-            <div class="top_bar">
-                <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <a href="Home.html" class="brand">COZERO</a>
+           <div class="top_bar">
+    <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <a href="Home.html" class="brand">COZERO</a>
+
+    <!-- Profile icon: takes the user to their account page -->
+    <a href="My_Account.html" class="profile_link" aria-label="My account" title="My account">
+        <svg class="profile_icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+        </svg>
+        <span class="profile_initials" hidden></span>
+    </a>
+</div>
             </div>
             <!--Navbar-->
             <nav class="navflex" id="main_nav">

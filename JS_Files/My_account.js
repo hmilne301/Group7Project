@@ -12,27 +12,17 @@
     // If you store usernames/names in a table (e.g. "profiles"), put its name and
     // column names here. If the table can't be read, the page falls back to the
     // details saved in the user's auth metadata (options.data at sign-up).
-    const PROFILE_TABLE = "profiles";
+    const PROFILE_TABLE = "userinfo";
     const PROFILE_COLUMNS = {
-        id: "id",                 // must match the logged-in user's id (auth.users.id)
+        id: "user_id",            // links to auth.users.id
         username: "username",
-        firstName: "first_name",
-        lastName: "last_name"
+        firstName: "fname",
+        lastName: "lname",
+        points: "emission_points" // shown on the page but not editable
     };
     // -----------------------------------------------------------------------------
 
-    // Finds the Supabase client created in supabase_client.js, whatever it's called
-    function getSupabaseClient() {
-        if (typeof supabaseClient !== "undefined") return supabaseClient;
-        if (typeof sb !== "undefined") return sb;
-        if (typeof client !== "undefined") return client;
-        if (window.supabaseClient) return window.supabaseClient;
-        if (window.supabase && typeof window.supabase.from === "function") return window.supabase;
-        console.error("my_account.js: couldn't find the Supabase client from supabase_client.js");
-        return null;
-    }
-
-    const db = getSupabaseClient();
+    // "db" is the Supabase client created in supabase_client.js
 
     // ---------- Grab elements from the page ----------
     const loadingView   = document.getElementById("accountLoading");
@@ -46,6 +36,7 @@
     const emailInput     = document.getElementById("email");
     const emailHint      = document.getElementById("emailHint");
     const memberSince    = document.getElementById("memberSince");
+    const emissionPoints = document.getElementById("emissionPoints");
     const detailsMessage = document.getElementById("detailsMessage");
     const editButton     = document.getElementById("editButton");
     const editActions    = document.getElementById("editActions");
@@ -134,6 +125,7 @@
             savedDetails.username  = profile[PROFILE_COLUMNS.username]  ?? savedDetails.username;
             savedDetails.firstName = profile[PROFILE_COLUMNS.firstName] ?? savedDetails.firstName;
             savedDetails.lastName  = profile[PROFILE_COLUMNS.lastName]  ?? savedDetails.lastName;
+            emissionPoints.textContent = profile[PROFILE_COLUMNS.points] ?? 0;
         } else if (profileError) {
             console.warn("Couldn't read profile table, using auth metadata instead:", profileError.message);
         }
