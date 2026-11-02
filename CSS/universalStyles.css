@@ -383,7 +383,7 @@ li {
     height: 40px;
     border-radius: 50%;
     border: 2px solid currentColor;
-    color: inherit;
+    color: white;
     text-decoration: none;
     transition: background-color 0.15s;
 }

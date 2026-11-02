@@ -44,7 +44,7 @@ checkFit();
 
     if (info && info.fname) {
         const initials = info.fname[0] + (info.lname ? info.lname[0] : "");
-        link.querySelector(".profile_icon").hidden = true;
+        link.querySelector(".profile_icon").setAttribute("hidden", "");
         const span = link.querySelector(".profile_initials");
         span.textContent = initials.toUpperCase();
         span.hidden = false;
