@@ -1,4 +1,4 @@
-const logout = document.getElementById("logout")
+const logoutButton = document.getElementById("logoutButton")
 
 // allows user to log out and redirects then to login page
 function logoutUser() {
@@ -7,4 +7,4 @@ function logoutUser() {
     });
 }
 
-logout.addEventListener("click", logoutUser);
+logoutButton.addEventListener("click", logoutUser);

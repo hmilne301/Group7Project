@@ -76,6 +76,11 @@ function emissionCalcUpdate(evt) {
   // stops page from being reloaded when form is submitted
   evt.preventDefault();
 
+  let result = document.getElementById("calcResult");
+
+  // clears the previous results
+  result.innerHTML = "";
+
   // getting user inputs
   let car = getCheckedValue("car_travel");
   let transport = getCheckedValue("public_transport");
@@ -85,10 +90,58 @@ function emissionCalcUpdate(evt) {
   let diet = getCheckedValue("diet");
   let clothes = getCheckedValue("clothes");
   let recycle = getCheckedValue("recycle");
-  let result = document.getElementById("calcResult");
 
-  // clears the previous results
-  result.innerHTML = "";
+  // clears previous error messages
+  document.querySelectorAll(".validation_error").forEach(function(error) {
+    error.textContent = "";
+  });
+
+  let validInput = true;
+
+  // checks for unanswered questions
+  if (car === null) {
+    document.getElementById("carError").textContent = "Please select your car travel distance.";
+    validInput = false;
+  }
+
+  if (transport === null) {
+    document.getElementById("transportError").textContent = "Please select your public transport distance.";
+    validInput = false;
+  }
+
+  if (plane === null) {
+    document.getElementById("planeError").textContent = "Please select your flight frequency.";
+    validInput = false;
+  }
+
+  if (heating === null) {
+    document.getElementById("heatingTypeError").textContent = "Please select your heating type.";
+    validInput = false;
+  }
+
+  if ((heating === "Gas" || heating === "Electricity") && usage === null) {
+    document.getElementById("usageError").textContent = "Please select your energy usage.";
+    validInput = false;
+  }
+
+  if (diet === null) {
+    document.getElementById("dietError").textContent = "Please select your diet.";
+    validInput = false;
+  }
+
+  if (clothes === null) {
+    document.getElementById("clothesError").textContent = "Please select how often you buy clothes.";
+    validInput = false;
+  }
+
+  if (recycle === null) {
+    document.getElementById("recycleError").textContent = "Please select your recycling frequency.";
+    validInput = false;
+  }
+
+  if (!validInput) {
+    return;
+  }
 
   // calling the emissionCalculator function and passing parameters
   emissionCalculator(car, transport, plane, heating, usage, diet, clothes, recycle, result);
@@ -213,7 +266,7 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   comparisonDisplay.classList.add("result_details");
 
   let transportDisplay = document.createElement("p");
-  transportDisplay.textContent = "Transport: " + transportTotal.toFixed(0) + " kg CO2 per Year";
+  transportDisplay.textContent = "Transport: " + transportTotal.toFixed(0) + " kg CO2 per year";
   transportDisplay.classList.add("result_details");
 
   let energyDisplay = document.createElement("p");

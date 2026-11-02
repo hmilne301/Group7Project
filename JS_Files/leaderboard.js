@@ -3,8 +3,8 @@
 const body = document.getElementById("leaderboardBody");
 const message = document.getElementById("leaderboardMessage");
 const yourRank = document.getElementById("yourRank");
-const globalTab = document.getElementById("globalTab")
-const friendsTab = document.getElementById("friendsTab")
+const globalTab = document.getElementById("globalTab");
+const friendsTab = document.getElementById("friendsTab");
 
 // setting id as null initially
 let myId = null;
