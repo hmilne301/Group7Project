@@ -24,7 +24,7 @@ async function loadData() {
     .from("activity")
     .select("activity_date, co2_kg_emitted")
     .order("activity_date", {ascending: false})
-    .limit(8);
+    .limit(4);
 
     if (error) {
         console.error("Error fetching data:", error.message);
@@ -71,7 +71,7 @@ async function showLast7Days() {
     .gte("activity_date", from);
 
     if (error) {
-        console.error("Error fetching last 7 days data:", error.message);
+        console.error("Error fetching last weeks data:", error.message);
         return;
     }
     if (data.length === 0) {
@@ -160,7 +160,7 @@ async function showTrendChart() {
             },
             scales: {
                 x: {
-                    title: {display: true, text: "7 days to"},
+                    title: {display: true, text: "Week Ending"},
                     grid: { display: false },
                 },
                 y: {
