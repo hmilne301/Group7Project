@@ -40,6 +40,7 @@
 #questionnaireForm input[type=radio] {
     height: 20px;
     width: 20px;
+    cursor: pointer;
 }
 
 #questionnaireForm input[type=submit] {
@@ -170,18 +171,20 @@
 
 /* Styling submit buttons for forms */
 input[type=submit] {
-  background-color: #4CAF50;
+  background-color: #45a049;
   color: white;
   padding: 22px 30px;
   border: none;
   border-radius: 4px;
   margin-top: 10px;
   font-size: 20px;
+  cursor: pointer;
 }
 
 /* changing button colour when user floats over button */
 input[type=submit]:hover {
   background-color: #45a049;
+  text-decoration: underline;
 }
 
 /* modifying the textboxes */
@@ -286,6 +289,20 @@ textarea {
     min-height: 500px;   
     width: 100%;
     margin: 60px auto;
+    box-shadow: #000000 0px 0px 10px 0px;
+}
+
+
+/* full-width image behind the activity form */
+.activityHero {
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("../Images/BelLomond.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin-inline: -18px;
 }
 
 /* activity container heading */
@@ -321,7 +338,7 @@ textarea {
     margin-top: 20px;
     width: 100%;
     padding: 14px;
-    background: #779341 ;
+    background: #45a049;
     color: #ffffff;
     border: none;
     border-radius: 20px;  
@@ -420,5 +437,27 @@ textarea {
 
     .contact_inputs br {
         display: none;
+    }
+}
+
+/* starting state: hidden and slightly lower */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+/* end state: added by JavaScript when scrolled into view */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* respect people who turn animations off in their system settings */
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 }

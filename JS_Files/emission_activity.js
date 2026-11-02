@@ -64,3 +64,17 @@ async function addEmissionActivity(event) {
 document.getElementById("emissionAmount").addEventListener("input", function () {
     document.getElementById("activityMessage").style.display = "none";
 });
+
+// fade elements in when they scroll into view
+const revealItems = document.querySelectorAll('.reveal');
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // only animate once
+        }
+    });
+}, { threshold: 0.15 });
+
+revealItems.forEach((item) => observer.observe(item));
