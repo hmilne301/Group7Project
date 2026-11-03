@@ -1,136 +1,278 @@
 'use strict';
 
-/*
- * Achievements page.
- *
- * There is no backend yet, so both blocks below are PLACEHOLDERS:
- *   - ACHIEVEMENTS mirrors the Achievement table in Create_Emissions.sql
- *     (name, description, points), plus the fields the page needs to show progress.
- *   - userStats stands in for the logged-in user's real data.
- * When the database/API exists, replace userStats with a fetch for the current user
- * (Activity rows -> counts, Earns rows -> which achievements are already awarded).
- */
+// =====================================================================
+// Achievements page
+//  - The list of achievements comes from the "achievement" table
+//  - Progress is worked out from the logged-in user's rows in "activity"
+//    and "userinfo"
+//  - Earned achievements are recorded in the "earns" table
+//  - Not logged in -> everything shows as not earned, with a log in prompt
+// =====================================================================
 
-const ACHIEVEMENTS = [
-    { id: 1, name: "First Emissions Logged", description: "Log your first emission activity.",
-      icon: "\u270D\uFE0F", points: 10, stat: "activitiesLogged", target: 1 },
-    { id: 2, name: "1 Week Logged", description: "Log emissions on 7 different days.",
-      icon: "\uD83D\uDCC5", points: 25, stat: "daysLogged", target: 7 },
-    { id: 3, name: "Register to Make Change", description: "Create your COZero account.",
-      icon: "\uD83D\uDC64", points: 5, stat: "registered", target: 1 },
-    { id: 4, name: "Get 100 Emission Points", description: "Reach 100 emission points.",
-      icon: "\uD83D\uDCCA", points: 50, stat: "emissionPoints", target: 100 },
-    { id: 5, name: "1 Month Logged", description: "Log emissions on 30 different days.",
-      icon: "\uD83D\uDDD3\uFE0F", points: 100, stat: "daysLogged", target: 30 },
-    { id: 6, name: "Join the Community", description: "Join the leaderboard.",
-      icon: "\uD83D\uDD12", points: 15, stat: "onLeaderboard", target: 1,
-      action: { label: "Sign Up To Join Leaderboard", href: "Login.html" } }
-];
+// Wrapped in a function so these names can't clash with supabase_client.js or navbar.js
+(() => {
 
-// Placeholder user data
-const userStats = {
-    activitiesLogged: 5,
-    daysLogged: 21,
-    registered: 1,
-    emissionPoints: 90,
-    onLeaderboard: 0
-};
+    // "db" is the Supabase client created in supabase_client.js
 
-function buildCard(achievement, current, earned) {
-    const item = document.createElement("li");
-    item.className = "achievement_card";
-    if (earned) {
-        item.classList.add("earned");
-    } else if (achievement.action) {
-        item.classList.add("locked");
+    // Icons live in the Images folder; the file name is stored in achievement.icon
+    const ICON_FOLDER = "../Images/";
+
+    // Achievements that need an account show a button instead of a progress bar
+    // when the user hasn't earned them. Keys match achievement.criteria_type.
+    const ACCOUNT_BUTTONS = {
+        registered:         { label: "Create an Account",           href: "Register.html" },
+        joined_leaderboard: { label: "Sign Up To Join Leaderboard", href: "Register.html" }
+    };
+
+    // ---------- Grab elements from the page ----------
+    const earnedList = document.getElementById("earnedList");
+    const nextList   = document.getElementById("nextList");
+    const summary    = document.getElementById("pointsSummary");
+    const message    = document.getElementById("achievementsMessage");
+
+    // ---------- Helper functions ----------
+    function showMessage(text, withLoginLink) {
+        message.textContent = text;
+        if (withLoginLink) {
+            // send the user back to this page after logging in (login.js supports ?redirect=)
+            const back = encodeURIComponent(window.location.pathname + window.location.search);
+            const link = document.createElement("a");
+            link.href = "Login.html?redirect=" + back;
+            link.textContent = "Log in";
+            message.appendChild(document.createTextNode(" "));
+            message.appendChild(link);
+        }
     }
 
-    const icon = document.createElement("span");
-    icon.className = "achievement_icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = achievement.icon;
-    item.appendChild(icon);
+    function addEmptyMessage(list, text) {
+        const item = document.createElement("li");
+        item.className = "empty_message";
+        item.textContent = text;
+        list.appendChild(item);
+    }
 
-    const title = document.createElement("h3");
-    title.textContent = achievement.name;
-    item.appendChild(title);
+    // ---------- Load data from Supabase ----------
+    async function loadAchievements() {
+        const { data, error } = await db
+            .from("achievement")
+            .select("*")
+            .order("points", { ascending: true });
+        if (error) throw error;
 
-    const description = document.createElement("p");
-    description.className = "achievement_description";
-    description.textContent = achievement.description;
-    item.appendChild(description);
+        // Only keep achievements that have a usable target number
+        return (data || []).filter(function (row) {
+            if (!Number(row.criteria_value)) {
+                console.warn("Skipping achievement with no criteria_value:", row.achievement_name);
+                return false;
+            }
+            return true;
+        });
+    }
 
-    const points = document.createElement("p");
-    points.className = "achievement_points";
-    points.textContent = achievement.points + " points";
-    item.appendChild(points);
+    async function loadStats(user) {
+        const stats = {
+            activities_logged: 0,
+            days_logged: 0,
+            registered: 0,
+            emission_points: 0,
+            joined_leaderboard: 0
+        };
+        if (!user) return stats;
 
-    // Cards with a call-to-action show the button instead of a progress bar
-    if (!earned && achievement.action) {
-        const button = document.createElement("a");
-        button.className = "achievement_button";
-        button.href = achievement.action.href;
-        button.textContent = achievement.action.label;
-        item.appendChild(button);
+        // Having an account counts as registered and as being on the leaderboard
+        stats.registered = 1;
+        stats.joined_leaderboard = 1;
+
+        // Only ever this user's rows
+        const { data: activities, error: activityError } = await db
+            .from("activity")
+            .select("activity_date")
+            .eq("user_id", user.id);
+        if (activityError) throw activityError;
+
+        stats.activities_logged = activities.length;
+        stats.days_logged = new Set(activities.map(function (a) { return a.activity_date; })).size;
+
+        const { data: profile, error: profileError } = await db
+            .from("userinfo")
+            .select("emission_points")
+            .eq("user_id", user.id)
+            .maybeSingle();
+        if (profileError) throw profileError;
+
+        stats.emission_points = profile ? Number(profile.emission_points) || 0 : 0;
+        return stats;
+    }
+
+    async function loadEarnedIds(user) {
+        if (!user) return new Set();
+
+        const { data, error } = await db
+            .from("earns")
+            .select("achievement_id")
+            .eq("user_id", user.id);
+        if (error) throw error;
+
+        return new Set(data.map(function (row) { return row.achievement_id; }));
+    }
+
+    // Saves achievements the user has just reached into the "earns" table.
+    // If the database refuses (e.g. a policy only allows reading) the page still
+    // shows them as earned, it just can't save them.
+    async function recordNewlyEarned(user, newlyEarned) {
+        if (!user || newlyEarned.length === 0) return;
+
+        const rows = newlyEarned.map(function (a) {
+            return { user_id: user.id, achievement_id: a.achievement_id };
+        });
+
+        const { error } = await db
+            .from("earns")
+            .upsert(rows, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
+        if (error) console.warn("Couldn't save earned achievements:", error.message);
+    }
+
+    // ---------- Build the page ----------
+    function buildCard(achievement, current, earned) {
+        const target = Number(achievement.criteria_value);
+        const button = ACCOUNT_BUTTONS[achievement.criteria_type];
+
+        const item = document.createElement("li");
+        item.className = "achievement_card";
+        if (earned) {
+            item.classList.add("earned");
+        } else if (button) {
+            item.classList.add("locked");
+        }
+
+        if (achievement.icon) {
+            const icon = document.createElement("img");
+            icon.className = "achievement_icon";
+            icon.src = ICON_FOLDER + achievement.icon;
+            icon.alt = "";            // decorative, the title says it all
+            icon.width = 48;
+            icon.height = 48;
+            // if the file is missing, hide the broken image instead of showing a gap
+            icon.addEventListener("error", function () { icon.hidden = true; });
+            item.appendChild(icon);
+        }
+
+        const title = document.createElement("h3");
+        title.textContent = achievement.achievement_name;
+        item.appendChild(title);
+
+        const description = document.createElement("p");
+        description.className = "achievement_description";
+        description.textContent = achievement.achievement_description || "";
+        item.appendChild(description);
+
+        const points = document.createElement("p");
+        points.className = "achievement_points";
+        points.textContent = achievement.points + " points";
+        item.appendChild(points);
+
+        if (!earned && button) {
+            const link = document.createElement("a");
+            link.className = "achievement_button";
+            link.href = button.href;
+            link.textContent = button.label;
+            item.appendChild(link);
+            return item;
+        }
+
+        const shown = Math.min(current, target);
+
+        const bar = document.createElement("progress");
+        bar.max = target;
+        bar.value = shown;
+        bar.setAttribute("aria-label", achievement.achievement_name + " progress");
+        item.appendChild(bar);
+
+        const label = document.createElement("p");
+        label.className = "progress_label";
+        label.textContent = earned ? "Completed" : shown + " / " + target;
+        item.appendChild(label);
+
         return item;
     }
 
-    const bar = document.createElement("progress");
-    bar.max = achievement.target;
-    bar.value = Math.min(current, achievement.target);
-    bar.setAttribute("aria-label", achievement.name + " progress");
-    item.appendChild(bar);
+    function render(achievements, stats, earnedIds, user) {
+        earnedList.innerHTML = "";
+        nextList.innerHTML = "";
 
-    const label = document.createElement("p");
-    label.className = "progress_label";
-    label.textContent = earned
-        ? "Completed"
-        : Math.min(current, achievement.target) + " / " + achievement.target;
-    item.appendChild(label);
+        let totalPoints = 0;
+        let earnedCount = 0;
 
-    return item;
-}
+        achievements.forEach(function (achievement) {
+            const current = Number(stats[achievement.criteria_type]) || 0;
+            const earned = earnedIds.has(achievement.achievement_id);
 
-function addEmptyMessage(list, text) {
-    const item = document.createElement("li");
-    item.className = "empty_message";
-    item.textContent = text;
-    list.appendChild(item);
-}
+            if (earned) {
+                totalPoints += Number(achievement.points) || 0;
+                earnedCount++;
+                earnedList.appendChild(buildCard(achievement, current, true));
+            } else {
+                nextList.appendChild(buildCard(achievement, current, false));
+            }
+        });
 
-function renderAchievements() {
-    const earnedList = document.getElementById("earnedList");
-    const nextList = document.getElementById("nextList");
-    const summary = document.getElementById("pointsSummary");
-
-    let totalPoints = 0;
-    let earnedCount = 0;
-
-    earnedList.innerHTML = "";
-    nextList.innerHTML = "";
-
-    ACHIEVEMENTS.forEach(function (achievement) {
-        const current = Number(userStats[achievement.stat]) || 0;
-        const earned = current >= achievement.target;
-
-        if (earned) {
-            totalPoints += achievement.points;
-            earnedCount++;
-            earnedList.appendChild(buildCard(achievement, current, true));
-        } else {
-            nextList.appendChild(buildCard(achievement, current, false));
+        if (earnedCount === 0) {
+            addEmptyMessage(earnedList, user
+                ? "No achievements yet. Log an emission activity to earn your first one."
+                : "Log in to start earning achievements.");
         }
-    });
+        if (achievements.length > 0 && earnedCount === achievements.length) {
+            addEmptyMessage(nextList, "You have earned every achievement. Nice work!");
+        }
 
-    if (earnedCount === 0) {
-        addEmptyMessage(earnedList, "No achievements yet. Log an emission activity to earn your first one.");
+        let text = earnedCount + " of " + achievements.length + " achievements earned | " +
+                   totalPoints + " achievement points";
+        if (user) text += " | " + stats.emission_points + " emission points";
+        summary.textContent = text;
     }
-    if (earnedCount === ACHIEVEMENTS.length) {
-        addEmptyMessage(nextList, "You have earned every achievement. Nice work!");
+
+    // ---------- Start ----------
+    async function init() {
+        if (typeof db === "undefined" || !db) {
+            showMessage("Sorry, we couldn't connect to the database. Please try again later.");
+            return;
+        }
+
+        showMessage("Loading your achievements...");
+
+        try {
+            // getUser() checks the session with Supabase, so it can't be faked locally
+            const { data: authData } = await db.auth.getUser();
+            const user = authData && authData.user ? authData.user : null;
+
+            const achievements = await loadAchievements();
+            const stats = await loadStats(user);
+            const savedIds = await loadEarnedIds(user);
+
+            // Earned = already saved, or the user's progress now meets the target
+            const earnedIds = new Set(savedIds);
+            const newlyEarned = [];
+            achievements.forEach(function (a) {
+                const reached = (Number(stats[a.criteria_type]) || 0) >= Number(a.criteria_value);
+                if (user && reached && !savedIds.has(a.achievement_id)) {
+                    earnedIds.add(a.achievement_id);
+                    newlyEarned.push(a);
+                }
+            });
+
+            render(achievements, stats, earnedIds, user);
+            await recordNewlyEarned(user, newlyEarned);
+
+            if (user) {
+                showMessage("");
+            } else {
+                showMessage("Log in or create an account to track your own progress.", true);
+            }
+        } catch (err) {
+            console.error(err);
+            showMessage("Sorry, we couldn't load your achievements: " + err.message);
+        }
     }
 
-    summary.textContent = earnedCount + " of " + ACHIEVEMENTS.length +
-        " achievements earned | " + totalPoints + " achievement points";
-}
-
-renderAchievements();
+    init();
+})();

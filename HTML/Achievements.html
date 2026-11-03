@@ -11,6 +11,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="../JS_Files/navbar.js"></script>
+        <!-- Supabase library, then the shared client (creates "db"), then this page's script -->
+        <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+        <script defer src="../JS_Files/supabase_client.js"></script>
         <script defer src="../JS_Files/achievements.js"></script>
     </head>
     <body>
@@ -54,6 +57,7 @@
             <div id="achievementsInfo">
                 <p>Earn badges and achievements by logging and cutting your emissions.</p>
                 <p id="pointsSummary"></p>
+                <p id="achievementsMessage" role="status"></p>
             </div>
 
             <section class="achievement_section" aria-labelledby="earnedHeading">
