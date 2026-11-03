@@ -13,18 +13,6 @@
 
     const ICON_FOLDER = "../Images/";
 
-    // Achievements that require an account
-    const ACCOUNT_BUTTONS = {
-        registered: {
-            label: "Create an Account",
-            href: "Register.html"
-        },
-        joined_leaderboard: {
-            label: "Sign Up To Join Leaderboard",
-            href: "Register.html"
-        }
-    };
-
     // ---------- Grab elements from the page ----------
 
     const earnedList = document.getElementById("earnedList");
@@ -311,7 +299,7 @@
 
     // ---------- Display achievements ----------
 
-    function render(achievements, stats, earnedIds, user) {
+    function render(achievements, stats, earnedIds) {
 
         earnedList.innerHTML = "";
         nextList.innerHTML = "";
@@ -418,7 +406,7 @@
                 stats.emission_points += added;
 
                 // Display the results
-                render(achievements, stats, earnedIds, user);
+                render(achievements, stats, earnedIds);
 
                 showMessage("");
 
