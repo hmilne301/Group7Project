@@ -22,7 +22,7 @@ db.auth.getSession().then(function(result) {
 async function loadData() {
     const { data, error } = await db
     .from("activity")
-    .select("activity_date, co2_kg_emitted")
+    .select("activity_date, co2_kg_emitted, category ( category_name )")
     .order("activity_date", {ascending: false})
     .limit(4);
 
@@ -59,6 +59,69 @@ loadData().then((data) => {
 }).catch((error) => {
     console.error("Error loading data:", error)
 });
+
+async function showCategoryBreakdown() {
+
+    const {data: {user }, error: authError} = await db.auth.getUser();
+    if (authError || !user) {
+        console.error("Error fetching user data:", authError.message);
+        return;
+    }
+
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+
+    const { data, error } = await db
+    .from("activity")
+    .select("co2_kg_emitted, category ( category_name)")
+    .eq("user_id", myId)
+    .gte("activity_date", start.toLocaleDateString('en-CA'));
+
+    if (error) {
+        console.error("Error fetching category data:", error.message);
+        return;
+    }
+
+        const tableBody2 = document.getElementById('category-rows');
+        tableBody2.innerHTML = "";
+        if ( !data || data.length === 0) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colspan = 3;
+            td.textContent = "Nothing logged in the last 7 days";
+            tr.appendChild(td);
+            tableBody2.appendChild(tr);
+
+            return;
+        }
+    const categoryTotals = {};
+    let fullTotal = 0;
+    data.forEach((item) => {
+        const category = item.category.category_name;
+        const amount = Number(item.co2_kg_emitted) || 0;
+        categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+        fullTotal += amount;
+    });
+    
+    Object.entries(categoryTotals)
+    .sort ((a, b) => b[1] - a[1])
+    .forEach(([category, amount]) => {
+        const tr = document.createElement("tr");
+        const categoryCell = document.createElement("td");
+        categoryCell.textContent = category;
+
+        const amountCell = document.createElement("td");
+        amountCell.textContent = amount.toFixed(1);
+
+        tr.append(categoryCell, amountCell)
+        tableBody2.appendChild(tr);
+        console.log(`Category: ${category}, Amount: ${amount.toFixed(1)}`);
+    }
+    );
+}
+        
+showCategoryBreakdown();
+
 
 async function showLast7Days() {
     const start = new Date();
