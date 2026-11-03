@@ -23,21 +23,8 @@
 
     // ---------- Helper functions ----------
 
-    function showMessage(text, withLoginLink) {
+    function showMessage(text) {
         message.textContent = text;
-
-        if (withLoginLink) {
-            const back = encodeURIComponent(
-                window.location.pathname + window.location.search
-            );
-
-            const link = document.createElement("a");
-            link.href = "Login.html?redirect=" + back;
-            link.textContent = "Log in";
-
-            message.appendChild(document.createTextNode(" "));
-            message.appendChild(link);
-        }
     }
 
     function addEmptyMessage(list, text) {
@@ -141,7 +128,9 @@
 
     async function recordNewlyEarned(user, newlyEarned) {
 
-        if (!user || newlyEarned.length === 0) return 0;
+        const none = { added: 0, savedIds: [] };
+
+        if (!user || newlyEarned.length === 0) return none;
 
         const rows = newlyEarned.map(function (achievement) {
             return {
@@ -159,26 +148,27 @@
             })
             .select("achievement_id");
 
-        if (error) {
+        if (error || !saved || saved.length === 0) {
             console.error("Couldn't save earned achievements:", error);
-            return 0;
+            return none;
         }
 
         // Calculate points for achievements successfully saved
         let added = 0;
-
-        (saved || []).forEach(function (row) {
-
+        saved.forEach(function (row) {
             const match = newlyEarned.find(function (achievement) {
                 return achievement.achievement_id === row.achievement_id;
             });
-
             if (match) {
                 added += Number(match.points) || 0;
             }
         });
 
-        if (added === 0) return 0;
+        const savedIds = saved.map(function (row) {
+            return row.achievement_id;
+        });
+
+        if (added === 0) return { added: 0, savedIds: savedIds };
 
         // Get the current emission points
         const { data: profile, error: profileError } = await db
@@ -189,7 +179,7 @@
 
         if (profileError) {
             console.error("Couldn't retrieve emission points:", profileError);
-            return 0;
+            return { added: 0, savedIds: savedIds };
         }
 
         const newTotal = (Number(profile.emission_points) || 0) + added;
@@ -203,10 +193,10 @@
 
         if (updateError || !updated || updated.length === 0) {
             console.error("Couldn't update emission points:", updateError);
-            return 0;
+            return { added: 0, savedIds: savedIds};
         }
 
-        return added;
+        return {added: added, savedIds: savedIds };
     }
 
 
@@ -215,15 +205,12 @@
     function buildCard(achievement, current, earned) {
 
         const target = Number(achievement.criteria_value);
-        const button = ACCOUNT_BUTTONS[achievement.criteria_type];
 
         const item = document.createElement("li");
         item.className = "achievement_card";
 
         if (earned) {
             item.classList.add("earned");
-        } else if (button) {
-            item.classList.add("locked");
         }
 
         // Achievement icon
@@ -259,19 +246,6 @@
         points.className = "achievement_points";
         points.textContent = achievement.points + " emission points";
         item.appendChild(points);
-
-        // Account-related achievements
-        if (!earned && button) {
-
-            const link = document.createElement("a");
-            link.className = "achievement_button";
-            link.href = button.href;
-            link.textContent = button.label;
-
-            item.appendChild(link);
-
-            return item;
-        }
 
         // Achievement progress
         const shown = Math.min(current, target);
@@ -381,33 +355,30 @@
                 // Load achievements and user progress
                 const achievements = await loadAchievements();
                 const stats = await loadStats(user);
-                const savedIds = await loadEarnedIds(user);
+                const earnedIds = await loadEarnedIds(user);
 
-                // Check which achievements have been reached
-                const earnedIds = new Set(savedIds);
-                const newlyEarned = [];
+                // keeps checking points as one achievement can unlock another
+                for (let i = 0; i < 5; i++) {
+                    
+                    const newlyEarned = achievements.filter(function (achievement) {
+                        return !earnedIds.has(achievement.achievement_id) && (Number(stats[achievement.criteria_type]) || 0) >= Number(achievement.criteria_value)
+                    });
 
-                achievements.forEach(function (achievement) {
+                    if (newlyEarned.length === 0) break;
 
-                    const reached =
-                        (Number(stats[achievement.criteria_type]) || 0) >=
-                        Number(achievement.criteria_value);
+                    const saveResult = await recordNewlyEarned(user, newlyEarned);
+                    if (saveResult.savedIds.length === 0) break;
 
-                    if (reached && !savedIds.has(achievement.achievement_id)) {
+                    // only achievements that really saved are shown as earned
+                    saveResult.savedIds.forEach(function (id) {
+                        earnedIds.add(id);
+                    });
 
-                        earnedIds.add(achievement.achievement_id);
-                        newlyEarned.push(achievement);
-                    }
-                });
-
-                // Save new achievements and award emission points
-                const added = await recordNewlyEarned(user, newlyEarned);
-
-                stats.emission_points += added;
+                    stats.emission_points += saveResult.added;
+                }
 
                 // Display the results
                 render(achievements, stats, earnedIds);
-
                 showMessage("");
 
             } catch (err) {
