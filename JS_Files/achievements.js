@@ -120,16 +120,53 @@
     // If the database refuses (e.g. a policy only allows reading) the page still
     // shows them as earned, it just can't save them.
     async function recordNewlyEarned(user, newlyEarned) {
-        if (!user || newlyEarned.length === 0) return;
+        if (!user || newlyEarned.length === 0) return 0;
 
         const rows = newlyEarned.map(function (a) {
             return { user_id: user.id, achievement_id: a.achievement_id };
         });
 
-        const { error } = await db
+        // .select() gives back only the rows that were really inserted,
+        // so achievements already saved are never counted twice
+        const { data: saved, error } = await db
             .from("earns")
-            .upsert(rows, { onConflict: "user_id,achievement_id", ignoreDuplicates: true });
-        if (error) console.warn("Couldn't save earned achievements:", error.message);
+            .upsert(rows, { onConflict: "user_id,achievement_id", ignoreDuplicates: true })
+            .select("achievement_id");
+        if (error) {
+            console.warn("Couldn't save earned achievements:", error.message);
+            return 0;
+        }
+
+        // add up the points for the achievements that were just saved
+        let added = 0;
+        saved.forEach(function (row) {
+            const match = newlyEarned.find(function (a) {
+                return a.achievement_id === row.achievement_id;
+            });
+            if (match) added += Number(match.points) || 0;
+        });
+        if (added === 0) return 0;
+
+        // read the current total, then save the new one
+        const { data: profile } = await db
+            .from("userinfo")
+            .select("emission_points")
+            .eq("user_id", user.id)
+            .single();
+        const newTotal = (Number(profile.emission_points) || 0) + added;
+
+        const { data: updated, error: updateError } = await db
+            .from("userinfo")
+            .update({ emission_points: newTotal })
+            .eq("user_id", user.id)
+            .select();
+
+        // RLS can block an update without an error, so check a row came back
+        if (updateError || !updated || updated.length === 0) {
+            console.warn("Couldn't update emission points");
+            return 0;
+        }
+        return added;
     }
 
     // ---------- Build the page ----------
@@ -260,8 +297,9 @@
                 }
             });
 
+            const added = await recordNewlyEarned(user, newlyEarned);
+            stats.emission_points += added;
             render(achievements, stats, earnedIds, user);
-            await recordNewlyEarned(user, newlyEarned);
 
             if (user) {
                 showMessage("");
