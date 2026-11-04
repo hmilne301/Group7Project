@@ -61,6 +61,13 @@
                 <p id="achievementsMessage" role="status"></p>
             </div>
 
+            <div class="filter_bar" role="group" aria-label="Filter achievements by category">
+                <button type="button" class="filter_button" data-filter="All" aria-pressed="true">All</button>
+                <button type="button" class="filter_button" data-filter="Account" aria-pressed="false">Account</button>
+                <button type="button" class="filter_button" data-filter="Tracking" aria-pressed="false">Tracking</button>
+                <button type="button" class="filter_button" data-filter="Points" aria-pressed="false">Points</button>
+            </div>
+
             <section class="achievement_section" aria-labelledby="earnedHeading">
                 <h2 id="earnedHeading">Your Achievements</h2>
                 <ul id="earnedList" class="achievement_grid"></ul>

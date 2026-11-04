@@ -13,6 +13,15 @@
 
     const ICON_FOLDER = "../Images/";
 
+    // groups each criteria type into a category for the filter buttons
+    const CATEGORY_BY_TYPE = {
+        registered: "Account",
+        joined_leaderboard: "Account",
+        activities_logged: "Tracking",
+        days_logged: "Tracking",
+        emission_points: "Points"
+    }
+
     // ---------- Grab elements from the page ----------
 
     const earnedList = document.getElementById("earnedList");
@@ -209,6 +218,9 @@
         const item = document.createElement("li");
         item.className = "achievement_card";
 
+        // stored in the card so filter can read it
+        item.dataset.category = CATEGORY_BY_TYPE[achievement.criteria_type] || "Other";
+
         if (earned) {
             item.classList.add("earned");
         }
@@ -328,6 +340,41 @@
         summary.textContent = text;
     }
 
+    // ---------- Filter by category ---------
+
+    function applyFilter(category) {
+
+        // shows or hides each card
+        document.querySelectorAll(".achievement_card").forEach(function (card) {
+            card.hidden = !(category === "All" || card.dataset.category === category);
+        });
+
+        // each list gets message if filter hides all its cards
+        [earnedList, nextList].forEach(function (list) {
+            const old = list.querySelector(".filter_empty");
+            if (old) old.remove();
+
+            const visible = list.querySelectorAll(".achievement_card:not([hidden])").length;
+            const hasCards = list.querySelectorAll(".achievement_card").length > 0;
+
+            if (hasCards && visible === 0) {
+                const item = document.createElement("li");
+                item.className = "empty_message filter_empty";
+                item.textContent = "Nothing here for this category";
+                list.appendChild(item);
+            }
+        });
+    }
+
+    document.querySelectorAll(".filter_button").forEach(function (button) {
+        button.addEventListener("click", function() {
+            document.querySelectorAll(".filter_button").forEach(function (other) {
+                other.setAttribute("aria-pressed", "false");
+            });
+            button.setAttribute("aria-pressed", "true");
+            applyFilter(button.dataset.filter);
+        });
+    });
 
     // ---------- Start the achievements page ----------
 

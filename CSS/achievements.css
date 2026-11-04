@@ -121,6 +121,34 @@
     margin: 0;
 }
 
+/* filter styling */
+.achievement_card[hidden] {
+    display: none;
+}
+
+.filter_bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.filter_button {
+    padding: 8px 18px;
+    border: 2px solid #2e7d32;
+    border-radius: 25px;
+    background: white;
+    color: #1E4620;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.filter_button[aria-pressed="true"] {
+    background: #2e7d32;
+    color: white;
+}
+
 @media screen and (max-width: 600px) {
     
     .achievement_section {
