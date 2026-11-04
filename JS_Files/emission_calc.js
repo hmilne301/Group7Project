@@ -15,6 +15,70 @@ const OTHER_HEATING_KG = 4000;
 // simplified estimate of UK average based on the categories
 const AVERAGE_UK_CO2 = 6800
 
+// category ids from the emission activity dropdown
+const CATEGORY_IDS = {
+  transport: "a6aafef5-5d49-4626-8cbb-20e9aed1f0a0",
+  energy:    "57bdb22f-2561-4371-94fa-feeeb16ca05e",
+  food:      "263c2842-54bb-4c48-96cc-bc36c1e36131",
+  shopping:  "f3f57226-0f42-479a-861c-f7da4bd5b176"
+};
+
+// saves each section of the questionnaire result as its own activity row
+async function addCalculatedEmissions(totals, button, messageE) {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+
+    // not signed in then send them to the login page
+    if (session === null) {
+      window.location.href = "Login.html";
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    const rows = [
+      { name: "Transport (questionnaire)",   amount: totals.transport, category: CATEGORY_IDS.transport },
+      { name: "Home energy (questionnaire)", amount: totals.energy,    category: CATEGORY_IDS.energy },
+      { name: "Food (questionnaire)",        amount: totals.food,      category: CATEGORY_IDS.food },
+      { name: "Lifestyle (questionnaire)",   amount: totals.lifestyle, category: CATEGORY_IDS.shopping }
+    ]
+    // skip anything that came out as 0
+    .filter(function (row) { return row.amount > 0; })
+    .map(function (row) {
+      const kg = Math.round(row.amount);
+      return {
+        activity_name: row.name,
+        activity_date: today,
+        quantity: kg,
+        co2_kg_emitted: kg,
+        category_id: row.category,
+        user_id: session.user.id
+      };
+    });
+
+    // stops double clicks from adding the same rows more than once 
+    button.disabled = true;
+
+    const { error } = await db.from("activity").insert(rows);
+
+    // if error then show error message and re enable the button so user tries again
+    if (error) {
+      console.error("Error adding calculated emissions:", error);
+      messageE.textContent = "There was an error adding your emissions. Please try again.";
+      button.disabled = false;
+      return;
+    }
+
+    // message showing it added successfully and changes button text to be "Added"
+    messageE.textContent = "Added to your emission records.";
+    button.textContent = "Added";
+  } catch (err) {
+    console.error(err);
+    messageE.textContent = "Something went wrong. Please try again.";
+    button.disabled = false;
+  }
+}
+
 let form = document.getElementById("questionnaireForm");
 
 // run calculation when form is submitted
@@ -274,6 +338,36 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   let lifestyleDisplay = document.createElement("p");
   lifestyleDisplay.textContent = "Lifestyle: " + lifestyleTotal.toFixed(0) + " kg CO2 per year";
   lifestyleDisplay.classList.add("result_details");
+    
+  // button to save the result to the user's emission records
+  let addButton = document.createElement("button");
+  addButton.type = "button";
+  addButton.textContent = "Add to my emission records";
+  addButton.classList.add("activityButton");
+
+  let addMessage = document.createElement("p");
+  addMessage.classList.add("result_details");
+  addMessage.setAttribute("aria-live", "polite");
+
+  addButton.addEventListener("click", function () {
+
+    // Ask the user to confirm before saving
+    const confirmed = confirm("Are you sure you want to add your emissions to your records?");
+
+    // If they click Cancel, stop here
+    if (!confirmed) {
+      return;
+    }
+
+    addCalculatedEmissions(
+      { transport: transportTotal,
+        energy: energyTotal,
+        food: foodTotal,
+        lifestyle: lifestyleTotal },
+        addButton,
+        addMessage
+    );
+  });
 
   // appending attributes to result container
   resultContainer.appendChild(resultHeading);
@@ -283,6 +377,8 @@ function emissionCalculator(car, transport, plane, heating, usage, diet, clothes
   resultContainer.appendChild(energyDisplay);
   resultContainer.appendChild(foodDisplay);
   resultContainer.appendChild(lifestyleDisplay);
+  resultContainer.appendChild(addButton); 
+  resultContainer.appendChild(addMessage);   
 
   // appending the container to the calcResult section
   result.appendChild(resultContainer);

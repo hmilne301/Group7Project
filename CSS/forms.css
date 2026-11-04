@@ -440,24 +440,15 @@ textarea {
     }
 }
 
-/* starting state: hidden and slightly lower */
+/* hides it */
 .reveal {
     opacity: 0;
     transform: translateY(40px);
     transition: opacity 1.0s ease, transform 1.0s ease;
 }
 
-/* end state: added by JavaScript when scrolled into view */
+/* when element is on screen it shows it */
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
-}
-
-/* respect people who turn animations off in their system settings */
-@media (prefers-reduced-motion: reduce) {
-    .reveal {
-        opacity: 1;
-        transform: none;
-        transition: none;
-    }
 }

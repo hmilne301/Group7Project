@@ -1,3 +1,4 @@
+
 // function for handling emission activity form submit
 async function addEmissionActivity(event) {
     event.preventDefault();
@@ -26,16 +27,13 @@ async function addEmissionActivity(event) {
         return;
     }
 
-    // get the signed in user so the row belongs to them
-    const { data: { user } } = await db.auth.getUser();
+    // checks who is logged in 
+    const { data: { session } } = await db.auth.getSession();
 
-    // if the user is not signed in show an alert to user and return
-    if (!user) {
-    message.textContent = "Please sign in first.";
-    message.style.display = "block";
-    return;
-    }
-   
+    // storing user id from the session
+    const myId = session.user.id;
+
+
     // insert the new emission activity into the database
     const { error } = await db.from("activity").insert([{
         activity_name: name,
@@ -43,7 +41,7 @@ async function addEmissionActivity(event) {
         quantity: amount,
         co2_kg_emitted: amount,
         category_id: category, 
-        user_id: user.id
+        user_id: myId
     }]);
 
     if (error) {
@@ -78,3 +76,18 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 
 revealItems.forEach((item) => observer.observe(item));
+
+// redirect to login automatically if nobody is signed in
+(async function () {
+    try {
+        const { data: { session } } = await db.auth.getSession();
+        if (session === null) {
+            window.location.href = "Login.html";
+        }
+    } catch (err) {
+        const msg = document.getElementById("activityMessage");
+        msg.textContent = "Redirect check failed: " + err.message;
+        msg.style.display = "block";
+    }
+})();
+
