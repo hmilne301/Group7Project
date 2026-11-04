@@ -64,6 +64,18 @@
                     <label for="goal-description">Describe (Describe your goal)</label>
                     <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
 
+                    <div class="goal-row">
+                        <div class="goal-fields">
+                            <label for="goal-target"> CO2 Target Reduction (kg)</label>
+                            <input id="goal-target" type="number" min="0" step="0.1">
+                        </div>
+
+                        <div class="goal-fields">
+                            <label for="goal-end-date">Target Date</label>
+                            <input id="goal-end-date" type="date">
+                        </div>
+                    </div>
+
                     <button type="submit">Create Your Goal</button>
                     <p id="form-result" role="status"></p>
                 </form>

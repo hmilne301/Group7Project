@@ -391,6 +391,21 @@ textarea {
     cursor: pointer;
 }
 
+.goal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+#goal-target,
+#goal-end-date {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    border: 1px solid black;
+    border-radius: 8px;
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:426px){
