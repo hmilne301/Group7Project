@@ -51,6 +51,9 @@ function registerUser(evt) {
     const lname = document.getElementById("lname").value.trim();
     const email = document.getElementById("email").value.trim();
 
+    // form is valid until check fails
+    let validInput = true;
+
     // clears previous error messages
     document.querySelectorAll(".validation_error").forEach(function(error) {
         error.textContent = "";
@@ -59,45 +62,58 @@ function registerUser(evt) {
     // checks username input
     if (username === "") {
         document.getElementById("usernameError").textContent = "Please enter a username";
-        return;
+        validInput = false;
+    }
+
+    if (username.length < 3 || username.length > 20) {
+        document.getElementById("usernameError").textContent = "Username must be between 3 and 20 characters long";
+        validInput = false;
     }
 
     // checks first name input
     if (fname === "") {
         document.getElementById("fnameError").textContent = "Please enter your first name";
-        return;
+        validInput = false;
     }
 
     // checks last name input
     if (lname === "") {
         document.getElementById("lnameError").textContent = "Please enter your last name";
-        return;
+        validInput = false;
     }
 
     // checks email input
     if (email === "") {
         document.getElementById("emailError").textContent = "Please enter your email address";
-        return;
+        validInput = false;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         document.getElementById("emailError").textContent = "Please enter a valid email address.";
-        return;
+        validInput = false;
     }
 
     // checks password
     if (password.value === "") {
         document.getElementById("passwordError").textContent = "Please create a password";
-        return;
+        validInput = false;
     }
 
     if (password.value.length < 8) {
         document.getElementById("passwordError").textContent = "Password must be at least 8 characters long.";
-        return;
+        validInput = false;
     }
 
-    if (password.isUpperCase){
-        
+    // checks passwords match
+    if (password.value !== confirmPassword.value) {
+        matchMessage.textContent = "Passwords do not match";
+        matchMessage.className = "match_message no_match";
+        validInput = false;
+    }
+
+    // stops if anything fails after each check
+    if (!validInput) {
+        return;
     }
 
 
