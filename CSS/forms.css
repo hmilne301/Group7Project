@@ -262,6 +262,7 @@ textarea {
     background-color: bisque;
     border: 1px solid;
     border-radius: 6px;
+    margin-bottom: 16px
 }
 
 .goal-card h3 {
@@ -270,9 +271,14 @@ textarea {
 }
 
 .goal-category {
+    display:inline-block;
+    background: #d7f2b6;
     color: black;
     font-weight: bold;
     margin: 0 0 8px;
+    border-radius: 999px;
+    margin: 0 0 12px;
+    padding: 3px 12px;
 }
 
 .goal-description {
@@ -407,10 +413,16 @@ textarea {
 }
 
 .goal-target {
+    display: inline-flex;
+    align-items: center;
+    background: #f0f6e6;
     font-size: 16px;
     font-weight: 600px;
     color: darkblue;
-    margin: 0 0 4px;
+    margin: 0 0 8px;
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin-top: 12px;
 }
 
 .goal-dates {
@@ -429,6 +441,20 @@ textarea {
 .goal-completed {
     border-color: #ADC698;
     background: #ADC698;
+}
+
+.goal-completed h3 {
+    text-decoration: line-through;
+    color: black;
+}
+
+.goal-status {
+    display: inline-block;
+    border: 1px solid #f0f6e6;
+    background: #f0f6e6;
+    border-radius: 6px;
+    padding: 3px 12px;
+    margin: 10px 0 0;
 }
 
 /* Media Queries */
