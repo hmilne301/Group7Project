@@ -2,6 +2,9 @@ const goalFrom = document.getElementById("goal-form")
 const goalsList = document.getElementById("goals-list")
 const formMessage = document.getElementById("form-result")
 
+//Date format for the dates created on the cards
+const goalDateFormat = { day: "numeric", month: "short", year: "numeric" };
+
 //Following line of code is performed when user presses create goal button
 
 goalFrom.addEventListener("submit", function (event) {
@@ -12,11 +15,21 @@ goalFrom.addEventListener("submit", function (event) {
     const title = document.getElementById("goal-title").value.trim();
     const category = document.getElementById("goal-category").value;
     const description = document.getElementById("goal-description").value.trim();
+    const target = Number(document.getElementById("goal-target").value);
+    const endDate = document.getElementById("goal-end-date").value;
+
+    //Start date as YYYY/MM/DD
+    const startDate = new Date().toLocaleDateString("en-CA");
 
     //Check required fields are filled out
 
-    if (!title || !category) {
-        formMessage.textContent = "Please enter a title and select a category";
+    if (!title || !category || !target || target < 0) {
+        formMessage.textContent = "Please enter a title and select a category, and a CO2 value above 0";
+        return;
+    }
+
+    if (endDate && endDate < startDate) {
+        formMessage.textContent = "The target date cant be in the past"
         return;
     }
 
@@ -26,6 +39,10 @@ goalFrom.addEventListener("submit", function (event) {
     if (emptyMessage) {
         emptyMessage.remove();
     }
+
+    //Keep current values that can change when edited
+    let currentTarget = target;
+    let currentEndDate = endDate;
 
     //Creates a goal card
     const goalCard = document.createElement("article");
@@ -54,6 +71,28 @@ goalFrom.addEventListener("submit", function (event) {
         goalCard.appendChild(goalDescription);
     }
 
+    //Adds the targeted reduced amount to the card
+    const goalTarget = document.createElement("p");
+    goalTarget.className = "goal-target";
+    goalTarget.textContent = `Target: ${currentTarget} kg CO2`;
+    goalCard.appendChild(goalTarget);
+
+    //Adds the dates to the card
+    const startText = new Date(startDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat);
+
+    const goalDates = document.createElement("p");
+    goalDates.className = "goal-dates";
+    goalDates.textContent = currentEndDate
+        ? `${startText} to ${new Date(currentEndDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
+        : `Started ${startText}`;
+    goalCard.appendChild(goalDates);
+
+    //Adds the label in preperation for the checkbot
+    const statusLabel = document.createElement("p");
+    statusLabel.className = "goal-status";
+    statusLabel.textContent = "Completed: No";
+    goalCard.appendChild(statusLabel);
+
     //Opens edit form when user pressed edit goal button
     const editForm = document.createElement("div");
     editForm.className = "edit-goal";
@@ -81,6 +120,24 @@ goalFrom.addEventListener("submit", function (event) {
     const editDescription = document.createElement("textarea");
     editDescription.setAttribute("aria-label", "Goal Description");
 
+    //Edit CO2 Target
+    const editTargetLabel = document.createElement("label");
+    editTargetLabel.textContent = "CO2 Target Reduction (kg)";
+
+    const editTarget = document.createElement("input");
+    editTarget.type = "number";
+    editTarget.min = "0";
+    editTarget.step = "0.1";
+    editTargetLabel.appendChild(editTarget);
+
+    //Edit Target Date
+    const editEndDateLabel = document.createElement("label");
+    editEndDateLabel.textContent = "Target Date"
+
+    const editEndDate = document.createElement("input");
+    editEndDate.type = "date";
+    editEndDateLabel.appendChild(editEndDate);
+
     //Sets edit message
     const editMessage = document.createElement("p");
     editMessage.className = "edit-message";
@@ -101,12 +158,31 @@ goalFrom.addEventListener("submit", function (event) {
         editTitle,
         editCategory,
         editDescription,
+        editTargetLabel,
+        editEndDateLabel,
         editMessage,
         saveButton,
         cancelButton
     );
 
     goalCard.appendChild(editForm);
+
+    //Add a checkbox which acts as the goal status being completed or not like a boolean field
+    const completeLabel = document.createElement("label");
+    completeLabel.className = "goal-complete-label";
+
+    const completeCheckbox = document.createElement("input");
+    completeCheckbox.type = "checkbox";
+
+    completeLabel.append(completeCheckbox, " Mark as complete");
+    goalCard.appendChild(completeLabel)
+
+    //Updates the status when the checkbox is interactacted with
+    completeCheckbox.addEventListener("change", function () {
+        statusLabel.textContent = `Completed: ${completeCheckbox.checked ? "Yes" : "No"}`;
+        goalCard.classList.toggle("goal-completed", completeCheckbox.checked);
+    });
+
 
     //Add Progress Label
     const progressLabel = document.createElement("p");
@@ -157,10 +233,14 @@ goalFrom.addEventListener("submit", function (event) {
         editTitle.value = goalTitle.textContent;
         editCategory.value = goalCategory.textContent;
         editDescription.value = goalDescription ? goalDescription.textContent : "";
+        editTarget.value = currentTarget;
+        editEndDate.value = currentEndDate;
         editMessage.textContent = "";
 
         goalTitle.hidden = true;
         goalCategory.hidden = true;
+        goalTarget.hidden = true;
+        goalDates.hidden = true;
 
         if (goalDescription) {
             goalDescription.hidden = true;
@@ -174,6 +254,8 @@ goalFrom.addEventListener("submit", function (event) {
         editForm.hidden = true;
         goalTitle.hidden = false;
         goalCategory.hidden = false;
+        goalTarget.hidden = false;
+        goalDates.hidden = false;
 
         if (goalDescription) {
             goalDescription.hidden = false;
@@ -184,14 +266,36 @@ goalFrom.addEventListener("submit", function (event) {
     saveButton.addEventListener("click", function () {
         const newGoalTitle = editTitle.value.trim();
         const newGoalDescription = editDescription.value.trim();
+        const newTarget = Number(editTarget.value);
+        const newEndDate = editEndDate.value;
 
         if (!newGoalTitle) {
             editMessage.textContent = "Enter a title";
             return;
         }
 
+        if (!newTarget || newTarget < 0) {
+            editMessage.textContent = "Enter a CO2 Value above 0";
+            return;
+        }
+
+        //End Date cant be before the starting date
+        if (newEndDate && newEndDate < startDate) {
+            editMessage.textContent = "The target date cannot be before the start date";
+            return;
+        }
+
         goalTitle.textContent = newGoalTitle;
         goalCategory.textContent = editCategory.value;
+
+        currentTarget = newTarget;
+        currentEndDate = newEndDate;
+
+        goalTarget.textContent = `Target: ${currentTarget} kg CO2`;
+        goalDates.textContent = currentEndDate
+            ? `${startText} to ${new Date(currentEndDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
+            : `Started ${startText}`;
+
 
         if (newGoalDescription) {
             //If there was no description and user wanted to create one
@@ -211,7 +315,8 @@ goalFrom.addEventListener("submit", function (event) {
         editForm.hidden = true;
         goalTitle.hidden = false;
         goalCategory.hidden = false;
-
+        goalTarget.hidden = false;
+        goalDates.hidden = false;
     });
 
     goalCard.appendChild(editButton);
