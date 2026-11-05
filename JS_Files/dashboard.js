@@ -244,9 +244,9 @@ const TREE_LOW_LIMIT = 70;
 const TREE_HIGH_LIMIT = 100;
 
 const TREE_levels = {
-    low: { image: "/Images/tree_1.jpg", text: "Low emissions this week! Your Trees are thriving! Keep up the good work!" },
-    medium: { image: "/Images/tree_1.jpg", text: "Moderate emissions this week. Your Trees are losing leaves. Consider more sustainable options!" },
-    high: { image: "/Images/tree_1.jpg", text: "High emissions this week. Your Trees are on fire! Consider more sustainable options!" }
+    low: { image: "../Images/tree_1.jpg", text: "Low emissions this week! Your Trees are thriving! Keep up the good work!" },
+    medium: { image: "../Images/tree_1.jpg", text: "Moderate emissions this week. Your Trees are losing leaves. Consider more sustainable options!" },
+    high: { image: "../Images/tree_1.jpg", text: "High emissions this week. Your Trees are on fire! Consider more sustainable options!" }
 };
 
 async function updateTreeImage() {
@@ -504,7 +504,7 @@ async function showLeaderboardPreview() {
         if (error) console.error("Error fetching leaderboard preview:", error.message);
         showNothing(list);
         return;
-    }
+    } 
 
     list.replaceChildren();
 
