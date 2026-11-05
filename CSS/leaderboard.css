@@ -20,7 +20,7 @@
 }
 
 .leaderboard_tabs button {
-    background-color: #4CAF50;
+    background-color: #81c785;
     color: white;
     border: none;
     border-radius: 25px;
@@ -29,13 +29,19 @@
 }
 
 .leaderboard_tabs button[aria-pressed="true"] {
-    background-color: #238B45;
+    background-color: #1b5e20;
+}
+
+.leaderboard_tabs button:hover {
+    background-color: #2e7d32;
 }
 
 .leaderboard_container {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* scroll sideways inside box */
+    overflow-x: auto;
 }
 
 #boardTable {
@@ -43,6 +49,10 @@
     max-width: 600px;
     border-collapse: collapse;
     margin-top: 20px;
+}
+
+#boardTable caption {
+    padding-bottom: 10px;
 }
 
 #boardTable th {

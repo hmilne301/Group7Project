@@ -26,6 +26,10 @@ async function sendContact(event) {
 
     let validInput = true;
 
+    nameError.textContent = "";
+    emailError.textContent = "";
+    messageError.textContent = "";
+
     // checking name input
     if (name === "") {
         nameError.textContent = "Please enter your name."
@@ -39,13 +43,23 @@ async function sendContact(event) {
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById("emailError").textContent = "Please enter a valid email address.";
+        emailError.textContent = "Please enter a valid email address.";
         validInput = false;
     }
 
     // checking message input
     if (message === "") {
         messageError.textContent = "Please enter a message."
+        validInput = false;
+    }
+
+    if (message.length < 10) {
+        messageError.textContent = "Message must be longer than 10 characters"
+        validInput = false;
+    }
+
+    if (message.length > 500) {
+        messageError.textContent = "Message must be shorter than 500 characters"
         validInput = false;
     }
 

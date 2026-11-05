@@ -60,8 +60,11 @@
 .add_friend_form input {
     flex: 1 1 200px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 1px solid #238B45;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: inherit;
 }
 
 /* Friends Page Button CSS*/
