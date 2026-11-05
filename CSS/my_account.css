@@ -1,0 +1,228 @@
+/* ===== My Account page ===== */
+
+.account_page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;  
+    padding: 2.5rem 1rem;
+}
+
+.account_card {
+    width: 100%;
+    max-width: 560px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+/* Makes sure [hidden] always wins over display rules */
+[hidden] {
+    display: none !important;
+}
+
+.account_loading {
+    text-align: center;
+    color: #555;
+}
+
+/* ----- Logged out view ----- */
+.logged_out_card {
+    text-align: center;
+}
+
+.logged_out_message {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: 0 0 1.5rem;
+}
+
+.logged_out_buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.logged_out_buttons .account_button {
+    min-width: 130px;
+}
+
+/* ----- Logged in view ----- */
+.account_heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.account_heading h1 {
+    margin: 0;
+}
+
+.account_card h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.75rem;
+}
+
+.account_form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.account_form label {
+    font-weight: 600;
+    margin-top: 0.6rem;
+}
+
+.account_form input {
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #c9c9c9;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Read-only fields look like plain text until "Edit details" is clicked */
+.account_form input[readonly] {
+    background: #f4f6f4;
+    border-color: transparent;
+    color: #222;
+    cursor: default;
+}
+
+.account_form input:not([readonly]):focus {
+    outline: 2px solid #2e7d32;
+    outline-offset: 1px;
+}
+
+.password_wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.password_wrapper input {
+    flex: 1;
+}
+
+.field_hint {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0.2rem 0 0;
+}
+
+.member_since {
+    margin: 1rem 0 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.account_message {
+    min-height: 1.2em;
+    margin: 0.75rem 0 0;
+    font-size: 0.95rem;
+}
+
+.account_message.success {
+    color: #2e7d32;
+}
+
+.account_message.error {
+    color: #c62828;
+}
+
+.account_actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.account_logout {
+    justify-content: center;
+    margin-top: 0;
+}
+
+.account_divider {
+    border: none;
+    border-top: 1px solid #e3e3e3;
+    margin: 1.75rem 0;
+}
+
+/* ----- Buttons ----- */
+.account_button {
+    display: inline-block;
+    padding: 0.65rem 1.3rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid #2e7d32;
+    transition: background-color 0.15s, color 0.15s;
+    font-family: inherit;
+}
+
+.account_button_primary {
+    background: #2e7d32;
+    color: #ffffff;
+}
+
+.account_button_primary:hover,
+.account_button_primary:focus-visible {
+    background: #1b5e20;
+    border-color: #1b5e20;
+}
+
+.account_button_secondary {
+    background: #ffffff;
+    color: #2e7d32;
+}
+
+.account_button_secondary:hover,
+.account_button_secondary:focus-visible {
+    background: #e8f5e9;
+}
+
+.account_button_danger {
+    background: #ffffff;
+    color: #c62828;
+    border-color: #c62828;
+}
+
+.account_button_danger:hover,
+.account_button_danger:focus-visible {
+    background: #ffebee;
+}
+
+.account_button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Hides text visually but keeps it for screen readers */
+.visually_hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .account_card {
+        padding: 1.4rem;
+    }
+    .logged_out_buttons .account_button,
+    .account_actions .account_button {
+        flex: 1;
+    }
+}

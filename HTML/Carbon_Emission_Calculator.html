@@ -7,6 +7,8 @@
         <!-- Linking in stylesheets -->
         <link rel="stylesheet" href="../CSS/universalStyles.css">
         <link rel="stylesheet" href="../CSS/forms.css">
+        <!-- Linking in the icon library to use in nav -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- JS file which won't load after rest of page has that customises the navbar -->
         <script defer src="../JS_Files/navbar.js"></script>
         <script defer src="../JS_Files/emission_calc.js"></script>
@@ -15,25 +17,35 @@
         <header>
 
             <div class="top_bar">
-                <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <a href="Home.html" class="brand">COZERO</a>
-            </div>
+    <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <a href="Home.html" class="brand">COZERO</a>
+
+    <!-- Profile icon: takes the user to their account page -->
+    <a href="My_account.html" class="profile_link" aria-label="My account" title="My account">
+        <svg class="profile_icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+        </svg>
+        <span class="profile_initials" hidden></span>
+    </a>
+</div>
             <!--Navbar-->
             <nav class="navflex" id="main_nav">
 
                 <ul>
-                    <li><a href="Home.html">Home</a></li>
-                    <li class="active"><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
-                    <li><a href="Emission_Activity.html">Emission Activity</a></li>
-                    <li><a href="Leaderboard.html">Leaderboard</a></li>
-                    <li><a href="Achievements.html">Achievements</a></li>
-                    <li><a href="Goals.html">Goals</a></li>
-                    <li><a href="Friends.html">Friends</a></li>
-                    <li><a href="Contact_Us.html">Contact Us</a></li>
+                    <li><a href="Home.html"><i class="fa fa-fw fa-home" aria-hidden="true"></i>Home</a></li>
+                    <li><a href="Dashboard.html"><i class="fa fa-fw fa-pie-chart" aria-hidden="true"></i>My Dashboard</a></li>
+                    <li class="active"><a href="Carbon_Emission_Calculator.html"><i class="fa fa-fw fa-calculator" aria-hidden="true"></i>Carbon Emission Calculator</a></li>
+                    <li><a href="Emission_Activity.html"><i class="fa fa-fw fa-tree" aria-hidden="true"></i>Emission Activity</a></li>
+                    <li><a href="Leaderboard.html"><i class="fa fa-fw fa-list" aria-hidden="true"></i>Leaderboard</a></li>
+                    <li><a href="Achievements.html"><i class="fa fa-fw fa-trophy" aria-hidden="true"></i>Achievements</a></li>
+                    <li><a href="Goals.html"><i class="fa fa-fw fa-bullseye" aria-hidden="true"></i>Goals</a></li>
+                    <li><a href="Friends.html"><i class="fa fa-fw fa-group" aria-hidden="true"></i>Friends</a></li>
+                    <li><a href="Contact_Us.html"><i class="fa fa-fw fa-envelope" aria-hidden="true"></i>Contact Us</a></li>
                 </ul>
 
             </nav>

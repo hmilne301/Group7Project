@@ -8,6 +8,11 @@
     font-weight: bold;
 }
 
+/* no gap when there is no message to show */
+#achievementsMessage:empty {
+    margin: 0;
+}
+
 .achievement_section {
     max-width: 900px;
     margin: 20px auto;
@@ -21,7 +26,7 @@
     text-align: center;
 }
 
-/* responsive grid: 3 across on desktop, fewer as the screen narrows */
+/* responsive grid: 4 across on desktop, fewer as the screen narrows */
 .achievement_grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -29,6 +34,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    align-items: stretch;
 }
 
 .achievement_card {
@@ -36,21 +42,28 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 6px;
-    padding: 15px;
+    gap: 10px;
+    padding: 20px 15px;
+    min-height: 280px;
     background-color: #E5EBDD;
     border: 1px solid #C5CEC0;
     border-radius: 8px;
     box-sizing: border-box;
 }
 
+/* icon image loaded from the Images folder */
 .achievement_icon {
-    font-size: 2em;
-    line-height: 1;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
 }
 
 .achievement_card h3 {
     margin: 0;
+    min-height: 2.4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.1em;
 }
 
@@ -61,6 +74,13 @@
     font-size: 0.9em;
 }
 
+.achievement_description {
+    min-height: 2.7em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .achievement_points {
     font-weight: bold;
 }
@@ -69,6 +89,7 @@
 .achievement_card progress {
     width: 100%;
     height: 16px;
+    margin-top: auto;
     appearance: none;
     -webkit-appearance: none;
     border: none;
@@ -78,41 +99,20 @@
 }
 
 .achievement_card progress::-webkit-progress-bar {
-    background-color: #B5B5B5;
+    background-color: #D9DDD3;
 }
 
 .achievement_card progress::-webkit-progress-value {
-    background-color: #779341;
+    background-color: #2e7d32;
 }
 
 .achievement_card progress::-moz-progress-bar {
-    background-color: #779341;
+    background-color: #2e7d32;
 }
 
 /* earned cards get a stronger border so they read as "done" without relying on colour alone */
 .achievement_card.earned {
     border: 2px solid #238B45;
-}
-
-/* locked cards are dimmer, with a call-to-action button */
-.achievement_card.locked {
-    background-color: #F4F4F4;
-}
-
-.achievement_button {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 8px 14px;
-    background-color: #779341;
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-.achievement_button:hover,
-.achievement_button:focus-visible {
-    background-color: darkgreen;
 }
 
 .empty_message {
@@ -121,8 +121,47 @@
     margin: 0;
 }
 
-@media screen and (max-width: 480px) {
+/* filter styling */
+.achievement_card[hidden] {
+    display: none;
+}
+
+.filter_bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.filter_button {
+    padding: 8px 18px;
+    border: 2px solid #2e7d32;
+    border-radius: 25px;
+    background: white;
+    color: #1E4620;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.filter_button[aria-pressed="true"] {
+    background: #2e7d32;
+    color: white;
+}
+
+@media screen and (max-width: 600px) {
+    
     .achievement_section {
         margin: 10px;
+        padding: 12px;
+    }
+
+    .achievement_grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .achievement_card {
+        min-height: 250px;
     }
 }
