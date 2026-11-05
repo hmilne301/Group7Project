@@ -53,49 +53,53 @@
         </header>
         <main>
             <div class="goals-container">
-            <section class="create-goal">
-                <h2>Create a Goal</h2>
-                <p>Set a target you'd like to achieve</p>
+                <section class="goal-info">
+                    <h1> Goals </h1>
+                    <p>Set goals for you to achieve to help reduce your emissions.</p>
+                </section>
+                <section class="create-goal">
+                    <h2>Create a Goal</h2>
+                    <p>Set a target you'd like to achieve</p>
 
-                <form id="goal-form">
-                    <label for="goal-title">Goal Title</label>
+                    <form id="goal-form">
+                        <label for="goal-title">Goal Title</label>
 
-                    <input type="text" id="goal-title" name="goal-title" placeholder="i.e. Cycle or Walk more than driving" maxlength="60" required>
-                
-                    <label for="goal-category">Category</label>
-                    <select id="goal-category" required>
-                        <option value="">Select a Category</option>
-                    </select>
+                        <input type="text" id="goal-title" name="goal-title" placeholder="e.g. Cycle or Walk more than driving" maxlength="60" required>
+                    
+                        <label for="goal-category">Category</label>
+                        <select id="goal-category" required>
+                            <option value="">Select a Category</option>
+                        </select>
 
-                    <label for="goal-description">Describe (Describe your goal)</label>
-                    <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
+                        <label for="goal-description">Describe (optional)</label>
+                        <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
 
-                    <div class="goal-row">
-                        <div class="goal-fields">
-                            <label for="goal-target"> CO2 Target Reduction (kg)</label>
-                            <input id="goal-target" type="number" min="0" step="0.1">
+                        <div class="goal-row">
+                            <div class="goal-fields">
+                                <label for="goal-target"> CO2 Target Reduction (kg)</label>
+                                <input id="goal-target" type="number" min="0" step="0.1">
+                            </div>
+
+                            <div class="goal-fields">
+                                <label for="goal-end-date">Target Date</label>
+                                <input id="goal-end-date" type="date">
+                            </div>
                         </div>
 
-                        <div class="goal-fields">
-                            <label for="goal-end-date">Target Date</label>
-                            <input id="goal-end-date" type="date">
-                        </div>
+                        <button type="submit">Create Your Goal</button>
+                        <p id="form-result" role="status"></p>
+                    </form>
+                </section>
+
+                <section class="personal-goals">
+                    <h2>My Goals</h2>
+
+                    <div id="goals-list">
+                        <p class="empty-message">
+                            You have not created any goals yet
+                        </p>
                     </div>
-
-                    <button type="submit">Create Your Goal</button>
-                    <p id="form-result" role="status"></p>
-                </form>
-            </section>
-
-            <section class="personal-goals">
-                <h2>My Goals</h2>
-
-                <div id="goals-list">
-                    <p class="empty-message">
-                        You have not created any goals yet
-                    </p>
-                </div>
-            </section>
+                </section>
             </div>
         </main>
         <footer>

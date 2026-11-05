@@ -92,12 +92,6 @@
     align-items: center;
 }
 
-#contactFormSection legend {
-    border-radius: 1em;
-    padding: 0.5em;
-    margin-top: 1em;
-}
-
 #contactFormSection fieldset {
     background-color: #E5EBDD;
     border: 0.125em solid black;
@@ -150,7 +144,7 @@
     display: flex;
     flex-wrap: wrap;
     /* adds a margin between each child element of form_row class */
-    gap: 16px ;
+    gap: 16px;
 }
 
 .contact_inputs input {
@@ -209,11 +203,17 @@ textarea {
     max-width: 700px;
     margin: 0 auto;
     padding: 10px;
-    background-color: #FFFFFF;
-    
 }
 
 /*Form and Goal Creation*/
+
+.goal-info {
+    text-align: center;
+}
+
+.create-goal {
+    margin-bottom: 20px;
+}
 
 .create-goal, 
 .personal-goals {
@@ -235,38 +235,46 @@ textarea {
     font-weight: bold;
 }
 
-#goal-title,
-#goal-category,
-#goal-description {
-    display: block;
-    width: 90%;
-    padding: 8px;
-    border: 1px;
+#goal-form input,
+#goal-form select,
+#goal-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #238B45;
     border-radius: 4px;
 }
 
+
 #goal-form button {
     display: block;
-    margin: 15px;
     padding: 12px 28px;
-    background-color: black;
+    margin: 12px 0 0;
+    background-color: #2e7d32;
     color: white;
-    font-size: 14px;
-    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    font-family: inherit;
     cursor: pointer;
+}
+
+#goal-form button:hover {
+    background-color: #1b5e20;
 }
 
 /* Goals JS CSS */
 .goal-card {
     padding: 10px;
-    background-color: bisque;
+    background-color: #F4F7EF;
     border: 1px solid;
     border-radius: 6px;
-    margin-bottom: 16px
+    margin-bottom: 16px;
 }
 
 .goal-card h3 {
-    font-family: 'Times New Roman', Times, serif;
     color: black;
 }
 
@@ -287,10 +295,9 @@ textarea {
 
 .goal-category {
     display:inline-block;
-    background: #d7f2b6;
+    background: #c8e6c9;
     color: black;
     font-weight: bold;
-    margin: 0 0 8px;
     border-radius: 999px;
     margin: 0 0 12px;
     padding: 3px 12px;
@@ -307,14 +314,14 @@ textarea {
     padding: 10px 14px;
     border: none;
     border-radius: 4px;
-    background-color: black;
+    background-color: #c62828;
     color: white;
     font-size: 14px;
     cursor: pointer;
 }
 
 .goal-delete:hover {
-    background-color: #EA3546;
+    background-color: #b71c1c;
 }
 
 /* Edit Goal Form */
@@ -341,7 +348,7 @@ textarea {
 }
 
 .edit-message {
-    font-size: 12px;
+    font-size: 14px;
     color: black;
     margin: 0;
 }
@@ -349,9 +356,14 @@ textarea {
 /* Edit Goal Buttons*/
 
 .goal-edit-button,
+.cancel-goal-edit {
+    border-color: #238B45;
+}
+
+.goal-edit-button,
 .save-goal,
 .cancel-goal-edit {
-    font-size: 12px;
+    font-size: 14px;
     padding: 6px 12px;
     border: 1px solid;
     background: #FFFFFF;
@@ -364,13 +376,13 @@ textarea {
 }
 
 .save-goal {
-    background: #185fa5;
+    background: #2e7d32;
     color: #FFFFFF;
-    border-color: #185fa5;
+    border-color: #2e7d32;
 }
 
 .save-goal:hover {
-    background: #0c447c;
+    background: #1b5e20;
 }
 
 .goal-card .goal-edit-button,
@@ -378,6 +390,7 @@ textarea {
     display: inline-block;
     width: auto;
     margin: 12px 16px 0 0;
+    font-size: 14px;
     padding: 8px 16px;
     border-radius: 6px;
     cursor: pointer;
@@ -389,32 +402,22 @@ textarea {
     gap: 10px;
 }
 
-#goal-target,
-#goal-end-date {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px 10px;
-    border: 1px solid black;
-    border-radius: 8px;
-}
-
 .goal-target {
     display: inline-flex;
     align-items: center;
-    background: #f0f6e6;
+    background: #E5EBDD;
     font-size: 16px;
-    font-weight: 600px;
-    color: darkblue;
-    margin: 0 0 8px;
+    font-weight: 600;
+    color: #1E4620;
+    margin: 12px 0 10px;
     border-radius: 8px;
     padding: 6px 12px;
-    margin-top: 12px;
 }
 
 .goal-dates {
-    font-size: 12px;
-    color: #95969D;
-    font-weight: bold;
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 10px;
 }
 
 .goal-complete-label {
@@ -457,11 +460,12 @@ textarea {
 
 .goal-status {
     display: inline-block;
-    border: 1px solid #f0f6e6;
-    background: #f0f6e6;
+    border: 1px solid #C5CEC0;
+    background: #E5EBDD;
+    color: #1E4620;
     border-radius: 6px;
     padding: 3px 12px;
-    margin: 10px 0 0;
+    margin: 10px 0;
 }
 
 /* Media Queries */
@@ -503,5 +507,9 @@ textarea {
 
     .contact_inputs br {
         display: none;
+    }
+
+    .goal-row {
+        grid-template-columns: 1fr;
     }
 }
