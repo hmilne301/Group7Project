@@ -7,12 +7,15 @@
 
         <!-- Linking CSS -->
         <link rel="stylesheet" href="../CSS/universalStyles.css">
+        <link rel="stylesheet" href="../CSS/Dashboard.css">
         <!-- Linking in the icon library to use in nav -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- External Supabase library -->
         <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
         <!-- Linking JS files -->
         <script defer src="../JS_Files/supabase_client.js"></script>
+        <script defer src="../JS_Files/dashboard.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
         <!-- Linking JS navbar -->
         <script defer src="../JS_Files/navbar.js"></script>
     </head>
@@ -58,64 +61,83 @@
         </header>
         <main>
             <!-- Summary-->
+            <div id="summary">
             <section class="summary">
                 <h2 id="summary-title">Summary</h2>
                 <p>Here is a summary of your recent activities and achievements related to carbon emissions.</p>
                 <!-- Add summary content here -->
                 <ul>
-                    <li><strong>Last 7 days (KG CO2e) </strong> <span id="change-7d" ></span></li>
-                    <li><strong>Goals on track:</strong> <span id="goals-on-track"></span></li>
+                    <li><strong>Last Weeks (KG CO2e) </strong> <span id="last7Days" ></span></li>
+                    <li><strong>Goals on track:</strong> <span id="goalsOnTrack"></span></li>
                     <li><strong>Leaderboard rank:</strong> <span id="leaderboard-rank"></span></li>
                     <li><strong>Activity streak (days):</strong> <span id="streak-days"></span> <a href="Achievements.html">Badges →</a></li>
                 </ul>
             </section>
-
+            </div>
+            
+            <div id="overTime">
             <section aria-labelledby="trend-title">
                 <h2 id="trend-title">Footprint over time</h2>
-                <p><a href="Emission_Activity.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Emission_Activity.html">View all →</button>
+                <div class="chart_box">
+                    <canvas id="trend-chart" role="img" aria-label="Line chart showing your carbon footprint over the last 8 weeks" width="400" height="200"></canvas>
+                </div>
                 <table>
-                    <caption>Weekly footprint, last 8 weeks</caption>
+                    <caption>Weekly footprint, last 4 weeks</caption>
                     <thead>
-                        <tr><th scope="col">7 days to</th><th scope="col">kg CO₂e</th></tr>
+                        <tr><th scope="col">Week Data</th><th scope="col">kg CO₂e</th></tr>
                     </thead>
                     <tbody id="trend-rows"></tbody>
                 </table>
             </section>
+            </div>
 
+           <div id="treeCard">
+                <section aria-labelledby="tree-title">
+                    <h2 id="tree-title">Your Impact</h2>
+                    <p>See how your actions are making a difference by following how your emissions effect this tree.</p>
+                    <img id="treeImage" alt="Your impact on the environment ">
+                    <p id="treeText"></p>
+                </section>
+            </div>
+             
+            <div id="categories">
             <section aria-labelledby="categories-title">
                 <h2 id="categories-title">Where it comes from</h2>
-                <p><a href="Emission_Activity.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Emission_Activity.html">View all →</button>
                 <table>
                     <caption>Last 7 days, by category</caption>
                     <thead>
-                        <tr><th scope="col">Category</th><th scope="col">kg CO₂e</th><th scope="col">Share</th></tr>
+                        <tr><th scope="col">Category</th><th scope="col">kg CO₂e</th></tr>
                     </thead>
                     <tbody id="category-rows"></tbody>
                 </table>
             </section>
 
+            </div>
+
             <section aria-labelledby="goals-title">
                 <h2 id="goals-title">Goals</h2>
-                <p><a href="Goals.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Goals.html">View all →</button>
                 <ul id="goals-list"></ul>
             </section>
 
             <section aria-labelledby="leaderboard-title">
                 <h2 id="leaderboard-title">Leaderboard</h2>
-                <p><a href="Leaderboard.html">View all →</a></p>
+                <button type="button" class="view_all" data-href="Leaderboard.html">View all →</button>
                 <ol id="leaderboard-list"></ol>
             </section>
 
             <section aria-labelledby="friends-title">
                     <h2 id="friends-title">Friends activity</h2>
-                    <p><a href="Friends.html">View all →</a></p>
+                    <button type="button" class="view_all" data-href="Friends.html">View all →</button>
                     <ul id="friends-list"></ul>
             </section>    
 
         </main>
         <footer>
             <hr>
-            <span id="copyright">">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
+            <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
             <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
             <a href="https://www.instagram.com/c0zero1" target="_blank">
             <img src="../Images/instagram_icon.png" alt="Instagram" class="instaiconimg" style="width: 20px; height: 20px;"> 

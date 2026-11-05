@@ -93,12 +93,6 @@
     align-items: center;
 }
 
-#contactFormSection legend {
-    border-radius: 1em;
-    padding: 0.5em;
-    margin-top: 1em;
-}
-
 #contactFormSection fieldset {
     background-color: #E5EBDD;
     border: 0.125em solid black;
@@ -151,7 +145,7 @@
     display: flex;
     flex-wrap: wrap;
     /* adds a margin between each child element of form_row class */
-    gap: 16px ;
+    gap: 16px;
 }
 
 .contact_inputs input {
@@ -212,11 +206,17 @@ textarea {
     max-width: 700px;
     margin: 0 auto;
     padding: 10px;
-    background-color: #FFFFFF;
-    
 }
 
 /*Form and Goal Creation*/
+
+.goal-info {
+    text-align: center;
+}
+
+.create-goal {
+    margin-bottom: 20px;
+}
 
 .create-goal, 
 .personal-goals {
@@ -238,44 +238,72 @@ textarea {
     font-weight: bold;
 }
 
-#goal-title,
-#goal-category,
-#goal-description {
-    display: block;
-    width: 90%;
-    padding: 8px;
-    border: 1px;
+#goal-form input,
+#goal-form select,
+#goal-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 16px;
+    border: 1px solid #238B45;
     border-radius: 4px;
 }
 
+
 #goal-form button {
     display: block;
-    margin: 15px;
     padding: 12px 28px;
-    background-color: black;
+    margin: 12px 0 0;
+    background-color: #2e7d32;
     color: white;
-    font-size: 14px;
-    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    font-family: inherit;
     cursor: pointer;
+}
+
+#goal-form button:hover {
+    background-color: #1b5e20;
 }
 
 /* Goals JS CSS */
 .goal-card {
     padding: 10px;
-    background-color: bisque;
+    background-color: #F4F7EF;
     border: 1px solid;
     border-radius: 6px;
+    margin-bottom: 16px;
 }
 
 .goal-card h3 {
-    font-family: 'Times New Roman', Times, serif;
     color: black;
 }
 
+.goal-card .goal-complete-label {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 12px;
+    padding: 8px 12px;
+    background: #FFFFFF;
+    border: 1px solid black;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    
+}
+
 .goal-category {
+    display:inline-block;
+    background: #c8e6c9;
     color: black;
     font-weight: bold;
-    margin: 0 0 8px;
+    border-radius: 999px;
+    margin: 0 0 12px;
+    padding: 3px 12px;
 }
 
 .goal-description {
@@ -414,6 +442,165 @@ textarea {
     margin-right: 4px;
 }
 
+.goal-delete {
+    display: block;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #c62828;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.goal-delete:hover {
+    background-color: #b71c1c;
+}
+
+/* Edit Goal Form */
+.edit-goal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.edit-goal[hidden] {
+    display: none;
+}
+
+.edit-goal input,
+.edit-goal select,
+.edit-goal textarea {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+    padding: 8px 12px;
+    border: 1px solid #238B45;
+    border-radius: 6px;
+}
+
+.edit-message {
+    font-size: 14px;
+    color: black;
+    margin: 0;
+}
+
+/* Edit Goal Buttons*/
+
+.goal-edit-button,
+.cancel-goal-edit {
+    border-color: #238B45;
+}
+
+.goal-edit-button,
+.save-goal,
+.cancel-goal-edit {
+    font-size: 14px;
+    padding: 6px 12px;
+    border: 1px solid;
+    background: #FFFFFF;
+    cursor: pointer;
+}
+
+.goal-edit-button:hover,
+.cancel-goal-edit:hover {
+    background: #E5EBDD;
+}
+
+.save-goal {
+    background: #2e7d32;
+    color: #FFFFFF;
+    border-color: #2e7d32;
+}
+
+.save-goal:hover {
+    background: #1b5e20;
+}
+
+.goal-card .goal-edit-button,
+.goal-card .goal-delete {
+    display: inline-block;
+    width: auto;
+    margin: 12px 16px 0 0;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.goal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.goal-target {
+    display: inline-flex;
+    align-items: center;
+    background: #E5EBDD;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1E4620;
+    margin: 12px 0 10px;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+.goal-dates {
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 10px;
+}
+
+.goal-complete-label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    gap: 10px;
+    margin: 8px 0 14px;
+    cursor: pointer;
+}
+
+.goal-complete-label input {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    place-content: center;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    background: #FFFFFF;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.goal-complete-label input:checked {
+    background: black;
+    border-color: #FFFFFF;
+}
+
+.goal-completed {
+    border-color: #ADC698;
+    background: #ADC698;
+}
+
+.goal-completed h3 {
+    text-decoration: line-through;
+    color: black;
+}
+
+.goal-status {
+    display: inline-block;
+    border: 1px solid #C5CEC0;
+    background: #E5EBDD;
+    color: #1E4620;
+    border-radius: 6px;
+    padding: 3px 12px;
+    margin: 10px 0;
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:426px){
@@ -460,6 +647,36 @@ textarea {
 
     .contact_inputs br {
         display: none;
+    }
+
+    .goal-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* hides it */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+/* when element is on screen it shows it */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* resize table on smaller screens */
+@media (max-width: 600px) {
+    .emissionTable th,
+    .emissionTable td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .editInput {
+        width: 80px;
     }
 }
 
