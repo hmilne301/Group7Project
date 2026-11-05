@@ -244,9 +244,9 @@ const TREE_LOW_LIMIT = 70;
 const TREE_HIGH_LIMIT = 100;
 
 const TREE_levels = {
-    low: { image: "/Images/tree_1.jpg", text: "Low emissions this week! Your Trees are thriving! Keep up the good work!" },
-    medium: { image: "/Images/tree_1.jpg", text: "Moderate emissions this week. Your Trees are losing leaves. Consider more sustainable options!" },
-    high: { image: "/Images/tree_1.jpg", text: "High emissions this week. Your Trees are on fire! Consider more sustainable options!" }
+    low: { image: "../Images/tree_1.jpg", text: "Low emissions this week! Your Trees are thriving! Keep up the good work!" },
+    medium: { image: "../Images/tree_1.jpg", text: "Moderate emissions this week. Your Trees are losing leaves. Consider more sustainable options!" },
+    high: { image: "../Images/tree_1.jpg", text: "High emissions this week. Your Trees are on fire! Consider more sustainable options!" }
 };
 
 async function updateTreeImage() {
@@ -433,5 +433,126 @@ const summaryCheck = setInterval(() => {
         showGoalsOnTrack();
         showLeaderboardPosition();
         showActivityStreak();
+
+        // previews
+        showGoalPreview();
+        showLeaderboardPreview();
+        showFriendPreview();
     }
 }, 100);
+
+// ---------- Dashboard previews ----------
+
+// puts a single "Nothing to show here" item in a list
+function showNothing(list) {
+    list.replaceChildren();
+    const li = document.createElement("li");
+    li.textContent = "Nothing to show here";
+    li.classList.add("empty_preview");
+    list.appendChild(li);
+}
+
+// adds one line of text to a list
+function addListItem(list, text) {
+    const li = document.createElement("li");
+    li.textContent = text;
+    list.appendChild(li);
+    return li;
+}
+
+// Goals preview - shows 1 goal that isn't completed yet
+async function showGoalPreview() {
+    const list = document.getElementById("goals-list");
+
+    const { data, error } = await db
+        .from("goal")
+        .select("goal_name, target_co2_kg, end_date")
+        .eq("user_id", myId)
+        .neq("goal_status", "completed")
+        .order("start_date", { ascending: false })
+        .limit(1);
+
+    if (error || data.length === 0) {
+        if (error) console.error("Error fetching goal preview:", error.message);
+        showNothing(list);
+        return;
+    }
+
+    const goal = data[0];
+    list.replaceChildren();
+
+    let text = goal.goal_name + " - Target: " + goal.target_co2_kg + " kg CO2";
+    if (goal.end_date) {
+        const endText = new Date(goal.end_date + "T00:00:00")
+            .toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+        text += " by " + endText;
+    }
+    addListItem(list, text);
+}
+
+// Leaderboard preview - top 3 users
+async function showLeaderboardPreview() {
+    const list = document.getElementById("leaderboard-list");
+
+    const { data, error } = await db
+        .from("userinfo")
+        .select("user_id, username, emission_points")
+        .order("emission_points", { ascending: false })
+        .limit(3);
+
+    if (error || data.length === 0) {
+        if (error) console.error("Error fetching leaderboard preview:", error.message);
+        showNothing(list);
+        return;
+    } 
+
+    list.replaceChildren();
+
+    for (const user of data) {
+        let name = user.username;
+        if (user.user_id === myId) {
+            name += " (you)";
+        }
+        addListItem(list, name + " - " + user.emission_points + " points");
+    }
+}
+
+// Friends preview - the friend with the most points
+async function showFriendPreview() {
+    const list = document.getElementById("friends-list");
+
+    // finds accepted friendships involving the logged in user
+    const { data: friendships, error } = await db
+        .from("friends")
+        .select("requester_id, receiver_id")
+        .eq("status", "accepted")
+        .or("requester_id.eq." + myId + ",receiver_id.eq." + myId);
+
+    if (error || friendships.length === 0) {
+        if (error) console.error("Error fetching friends:", error.message);
+        showNothing(list);
+        return;
+    }
+
+    // gets the other person's id from each friendship
+    const ids = friendships.map(row =>
+        row.requester_id === myId ? row.receiver_id : row.requester_id
+    );
+
+    // gets the friend with the highest points
+    const { data: topFriend, error: userError } = await db
+        .from("userinfo")
+        .select("username, emission_points")
+        .in("user_id", ids)
+        .order("emission_points", { ascending: false })
+        .limit(1);
+
+    if (userError || topFriend.length === 0) {
+        if (userError) console.error("Error fetching top friend:", userError.message);
+        showNothing(list);
+        return;
+    }
+
+    list.replaceChildren();
+    addListItem(list, topFriend[0].username + " - " + topFriend[0].emission_points + " points");
+}

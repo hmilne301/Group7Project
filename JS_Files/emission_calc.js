@@ -184,7 +184,13 @@ function emissionCalcUpdate(evt) {
 
   // calling the emissionCalculator function and passing parameters
   emissionCalculator(car, transport, plane, heating, usage, diet, clothes, recycle, result);
+    // displaying the result section
+  result.style.display = "flex";
+
+  // scroll down to the results
+  result.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
 
 // Transport
 function calculateTransport(car, transport, plane) {
