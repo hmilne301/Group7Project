@@ -61,28 +61,33 @@
                     <h2>Create a Goal</h2>
                     <p>Set a target you'd like to achieve</p>
 
-                    <form id="goal-form">
-                        <label for="goal-title">Goal Title</label>
+                    <form id="goal-form" novalidate>
 
-                        <input type="text" id="goal-title" name="goal-title" placeholder="e.g. Cycle or Walk more than driving" maxlength="60" required>
-                    
+                        <label for="goal-title">Goal Title</label>
+                        <input type="text" id="goal-title" name="goal-title" placeholder="e.g. Cycle or Walk more than driving" maxlength="60">
+                        <p class="validation_error" id="titleError"></p>
+
                         <label for="goal-category">Category</label>
-                        <select id="goal-category" required>
+                        <select id="goal-category">
                             <option value="">Select a Category</option>
                         </select>
+                        <p class="validation_error" id="categoryError"></p>
 
                         <label for="goal-description">Describe (optional)</label>
-                        <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
+                        <textarea id="goal-description" placeholder="Describe your goal" rows="3"></textarea>
+                        <p class="validation_error" id="descriptionError"></p>
 
                         <div class="goal-row">
                             <div class="goal-fields">
                                 <label for="goal-target"> CO2 Target Reduction (kg)</label>
                                 <input id="goal-target" type="number" min="0" step="0.1">
+                                <p class="validation_error" id="targetError"></p>
                             </div>
 
                             <div class="goal-fields">
                                 <label for="goal-end-date">Target Date</label>
                                 <input id="goal-end-date" type="date">
+                                <p class="validation_error" id="dateError"></p>
                             </div>
                         </div>
 

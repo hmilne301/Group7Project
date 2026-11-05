@@ -482,8 +482,12 @@ textarea {
 
 .edit-message {
     font-size: 14px;
-    color: black;
+    color: #c62828;
     margin: 0;
+}
+
+.edit-message:empty {
+    display: none;
 }
 
 /* Edit Goal Buttons*/

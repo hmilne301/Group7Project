@@ -1,4 +1,4 @@
-const goalFrom = document.getElementById("goal-form")
+const goalForm = document.getElementById("goal-form")
 const goalsList = document.getElementById("goals-list")
 const formMessage = document.getElementById("form-result")
 const categorySelect = document.getElementById("goal-category")
@@ -51,7 +51,7 @@ for (const category of categories || []) {
 
 //Following line of code is performed when user presses create goal button
 
-goalFrom.addEventListener("submit", async function (event) {
+goalForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     //Gather form values
@@ -65,24 +65,50 @@ goalFrom.addEventListener("submit", async function (event) {
     //Start date as YYYY/MM/DD
     const startDate = new Date().toLocaleDateString("en-CA");
 
-    //Check required fields are filled out
+    // clears old messages
+    goalForm.querySelectorAll(".validation_error").forEach(function (error) {
+        error.textContent = ""
+    });
+    formMessage.textContent = ""
 
-    //Check if a user is logged in
-    if (!user) {
-        formMessage.textContent = "Please login to create a goal";
-        return;
+    // every check runs so messages show at once
+    let validInput = true;
+
+    // title check
+    if (title.length < 3 || title.length > 60) {
+        document.getElementById("titleError").textContent = "Title must be between 3 to 60 characters long.";
+        validInput = false;
     }
 
-    if (!title || !category || !target || target < 0) {
-        formMessage.textContent = "Please enter a title and select a category, and a CO2 value above 0";
-        return;
+    // category check
+    if (!category) {
+        document.getElementById("categoryError").textContent = "Please select a category.";
+        validInput = false;
     }
 
+    // description check
+    if (description.length > 200) {
+        document.getElementById("descriptionError").textContent = "Description must be below 200 characters long.";
+        validInput = false;
+    }
+
+    // target check - checking if 0 or empty
+    if (!target || target <= 0) {
+        document.getElementById("targetError").textContent = "Please enter a CO2 target above 0kg.";
+        validInput = false;
+    }
+
+    // date check only when entered
     if (endDate && endDate < startDate) {
-        formMessage.textContent = "The target date cant be in the past"
-        return;
+        document.getElementById("dateError").textContent = "The target date can't be in the past.";
+        validInput = false;
     }
 
+    // stops after all checks have ran
+    if (!validInput) {
+        return;
+    }
+    
     //Save goal to supabase
     const { error } = await db
         .from("goal")
@@ -349,21 +375,29 @@ for (const goal of goals) {
         const newTarget = Number(editTarget.value);
         const newEndDate = editEndDate.value;
 
-        if (!newGoalTitle) {
-            editMessage.textContent = "Enter a title";
-            return;
+        // collects every problem
+        const problems = [];
+
+        if (newGoalTitle.length < 3 || newGoalTitle.length > 60) {
+            problems.push("Title must be 3 to 60 characters long.")
         }
 
-        if (!newTarget || newTarget < 0) {
-            editMessage.textContent = "Enter a CO2 Value above 0";
-            return;
+        if (!newTarget || newTarget <= 0) {
+            problems.push("Enter a CO2 target over 0kg.")
         }
 
         //End Date cant be before the starting date
         if (newEndDate && newEndDate < goal.start_date) {
-            editMessage.textContent = "The target date cannot be before the start date";
+            problems.push("The target date cannot be before start date.")
+        }
+
+        if (problems.length > 0){
+            editMessage.textContent = problems.join(" ");
+            editMessage.setAttribute("rule", "alert");
             return;
         }
+
+        editMessage.textContent = "";
 
         const { error } = await db
             .from("goal")
@@ -447,6 +481,7 @@ for (const goal of goals) {
             const emptyMessage = document.createElement("p");
             emptyMessage.className = "empty-message";
             emptyMessage.textContent = "No goals have been created yet";
+            goalsList.appendChild(emptyMessage);
         }
     });
 
