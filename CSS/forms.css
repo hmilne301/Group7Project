@@ -40,6 +40,7 @@
 #questionnaireForm input[type=radio] {
     height: 20px;
     width: 20px;
+    cursor: pointer;
 }
 
 #questionnaireForm input[type=submit] {
@@ -172,18 +173,20 @@
 
 /* Styling submit buttons for forms */
 input[type=submit] {
-  background-color: #4CAF50;
+  background-color: #45a049;
   color: white;
   padding: 22px 30px;
   border: none;
   border-radius: 4px;
   margin-top: 10px;
   font-size: 20px;
+  cursor: pointer;
 }
 
 /* changing button colour when user floats over button */
 input[type=submit]:hover {
   background-color: #45a049;
+  text-decoration: underline;
 }
 
 /* modifying the textboxes */
@@ -307,6 +310,136 @@ textarea {
     color: black;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+/* Styling for activity form */
+/* activity container */
+.activityContainer{
+    border-radius: 20px;  
+    background: #ffffff;
+    padding: 30px;
+    border-style: solid;
+    border-width: 1px;
+    max-width: 600px;   
+    box-sizing: border-box;
+    width: 80%;          
+    min-height: 500px;   
+    width: 100%;
+    margin: 60px auto;
+    box-shadow: #000000 0px 0px 10px 0px;
+}
+
+
+/* full-width image behind the activity form */
+.activityHero {
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+    background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("../Images/BelLomond.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    margin-inline: -18px;
+}
+
+/* activity container heading */
+.activityContainer h2{
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+}
+
+/* activity form styling */
+.activityForm {
+    margin-top: 80px;
+    margin-bottom: 50px;
+}
+
+/* activity form labels and inputs */
+.activityForm label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* activity form inputs */
+.activityForm input {
+    border-radius: 20px;  
+    width: 93%;
+    padding: 14px;
+    border: 1px solid #000000;
+    font-size: 16px;
+}
+
+/* activity button styling */
+.activityButton{
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    background: #45a049;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;  
+    cursor: pointer;
+    font-size: 18px;
+} 
+
+/* activity form labels styling */
+.activityForm label {
+    display: block;
+    margin-top: 12px;  
+    margin-bottom: 4px;
+}
+
+/* view records button styling */
+.activityRecordsButton{
+    display: block;         
+    box-sizing: border-box;
+    margin-top: 15px;        
+    text-align: center;
+    text-decoration: none;
+}
+
+.activityRecordsButton:hover {
+    text-decoration: underline;
+}
+
+/* activity button hover state */
+.activityButton:hover{
+    text-decoration: underline;
+}
+
+/* message shown under the box */
+.activityMessage {
+    display: none;          
+    text-align: center;
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #238B45;        
+}
+
+/* emission table */
+.emissionTable {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    border: 2px solid
+}
+
+.emissionTable th,
+.emissionTable td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #000000;
+}
+
+.emissionTable th {
+    background: #238B45;
+    color: #ffffff;
+}
+
+.tableButton{
+    margin-right: 4px;
 }
 
 .goal-delete {
@@ -482,6 +615,13 @@ textarea {
         width: 80%;
     }
 
+    /* activity resizing for smaller screens */
+@media (max-width: 700px){
+    .activityContainer{
+        max-width: 40%;
+    }
+}
+
     #questionnaireForm input[type=submit] {
         width: 100%;
     }
@@ -511,5 +651,57 @@ textarea {
 
     .goal-row {
         grid-template-columns: 1fr;
+    }
+}
+
+/* hides it */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+/* when element is on screen it shows it */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* resize table on smaller screens */
+@media (max-width: 600px) {
+    .emissionTable th,
+    .emissionTable td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .editInput {
+        width: 80px;
+    }
+}
+
+/* hides it */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+/* when element is on screen it shows it */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* resize table on smaller screens */
+@media (max-width: 600px) {
+    .emissionTable th,
+    .emissionTable td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .editInput {
+        width: 80px;
     }
 }

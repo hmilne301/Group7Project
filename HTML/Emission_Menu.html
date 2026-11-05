@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Emission Menu</title>
+        <!-- Linking in stylesheets -->
+        <link rel="stylesheet" href="/CSS/universalStyles.css">
+        <link rel="stylesheet" href="/CSS/forms.css">
+        <!-- JS file which won't load after rest of page has that customises the navbar -->
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="/JS_Files/supabase_client.js"></script>
+        <script defer src="/JS_Files/navbar.js"></script>
+        <script defer src="/JS_Files/emission_menu.js"></script>
+    </head>
+    <body>
+        <header>
+
+            <div class="top_bar">
+                <button class="nav_collapse" aria-label="Open menu" aria-expanded="false" aria-controls="main_nav">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <a href="index.html" class="brand">COZERO</a>
+            </div>
+            <!--Navbar-->
+            <nav class="navflex" id="main_nav">
+
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
+                    <li class="active"><a href="Emission_Activity.html">Emission Activity</a></li>
+                    <li><a href="Leaderboard.html">Leaderboard</a></li>
+                    <li><a href="Achievements.html">Achievements</a></li>
+                    <li><a href="Goals.html">Goals</a></li>
+                    <li><a href="Friends.html">Friends</a></li>
+                    <li><a href="Contact_Us.html">Contact Us</a></li>
+                </ul>
+
+            </nav>
+
+        </header>
+        <main>
+          <section>
+            <!-- this is the container for the menu form -->
+            <div class="activityContainer">
+                <h2>Emission Menu</h2>
+                <table class="emissionTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Emission Name</th>
+                            <th>Emission Category</th>
+                            <th>Emission Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emissionTableBody"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><b>Total Emission Amount</b></td>
+                            <td id="emissionTotal">0</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <a href="Emission_Activity.html" class="activityButton activityRecordsButton">Emission activity</a>
+            </div>     
+    </section>
+        </main>
+        <footer>
+            <hr>
+            <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
+            <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
+            <a href="https://www.instagram.com/c0zero1" target="_blank">
+                <img src="/Images/instagram_icon.png" alt="Instagram" class="instaiconimg">
+            </a>
+        </footer>
+    </body>
+</html>
