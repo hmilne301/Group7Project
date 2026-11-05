@@ -22,9 +22,9 @@ db.auth.getSession().then(function(result) {
 async function loadData() {
     const { data, error } = await db
     .from("activity")
-    .select("activity_date, co2_kg_emitted")
+    .select("activity_date, co2_kg_emitted, category ( category_name )")
     .order("activity_date", {ascending: false})
-    .limit(8);
+    .limit(4);
 
     if (error) {
         console.error("Error fetching data:", error.message);
@@ -60,6 +60,69 @@ loadData().then((data) => {
     console.error("Error loading data:", error)
 });
 
+async function showCategoryBreakdown() {
+
+    const {data: {user }, error: authError} = await db.auth.getUser();
+    if (authError || !user) {
+        console.error("Error fetching user data:", authError.message);
+        return;
+    }
+
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+
+    const { data, error } = await db
+    .from("activity")
+    .select("co2_kg_emitted, category ( category_name)")
+    .eq("user_id", myId)
+    .gte("activity_date", start.toLocaleDateString('en-CA'));
+
+    if (error) {
+        console.error("Error fetching category data:", error.message);
+        return;
+    }
+
+        const tableBody2 = document.getElementById('category-rows');
+        tableBody2.innerHTML = "";
+        if ( !data || data.length === 0) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colspan = 3;
+            td.textContent = "Nothing logged in the last 7 days";
+            tr.appendChild(td);
+            tableBody2.appendChild(tr);
+
+            return;
+        }
+    const categoryTotals = {};
+    let fullTotal = 0;
+    data.forEach((item) => {
+        const category = item.category.category_name;
+        const amount = Number(item.co2_kg_emitted) || 0;
+        categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+        fullTotal += amount;
+    });
+    
+    Object.entries(categoryTotals)
+    .sort ((a, b) => b[1] - a[1])
+    .forEach(([category, amount]) => {
+        const tr = document.createElement("tr");
+        const categoryCell = document.createElement("td");
+        categoryCell.textContent = category;
+
+        const amountCell = document.createElement("td");
+        amountCell.textContent = amount.toFixed(1);
+
+        tr.append(categoryCell, amountCell)
+        tableBody2.appendChild(tr);
+        console.log(`Category: ${category}, Amount: ${amount.toFixed(1)}`);
+    }
+    );
+}
+        
+showCategoryBreakdown();
+
+
 async function showLast7Days() {
     const start = new Date();
     start.setDate(start.getDate() - 6);
@@ -71,7 +134,7 @@ async function showLast7Days() {
     .gte("activity_date", from);
 
     if (error) {
-        console.error("Error fetching last 7 days data:", error.message);
+        console.error("Error fetching last weeks data:", error.message);
         return;
     }
     if (data.length === 0) {
@@ -80,7 +143,7 @@ async function showLast7Days() {
 
     let total = 0;
     data.forEach((item) => {
-        total += number(item.co2_kg_emitted);
+        total += Number(item.co2_kg_emitted);
     });
 
     document.getElementById("last7Days").textContent = total.toFixed(1);
@@ -160,7 +223,7 @@ async function showTrendChart() {
             },
             scales: {
                 x: {
-                    title: {display: true, text: "7 days to"},
+                    title: {display: true, text: "Week Ending"},
                     grid: { display: false },
                 },
                 y: {
@@ -174,3 +237,201 @@ async function showTrendChart() {
 }
 
 showTrendChart();
+
+//Tree picture change
+
+const TREE_LOW_LIMIT = 70;
+const TREE_HIGH_LIMIT = 100;
+
+const TREE_levels = {
+    low: { image: "/Images/tree_1.jpg", text: "Low emissions this week! Your Trees are thriving! Keep up the good work!" },
+    medium: { image: "/Images/tree_1.jpg", text: "Moderate emissions this week. Your Trees are losing leaves. Consider more sustainable options!" },
+    high: { image: "/Images/tree_1.jpg", text: "High emissions this week. Your Trees are on fire! Consider more sustainable options!" }
+};
+
+async function updateTreeImage() {
+    const start = new Date();
+    start.setDate(start.getDate() - 6);
+
+    const { data, error } = await db
+    .from("activity")
+    .select("co2_kg_emitted")
+    .gte("activity_date", start.toLocaleDateString('en-CA'));
+
+    if (error) {
+        console.error("Error fetching last week's data for tree image:", error.message);
+        return;
+    }
+
+    // nothing logged in the last week
+    if (data.length === 0) {
+        return;
+    }
+
+    let total = 0;
+    data.forEach((item) => {
+        total += Number(item.co2_kg_emitted);
+    });
+
+    let level = "medium";
+    if (total < TREE_LOW_LIMIT) {
+        level = "low";
+    } else if (total > TREE_HIGH_LIMIT) {
+        level = "high";
+    }
+
+    const treeImage = document.getElementById("treeImage");
+    treeImage.src = TREE_levels[level].image;
+    treeImage.alt = TREE_levels[level].text;
+    document.getElementById("treeText").textContent = TREE_levels[level].text;
+}
+
+updateTreeImage();
+
+// load the dashboard summary data
+// goals on track
+async function showGoalsOnTrack() {
+    const today = new Date().toLocaleDateString('en-CA');
+
+    const { data: goals, error } = await db
+    .from("goal")
+    .select("goal_id, target_co2_kg, start_date, end_date")
+    .eq("user_id", myId)
+    .lte("start_date", today)
+    .gte("end_date", today);
+
+    if (error) {
+        console.error("Error fetching goals:", error.message);
+        return;
+    }
+
+    let count = 0;
+
+    for (const goal of goals) {
+        const { data: activities, error: activityError } = await db
+        .from("activity")
+        .select("co2_kg_emitted")
+        .gte("activity_date", goal.start_date)
+        .lte("activity_date", goal.end_date);
+
+        if (activityError) {
+            console.error("Error fetching activities for goal:", activityError.message);
+            continue;
+        }
+
+        const total = activities.reduce(
+            (sum, item) => sum + Number(item.co2_kg_emitted),
+             0);
+
+        if (total <= Number(goal.target_co2_kg)) {
+            count++;
+        }
+    }
+
+    document.getElementById("goalsOnTrack").textContent = 
+    `${count}/${goals.length}`;
+}
+
+//leaderboard position
+async function showLeaderboardPosition() {
+
+    const { data, error } = await db
+    .from("userinfo")
+    .select("user_id, emission_points")
+    .order("emission_points", { ascending: false }  
+    );
+    
+    if (error) {
+        console.error("Error fetching leaderboard data:", error.message);
+        return;
+    }
+
+    const myUser = data.find(user => user.user_id === myId);
+
+    if (!myUser) {
+        document.getElementById("leaderboard-rank").textContent = "N/A";
+        return;
+    }
+
+    const rank = data.filter(
+        user=> Number(user.emission_points) > 
+               Number(myUser.emission_points)
+    ).length+1;
+
+    document.getElementById("leaderboard-rank").textContent = 
+    `#${rank}`;
+}
+
+// Activity streak
+async function showActivityStreak() {
+    const { data, error } = await db
+    .from("activity")
+    .select("activity_date")
+    .eq("user_id", myId)
+    .order("activity_date", { ascending: false });
+
+    if (error) {
+        console.error("Error fetching activity streak data:", error.message);
+        return;
+    }
+
+    const element = document.getElementById("streak-days");
+
+    if (data.length === 0) {
+        element.textContent = "0";
+        return;
+    }
+
+    const dates = [...new Set(
+        data.map(item => item.activity_date.slice(0, 10))
+    )];
+
+    function formatDate(date){
+        return date.getFullYear() + '-' +
+            String(date.getMonth() + 1).padStart(2, '0') + '-' +
+            String(date.getDate()).padStart(2, '0');
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (
+        dates[0] === formatDate(today) || 
+        dates[0] === formatDate(yesterday)
+    ){
+        element.textContent = "0";
+        return;
+    }
+
+    let streak = 0;
+    const expected = new Date(dates[0] + "T00:00:00Z");
+
+    for (const date of dates) {
+
+        if (date !== formatDate(expected)) {
+            break;
+        }
+
+        streak++;
+        expected.setDate(expected.getDate() - 1);
+    }
+    element.textContent = streak;
+
+}
+
+// Call the functions to display the dashboard summary data
+const summaryCheck = setInterval(() => {
+
+    if (myId !== null) {
+
+        clearInterval(summaryCheck);
+
+        showLast7Days();
+        showGoalsOnTrack();
+        showLeaderboardPosition();
+        showActivityStreak();
+    }
+}, 100);
