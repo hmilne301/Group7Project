@@ -20,6 +20,11 @@ if (savedMessage) {
 //Gets the logged in user
 const { data: { user } } = await db.auth.getUser();
 
+//Sends any user that isnt logged in to the login page
+if (!user) {
+    location.replace("Login.html");
+}
+
 //Loads the categories from supabase
 const { data: categories, error: categoryError } = await db
     .from("category")
@@ -414,6 +419,39 @@ for (const goal of goals) {
     });
 
     goalCard.appendChild(editButton);
+
+    //Add option to delete a goal via a button
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.textContent = "Delete Goal";
+    deleteButton.className = "goal-delete";
+
+    //Delete the goal from supabase and remove the card
+
+    deleteButton.addEventListener("click", async function () {
+        const { error } = await db
+            .from("goal")
+            .delete()
+            .eq("goal_id", goal.goal_id);
+        
+        if (error) {
+            formMessage.textContent = "Could not delete goal";
+            console.error(error.code, error.message, error.details, error.hint);
+            return;
+        }
+
+        goalCard.remove();
+
+        //Shows the empty message if that was the only goal
+        if (!goalsList.querySelector(".goal-card")) {
+            const emptyMessage = document.createElement("p");
+            emptyMessage.className = "empty-message";
+            emptyMessage.textContent = "No goals have been created yet";
+        }
+    });
+
+    goalCard.appendChild(deleteButton);
+
 
 
     goalsList.appendChild(goalCard);

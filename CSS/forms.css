@@ -270,6 +270,21 @@ textarea {
     color: black;
 }
 
+.goal-card .goal-complete-label {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 12px;
+    padding: 8px 12px;
+    background: #FFFFFF;
+    border: 1px solid black;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    
+}
+
 .goal-category {
     display:inline-block;
     background: #d7f2b6;
@@ -285,35 +300,6 @@ textarea {
     color: black;
     margin-top: 0;
     margin-bottom: 0;
-}
-
-.progress-bar {
-    width: 0%;
-    height: 12px;
-    background-color:#D8D8D8;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-fill {
-    width: 0%;
-    height: 100%;
-    background-color: #71B340;
-    border-radius: 10px;
-}
-
-.goal-slider {
-    display: block;
-    width: 100%;
-    margin: 0 0 8px;
-    cursor: pointer;
-    accent-color: #71B340;
-}
-
-.progress-label {
-    margin-bottom: 8px;
-    font-weight: bold;
 }
 
 .goal-delete {
@@ -432,10 +418,31 @@ textarea {
 }
 
 .goal-complete-label {
-    display: block;
+    display: inline-flex;
+    align-items: center;
     font-size: 14px;
+    gap: 10px;
     margin: 8px 0 14px;
     cursor: pointer;
+}
+
+.goal-complete-label input {
+    appearance: none;
+    -webkit-appearance: none;
+    display: grid;
+    place-content: center;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    background: #FFFFFF;
+    border: 2px solid black;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.goal-complete-label input:checked {
+    background: black;
+    border-color: #FFFFFF;
 }
 
 .goal-completed {
