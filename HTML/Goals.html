@@ -5,11 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Goals</title>
         <!-- Linking in stylesheets -->
-        <link rel="stylesheet" href="/CSS/universalStyles.css">
-        <link rel="stylesheet" href="/CSS/forms.css">
+        <link rel="stylesheet" href="../CSS/universalStyles.css">
+        <link rel="stylesheet" href="../CSS/forms.css">
+        <!-- Linking in the icon library to use in nav -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <!-- JS file which won't load after rest of page has that customises the navbar -->
-        <script defer src="/JS_Files/navbar.js"></script>
-        <script defer src="/JS_Files/goals.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script defer src="../JS_Files/supabase_client.js"></script>
+        <script defer src="../JS_Files/navbar.js"></script>
+        <script type="module" src="../JS_Files/goals.js"></script>
     </head>
     <body>
         <header>
@@ -21,66 +25,81 @@
                     <span></span>
                 </button>
                 <a href="Home.html" class="brand">COZERO</a>
+
+                <!-- Profile icon: takes the user to their account page -->
+                <a href="My_account.html" class="profile_link" aria-label="My account" title="My account">
+                    <svg class="profile_icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="8" r="4"></circle>
+                        <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+                    </svg>
+                    <span class="profile_initials" hidden></span>
+                </a>
             </div>
             <!--Navbar-->
             <nav class="navflex" id="main_nav">
-
                 <ul>
-                    <li><a href="Home.html">Home</a></li>
-                    <li><a href="Carbon_Emission_Calculator.html">Carbon Emission Calculator</a></li>
-                    <li><a href="Emission_Activity.html">Emission Activity</a></li>
-                    <li><a href="Leaderboard.html">Leaderboard</a></li>
-                    <li><a href="Achievements.html">Achievements</a></li>
-                    <li class="active"><a href="Goals.html">Goals</a></li>
-                    <li><a href="Friends.html">Friends</a></li>
-                    <li><a href="Emissions_Info.html">Emissions Info</a></li>
-                    <li><a href="Contact_Us.html">Contact Us</a></li>
+                    <li><a href="Home.html"><i class="fa fa-fw fa-home" aria-hidden="true"></i>Home</a></li>
+                    <li><a href="Dashboard.html"><i class="fa fa-fw fa-pie-chart" aria-hidden="true"></i>My Dashboard</a></li>
+                    <li><a href="Carbon_Emission_Calculator.html"><i class="fa fa-fw fa-calculator" aria-hidden="true"></i>Carbon Emission Calculator</a></li>
+                    <li><a href="Emission_Activity.html"><i class="fa fa-fw fa-tree" aria-hidden="true"></i>Emission Activity</a></li>
+                    <li><a href="Leaderboard.html"><i class="fa fa-fw fa-list" aria-hidden="true"></i>Leaderboard</a></li>
+                    <li><a href="Achievements.html"><i class="fa fa-fw fa-trophy" aria-hidden="true"></i>Achievements</a></li>
+                    <li class="active"><a href="Goals.html"><i class="fa fa-fw fa-bullseye" aria-hidden="true"></i>Goals</a></li>
+                    <li><a href="Friends.html"><i class="fa fa-fw fa-group" aria-hidden="true"></i>Friends</a></li>
+                    <li><a href="Contact_Us.html"><i class="fa fa-fw fa-envelope" aria-hidden="true"></i>Contact Us</a></li>
                 </ul>
-
             </nav>
-            
-            <section class="header_container">
-                <h1></h1>
-            </section>
 
         </header>
         <main>
             <div class="goals-container">
-            <section class="create-goal">
-                <h2>Create a Goal</h2>
-                <p>Set a target you'd like to achieve</p>
+                <section class="goal-info">
+                    <h1> Goals </h1>
+                    <p>Set goals for you to achieve to help reduce your emissions.</p>
+                </section>
+                <section class="create-goal">
+                    <h2>Create a Goal</h2>
+                    <p>Set a target you'd like to achieve</p>
 
-                <form id="goal-form">
-                    <label for="goal-title">Goal Title</label>
+                    <form id="goal-form">
+                        <label for="goal-title">Goal Title</label>
 
-                    <input type="text" id="goal-title" name="goal-title" placeholder="i.e. Cycle or Walk more than driving" maxlength="60" required>
-                
-                    <label for="goal-category">Category</label>
-                    <select id="goal-category" required>
-                        <option value="">Select a Category</option>
-                        <option value="Home">Home</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Food">Food</option>
-                        <option value="Lifestyle">Lifestyle</option>
-                    </select>
+                        <input type="text" id="goal-title" name="goal-title" placeholder="e.g. Cycle or Walk more than driving" maxlength="60" required>
+                    
+                        <label for="goal-category">Category</label>
+                        <select id="goal-category" required>
+                            <option value="">Select a Category</option>
+                        </select>
 
-                    <label for="goal-description">Describe (Describe your goal)</label>
-                    <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
+                        <label for="goal-description">Describe (optional)</label>
+                        <textarea id="goal-description" placeholder="Describe your goal" maxlength="200" rows="3"></textarea>
 
-                    <button type="submit">Create Your Goal</button>
-                    <p id="form-result" role="status"></p>
-                </form>
-            </section>
+                        <div class="goal-row">
+                            <div class="goal-fields">
+                                <label for="goal-target"> CO2 Target Reduction (kg)</label>
+                                <input id="goal-target" type="number" min="0" step="0.1">
+                            </div>
 
-            <section class="personal-goals">
-                <h2>My Goals</h2>
+                            <div class="goal-fields">
+                                <label for="goal-end-date">Target Date</label>
+                                <input id="goal-end-date" type="date">
+                            </div>
+                        </div>
 
-                <div id="goals-list">
-                    <p class="empty-message">
-                        You have not created any goals yet
-                    </p>
-                </div>
-            </section>
+                        <button type="submit">Create Your Goal</button>
+                        <p id="form-result" role="status"></p>
+                    </form>
+                </section>
+
+                <section class="personal-goals">
+                    <h2>My Goals</h2>
+
+                    <div id="goals-list">
+                        <p class="empty-message">
+                            You have not created any goals yet
+                        </p>
+                    </div>
+                </section>
             </div>
         </main>
         <footer>
@@ -88,7 +107,7 @@
             <span id="copyright">© Copyright COZero.</span> <b>Telephone:</b> +44 7826 569414.
             <a href="mailto:c0zero1231@outlook.com"><b>Email: </b>c0zero1231@outlook.com</a>
             <a href="https://www.instagram.com/c0zero1" target="_blank">
-                <img src="/Images/instagram_icon.png" alt="Instagram" class="instaiconimg">
+                <img src="../Images/instagram_icon.png" alt="Instagram" class="instaiconimg">
             </a>
         </footer>
     </body>
