@@ -59,6 +59,7 @@
     border-radius: 8px;
     width: fit-content;
     min-width: 320px;
+    scroll-margin-top: 120px;
 }
 
 .result_container {
