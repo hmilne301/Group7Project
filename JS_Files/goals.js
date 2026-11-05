@@ -1,13 +1,52 @@
 const goalFrom = document.getElementById("goal-form")
 const goalsList = document.getElementById("goals-list")
 const formMessage = document.getElementById("form-result")
+const categorySelect = document.getElementById("goal-category")
 
 //Date format for the dates created on the cards
 const goalDateFormat = { day: "numeric", month: "short", year: "numeric" };
 
+//The word the database uses for a completed goal
+const completedStatus = "completed";
+
+//Shows the message saved before page is reloaded
+const savedMessage = sessionStorage.getItem("goalMessage");
+
+if (savedMessage) {
+    formMessage.textContent = savedMessage;
+    sessionStorage.removeItem("goalMessage");
+}
+
+//Gets the logged in user
+const { data: { user } } = await db.auth.getUser();
+
+//Loads the categories from supabase
+const { data: categories, error: categoryError } = await db
+    .from("category")
+    .select("*")
+    .order("category_name", { ascending: true});
+
+if (categoryError) {
+    formMessage.textContent = "Could not load categories";
+    console.error(categoryError);
+}
+
+//Lookup so a category_id can be found by name
+
+const categoryNames = {};
+
+for (const category of categories || []) {
+    categoryNames[category.category_id] = category.category_name;
+
+    const option = document.createElement("option");
+    option.value = category.category_id;
+    option.textContent = category.category_name;
+    categorySelect.appendChild(option);
+}
+
 //Following line of code is performed when user presses create goal button
 
-goalFrom.addEventListener("submit", function (event) {
+goalFrom.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     //Gather form values
@@ -23,6 +62,12 @@ goalFrom.addEventListener("submit", function (event) {
 
     //Check required fields are filled out
 
+    //Check if a user is logged in
+    if (!user) {
+        formMessage.textContent = "Please login to create a goal";
+        return;
+    }
+
     if (!title || !category || !target || target < 0) {
         formMessage.textContent = "Please enter a title and select a category, and a CO2 value above 0";
         return;
@@ -33,16 +78,66 @@ goalFrom.addEventListener("submit", function (event) {
         return;
     }
 
-    //Remove empty message awaiting new goal
+    //Save goal to supabase
+    const { error } = await db
+        .from("goal")
+        .insert({
+            goal_name: title,
+            goal_description: description || null,
+            category_id: category,
+            target_co2_kg: target,
+            start_date: startDate,
+            goal_status: "active",
+            end_date: endDate || null,
+            user_id: user.id
+        });
+
+    if (error) {
+        formMessage.textContent = "Could not save goal";
+        console.error(error.code, error.message, error.details, error.hint);
+        return;
+    }
+
+    sessionStorage.setItem("goalMessage", "Goal Created successfully");
+    location.reload();
+
+});
+
+   
+//Loads user goals from supabase
+let goals =[];
+
+if (user) {
+    const { data, error: loadError } = await db
+        .from("goal")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("start_date", { ascending: true })
+        .order("goal_id", { ascending: true });
+
+    if (loadError) {
+        formMessage.textContent = "Could not load goals"
+        console.error(loadError);
+    }
+
+    goals = data || [];
+
+} else {
+    formMessage.textContent = "Please login to see your goals";
+
+}
+
+//Removes the empty message while awiting a new goal
+if (goals.length > 0) {
     const emptyMessage = goalsList.querySelector(".empty-message");
 
     if (emptyMessage) {
         emptyMessage.remove();
     }
+}
 
-    //Keep current values that can change when edited
-    let currentTarget = target;
-    let currentEndDate = endDate;
+//Builds a goal card for each saved gol
+for (const goal of goals) {
 
     //Creates a goal card
     const goalCard = document.createElement("article");
@@ -51,49 +146,53 @@ goalFrom.addEventListener("submit", function (event) {
     //Add title to the card
 
     const goalTitle = document.createElement("h3");
-    goalTitle.textContent = title;
+    goalTitle.textContent = goal.goal_name;
     goalCard.appendChild(goalTitle);
 
     //Add the category to the card
 
     const goalCategory = document.createElement("p");
     goalCategory.className = "goal-category";
-    goalCategory.textContent = category;
+    goalCategory.textContent = categoryNames[goal.category_id] || "Uncategorised";
     goalCard.appendChild(goalCategory);
 
     //If a description was entered then it is added to the card
     let goalDescription = null;
 
-    if (description) {
+    if (goal.goal_description) {
         goalDescription = document.createElement("p");
         goalDescription.className = "goal-description";
-        goalDescription.textContent = description;
+        goalDescription.textContent = goal.goal_description;
         goalCard.appendChild(goalDescription);
     }
 
     //Adds the targeted reduced amount to the card
     const goalTarget = document.createElement("p");
     goalTarget.className = "goal-target";
-    goalTarget.textContent = `Target: ${currentTarget} kg CO2`;
+    goalTarget.textContent = `Target: ${goal.target_co2_kg} kg CO2`;
     goalCard.appendChild(goalTarget);
 
     //Adds the dates to the card
-    const startText = new Date(startDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat);
+    const startText = new Date(goal.start_date + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat);
 
     const goalDates = document.createElement("p");
     goalDates.className = "goal-dates";
-    goalDates.textContent = currentEndDate
-        ? `${startText} to ${new Date(currentEndDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
+    goalDates.textContent = goal.end_date
+        ? `${startText} to ${new Date(goal.end_date + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
         : `Started ${startText}`;
     goalCard.appendChild(goalDates);
 
     //Adds the label in preperation for the checkbot
     const statusLabel = document.createElement("p");
     statusLabel.className = "goal-status";
-    statusLabel.textContent = "Completed: No";
+    statusLabel.textContent = `Completed: ${goal.goal_status === completedStatus ? "Yes" : "No"}`;
     goalCard.appendChild(statusLabel);
 
-    //Opens edit form when user pressed edit goal button
+    if (goal.goal_status === completedStatus) {
+        goalCard.classList.add("goal-completed");
+    }
+
+       //Opens edit form when user pressed edit goal button
     const editForm = document.createElement("div");
     editForm.className = "edit-goal";
     editForm.hidden = true;
@@ -107,7 +206,7 @@ goalFrom.addEventListener("submit", function (event) {
     const editCategory = document.createElement("select");
     editCategory.setAttribute("aria-label", "Goal Category");
 
-    for (const formOption of document.getElementById("goal-category").options) {
+    for (const formOption of categorySelect.options) {
         if (formOption.value) {
             const option = document.createElement("option");
             option.value = formOption.value;
@@ -167,61 +266,37 @@ goalFrom.addEventListener("submit", function (event) {
 
     goalCard.appendChild(editForm);
 
-    //Add a checkbox which acts as the goal status being completed or not like a boolean field
+    //Adds a checkbox which acts as the completion of goal_status which is being treated like a boolean value with appropriate text
     const completeLabel = document.createElement("label");
     completeLabel.className = "goal-complete-label";
 
     const completeCheckbox = document.createElement("input");
     completeCheckbox.type = "checkbox";
+    completeCheckbox.checked = goal.goal_status === completedStatus;
 
     completeLabel.append(completeCheckbox, " Mark as complete");
     goalCard.appendChild(completeLabel)
 
-    //Updates the status when the checkbox is interactacted with
-    completeCheckbox.addEventListener("change", function () {
+    //Saves the interaction to supabase
+    completeCheckbox.addEventListener("change", async function () {
+        const status = completeCheckbox.checked ? completedStatus : "active";
+
+        const { error } = await db
+            .from("goal")
+            .update({ goal_status: status})
+            .eq("goal_id", goal.goal_id);
+        if (error) {
+            //Put the status back if it failed to update
+            completeCheckbox.checked = !completeCheckbox.checked;
+            formMessage.textContent = "Could not update status";
+            console.error(error.code, error.message, error.details, error.hint);
+            return;
+        }
+
+        goal.goal_status = status;
         statusLabel.textContent = `Completed: ${completeCheckbox.checked ? "Yes" : "No"}`;
         goalCard.classList.toggle("goal-completed", completeCheckbox.checked);
     });
-
-
-    //Add Progress Label
-    const progressLabel = document.createElement("p");
-    progressLabel.className = "progress-label";
-    progressLabel.textContent = "Progress: 0%";
-    goalCard.appendChild(progressLabel);
-
-    //Create the progress bar
-    const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar";
-
-    const progressFill = document.createElement("div");
-    progressFill.className = "progress-fill";
-
-    progressBar.appendChild(progressFill);
-    goalCard.appendChild(progressBar);
-
-    //Range Slider for increments of 25
-
-    const progressSlider = document.createElement("input");
-    progressSlider.type = "range";
-    progressSlider.min = "0";
-    progressSlider.max = "100";
-    progressSlider.step = "25";
-    progressSlider.value = "0";
-    progressSlider.className = "goal-slider"
-    progressSlider.setAttribute("aria-label", "Goal Progress")
-
-    //Update the slider when the slider moves
-
-    progressSlider.addEventListener("input", function () {
-        const progress = Number(progressSlider.value);
-
-        progressLabel.textContent = `Progress: ${progress}%`;
-        progressFill.style.width = `${progress}%`;
-    });
-
-    //Adds slider to the goal card
-    goalCard.appendChild(progressSlider)
 
     //Add edit button
     const editButton = document.createElement("button");
@@ -230,11 +305,11 @@ goalFrom.addEventListener("submit", function (event) {
     editButton.className = "goal-edit-button";
 
     editButton.addEventListener("click", function () {
-        editTitle.value = goalTitle.textContent;
-        editCategory.value = goalCategory.textContent;
-        editDescription.value = goalDescription ? goalDescription.textContent : "";
-        editTarget.value = currentTarget;
-        editEndDate.value = currentEndDate;
+        editTitle.value = goal.goal_name;
+        editCategory.value = goal.category_id;
+        editDescription.value = goal.goal_description || "";
+        editTarget.value = goal.target_co2_kg;
+        editEndDate.value = goal.end_date || "";
         editMessage.textContent = "";
 
         goalTitle.hidden = true;
@@ -263,7 +338,7 @@ goalFrom.addEventListener("submit", function (event) {
     });
 
     //Update the Goal Card when new values are entered
-    saveButton.addEventListener("click", function () {
+    saveButton.addEventListener("click", async function () {
         const newGoalTitle = editTitle.value.trim();
         const newGoalDescription = editDescription.value.trim();
         const newTarget = Number(editTarget.value);
@@ -280,20 +355,39 @@ goalFrom.addEventListener("submit", function (event) {
         }
 
         //End Date cant be before the starting date
-        if (newEndDate && newEndDate < startDate) {
+        if (newEndDate && newEndDate < goal.start_date) {
             editMessage.textContent = "The target date cannot be before the start date";
             return;
         }
 
-        goalTitle.textContent = newGoalTitle;
-        goalCategory.textContent = editCategory.value;
+        const { error } = await db
+            .from("goal")
+            .update({
+                goal_name: newGoalTitle,
+                category_id: editCategory.value,
+                goal_description: newGoalDescription || null,
+                target_co2_kg: newTarget,
+                end_date: newEndDate || null
+            })
+            .eq("goal_id", goal.goal_id);
+        
+        if (error) {
+            editMessage.textContent = "Could not save changes";
+            console.error(error.code, error.message, error.details, error.hint);
+            return;
+        }
 
-        currentTarget = newTarget;
-        currentEndDate = newEndDate;
+        goal.goal_name = newGoalTitle;
+        goal.category_id = editCategory.value;
+        goal.goal_description = newGoalDescription || null;
+        goal.target_co2_kg = newTarget;
+        goal.end_date = newEndDate || null;
 
-        goalTarget.textContent = `Target: ${currentTarget} kg CO2`;
-        goalDates.textContent = currentEndDate
-            ? `${startText} to ${new Date(currentEndDate + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
+        goalTitle.textContent = goal.goal_name;
+        goalCategory.textContent = categoryNames[goal.category_id] || "Uncategorised";
+        goalTarget.textContent = `Target: ${goal.target_co2_kg} kg CO2`;
+        goalDates.textContent = goal.end_date
+            ? `${startText} to ${new Date(goal.end_date + "T00:00:00").toLocaleDateString("en-GB", goalDateFormat)}`
             : `Started ${startText}`;
 
 
@@ -321,26 +415,7 @@ goalFrom.addEventListener("submit", function (event) {
 
     goalCard.appendChild(editButton);
 
-    //Add option to delete via a button
-    const deleteButton = document.createElement("button");
-    deleteButton.type = "button";
-    deleteButton.textContent = "Delete Goal";
-    deleteButton.className = "goal-delete";
 
-    //Delete the goal after confirmation through window
-
-    deleteButton.addEventListener("click", function () {
-        goalCard.remove();
-      
-    });
-
-    goalCard.appendChild(deleteButton)
-
-    //Displays the new created goal
     goalsList.appendChild(goalCard);
 
-    goalFrom.reset();
-
-    formMessage.textContent = "Goal Created Successfully"
-
-});
+}
