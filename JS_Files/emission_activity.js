@@ -66,11 +66,12 @@ document.getElementById("emissionAmount").addEventListener("input", function () 
 // fade elements in when they scroll into view
 const revealItems = document.querySelectorAll('.reveal');
 
+// IntersectionObserver to observe when elements are in view
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target); // only animate once
+            observer.unobserve(entry.target); 
         }
     });
 }, { threshold: 0.15 });
