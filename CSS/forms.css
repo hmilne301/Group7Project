@@ -110,6 +110,27 @@
     background-color: #E5EBDD;
     border-radius: 8px;
     margin: 5px;
+    animation: fadeInOut 4s ease-in-out forwards;
+}
+
+/* fades the success and error messages in and out */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    15% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
 }
 
 #nameError,
@@ -174,7 +195,7 @@
 
 /* Styling submit buttons for forms */
 input[type=submit] {
-  background-color: #45a049;
+  background-color: #2e7d32;
   color: white;
   padding: 22px 30px;
   border: none;
@@ -186,8 +207,7 @@ input[type=submit] {
 
 /* changing button colour when user floats over button */
 input[type=submit]:hover {
-  background-color: #45a049;
-  text-decoration: underline;
+  background-color: #1b5e20;
 }
 
 /* modifying the textboxes */
