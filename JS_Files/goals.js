@@ -29,6 +29,7 @@ if (!user) {
 const { data: categories, error: categoryError } = await db
     .from("category")
     .select("*")
+    .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
     .order("category_name", { ascending: true});
 
 if (categoryError) {

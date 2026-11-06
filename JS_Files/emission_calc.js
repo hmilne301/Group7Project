@@ -40,7 +40,7 @@ async function addCalculatedEmissions(total, nameInput, button, messageE) {
     activity_date: new Date().toISOString().slice(0, 10),
     quantity: kg,
     co2_kg_emitted: kg,
-    category_id: "09004f40-3a19-417d-95c6-5b4f34da1af8", // this is the other category id 
+    category_id: "85a649bb-75de-420b-88fd-9751002f2794", // this is the yearly emission category id 
     user_id: session.user.id
   }]);
 

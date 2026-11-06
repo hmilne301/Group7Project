@@ -23,6 +23,7 @@ async function loadData() {
     const { data, error } = await db
     .from("activity")
     .select("activity_date, co2_kg_emitted, category ( category_name )")
+    .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
     .order("activity_date", {ascending: false})
     .limit(4);
 
@@ -72,10 +73,11 @@ async function showCategoryBreakdown() {
     start.setDate(start.getDate() - 6);
 
     const { data, error } = await db
-    .from("activity")
-    .select("co2_kg_emitted, category ( category_name)")
-    .eq("user_id", myId)
-    .gte("activity_date", start.toLocaleDateString('en-CA'));
+        .from("activity")
+        .select("co2_kg_emitted, category ( category_name)")
+        .eq("user_id", myId)
+        .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
+        .gte("activity_date", start.toLocaleDateString('en-CA'));
 
     if (error) {
         console.error("Error fetching category data:", error.message);
@@ -129,9 +131,10 @@ async function showLast7Days() {
     const from = start.toLocaleDateString('en-CA'); // Format as YYYY-MM-DD
 
     const { data, error } = await db
-    .from("activity")
-    .select("co2_kg_emitted")
-    .gte("activity_date", from);
+        .from("activity")
+        .select("co2_kg_emitted")
+        .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
+        .gte("activity_date", from);
 
     if (error) {
         console.error("Error fetching last weeks data:", error.message);
@@ -172,9 +175,10 @@ async function showTrendChart() {
     start.setDate(start.getDate() - (WEEKS *7) -1);
 
     const { data, error } = await db
-    .from("activity")
-    .select("activity_date, co2_kg_emitted")
-    .gte("activity_date", start.toLocaleDateString('en-CA'));
+        .from("activity")
+        .select("activity_date, co2_kg_emitted")
+        .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
+        .gte("activity_date", start.toLocaleDateString('en-CA'));
 
     if (error) {
         console.error("Error fetching trend Chart data:", error.message);
@@ -254,9 +258,10 @@ async function updateTreeImage() {
     start.setDate(start.getDate() - 6);
 
     const { data, error } = await db
-    .from("activity")
-    .select("co2_kg_emitted")
-    .gte("activity_date", start.toLocaleDateString('en-CA'));
+        .from("activity")
+        .select("co2_kg_emitted")
+        .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
+        .gte("activity_date", start.toLocaleDateString('en-CA'));
 
     if (error) {
         console.error("Error fetching last week's data for tree image:", error.message);
