@@ -370,6 +370,22 @@ textarea {
     font-size: 16px;
 }
 
+.emission_category {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.emission_category:focus {
+    outline: 2px solid #45A049;
+    outline-offset: 2px;
+}
+
 /* activity button styling */
 .activityButton,
 .activityForm button, 
