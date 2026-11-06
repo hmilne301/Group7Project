@@ -195,10 +195,10 @@ async function showTrendChart() {
         totals[WEEKS - 1 - Math.floor(daysAgo / 7)] += Number(item.co2_kg_emitted);
     });
 
-    // label point with date week end
+     // label point with date week end (oldest on the left, this week on the right)
     const labels = totals.map((total, i) => {
         const weekEnd = new Date(today);
-        weekEnd.setDate(weekEnd.getDate() - (i * 7));
+        weekEnd.setDate(weekEnd.getDate() - ((WEEKS - 1 - i) * 7));
         return weekEnd.toLocaleDateString('en-CA');
     });
 
