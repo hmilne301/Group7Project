@@ -110,6 +110,27 @@
     background-color: #E5EBDD;
     border-radius: 8px;
     margin: 5px;
+    animation: fadeInOut 4s ease-in-out forwards;
+}
+
+/* fades the success and error messages in and out */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    15% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    80% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
 }
 
 #nameError,
@@ -174,7 +195,7 @@
 
 /* Styling submit buttons for forms */
 input[type=submit] {
-  background-color: #45a049;
+  background-color: #2e7d32;
   color: white;
   padding: 22px 30px;
   border: none;
@@ -186,8 +207,7 @@ input[type=submit] {
 
 /* changing button colour when user floats over button */
 input[type=submit]:hover {
-  background-color: #45a049;
-  text-decoration: underline;
+  background-color: #1b5e20;
 }
 
 /* modifying the textboxes */
@@ -368,6 +388,22 @@ textarea {
     border: 1px solid black;
     border-radius: 20px;  
     font-size: 16px;
+}
+
+.emission_category {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.emission_category:focus {
+    outline: 2px solid #45A049;
+    outline-offset: 2px;
 }
 
 /* activity button styling */
@@ -686,7 +722,6 @@ textarea {
     .activityContainer{
         max-width: auto;
     }
-}
 
     #questionnaireForm input[type=submit] {
         width: 100%;
@@ -718,6 +753,7 @@ textarea {
     .goal-row {
         grid-template-columns: 1fr;
     }
+}
 
 /* resize table on smaller screens */
 @media screen and (max-width: 600px) {
