@@ -702,7 +702,6 @@ textarea {
     .activityContainer{
         max-width: auto;
     }
-}
 
     #questionnaireForm input[type=submit] {
         width: 100%;
@@ -734,6 +733,7 @@ textarea {
     .goal-row {
         grid-template-columns: 1fr;
     }
+}
 
 /* resize table on smaller screens */
 @media screen and (max-width: 600px) {
