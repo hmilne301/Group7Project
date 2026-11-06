@@ -192,7 +192,7 @@ async function showTrendChart() {
         if (daysAgo <0 || daysAgo >= WEEKS * 7){
             return;
         }
-        totals[Math.floor(daysAgo / 7)] += Number(item.co2_kg_emitted);
+        totals[WEEKS - 1 - Math.floor(daysAgo / 7)] += Number(item.co2_kg_emitted);
     });
 
     // label point with date week end
