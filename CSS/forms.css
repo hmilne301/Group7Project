@@ -315,19 +315,17 @@ textarea {
 
 /* Styling for activity form */
 /* activity container */
-.activityContainer{
-    border-radius: 20px;  
-    background: #ffffff;
-    padding: 30px;
-    border-style: solid;
-    border-width: 1px;
-    max-width: 600px;   
-    box-sizing: border-box;
-    width: 80%;          
-    min-height: 500px;   
+.activityContainer{ 
     width: 100%;
+    max-width: 600px;
+    min-height: 500px;
+    box-sizing: border-box;
     margin: 60px auto;
-    box-shadow: #000000 0px 0px 10px 0px;
+    padding: 30px;
+    background: #FFFFFF;
+    border: 1px solid black;
+    border-radius: 20px;
+    box-shadow: #000 0 0 10px 0;
 }
 
 
@@ -359,36 +357,43 @@ textarea {
 /* activity form labels and inputs */
 .activityForm label {
     display: block;
+    margin-top: 12px;
     margin-bottom: 8px;
 }
 
 /* activity form inputs */
 .activityForm input {
-    border-radius: 20px;  
     width: 93%;
     padding: 14px;
-    border: 1px solid #000000;
+    border: 1px solid black;
+    border-radius: 20px;  
     font-size: 16px;
 }
 
 /* activity button styling */
-.activityButton{
-    margin-top: 20px;
+.activityButton,
+.activityForm button, 
+.activityContainer button {
+    display: block;
     width: 100%;
+    box-sizing: border-box;
+    margin-top: 15px;
     padding: 14px;
     background: #45a049;
-    color: #ffffff;
+    color: white;
     border: none;
-    border-radius: 20px;  
-    cursor: pointer;
+    border-radius: 20px; 
     font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 } 
 
-/* activity form labels styling */
-.activityForm label {
-    display: block;
-    margin-top: 12px;  
-    margin-bottom: 4px;
+.activityButton:hover,
+.activityForm button:hover,
+.activityContainer button:hover {
+    background-color: #388E3C;
 }
 
 /* view records button styling */
@@ -400,20 +405,20 @@ textarea {
     text-decoration: none;
 }
 
-.activityRecordsButton:hover {
-    text-decoration: underline;
-}
-
-/* activity button hover state */
-.activityButton:hover{
-    text-decoration: underline;
+.editInput {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 
 /* message shown under the box */
 .activityMessage {
     display: none;          
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
     font-size: 22px;
     font-weight: bold;
     color: #238B45;        
@@ -424,24 +429,66 @@ textarea {
     width: 100%;
     margin-top: 30px;
     border-collapse: collapse;
-    border: 2px solid
+    border: 2px solid black;
 }
 
 .emissionTable th,
 .emissionTable td {
     padding: 12px;
     text-align: left;
-    border: 1px solid #000000;
+    border: 1px solid black;
 }
 
 .emissionTable th {
     background: #238B45;
-    color: #ffffff;
+    color: white;
 }
 
-.tableButton{
-    margin-right: 4px;
+/* Emission table action buttons */
+
+.activityContainer .emissionTable .tableButton {
+    padding: 8px 14px;
+    margin: 3px;
+    border: none;
+    border-radius: 8px;
+    background-color: #45A049;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
 }
+
+.activityContainer .emissionTable .tableButton:hover {
+    background-color: #388E3C;
+}
+
+/* Remove button */
+.activityContainer .emissionTable .removeButton {
+    background-color: #D9534F;
+}
+
+.activityContainer .emissionTable .removeButton:hover {
+    background-color: #C9302C;
+}
+
+/* Save button */
+.tableButton .saveButton {
+    background-color: #45A049;
+}
+
+.tableButton .saveButton:hover {
+    background-color: #388E3C;
+}
+
+/* Cancel Button */
+.activityContainer .emissionTable .cancelButton {
+    background-color: #D9534F;
+}
+
+.activityContainer .emissionTable .cancelButton:hover {
+    background-color: #C9302C;
+}
+
+/* Goal Styling */
 
 .goal-delete {
     display: block;
@@ -606,6 +653,19 @@ textarea {
     margin: 10px 0;
 }
 
+/* hides it */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.0s ease, transform 1.0s ease;
+}
+
+/* when element is on screen it shows it */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Media Queries */
 /* Mobile/Smart Phones */
 @media screen and (max-width:426px){
@@ -619,8 +679,9 @@ textarea {
     .success_message {
         width: 80%;
     }
+}
 
-    /* activity resizing for smaller screens */
+/* activity resizing for smaller screens */
 @media (max-width: 700px){
     .activityContainer{
         max-width: auto;
@@ -657,56 +718,35 @@ textarea {
     .goal-row {
         grid-template-columns: 1fr;
     }
-}
-
-/* hides it */
-.reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 1.0s ease, transform 1.0s ease;
-}
-
-/* when element is on screen it shows it */
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
 
 /* resize table on smaller screens */
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
+    .activityContainer {
+        width: 100%;
+        min-height: 0;
+        padding: 20px;
+    }
+
+    .emissionTable {
+        width: 100%;
+        table-layout: auto;
+    }
+    
     .emissionTable th,
     .emissionTable td {
-        padding: 8px;
-        font-size: 14px;
+        padding: 6px;
+        font-size: 12px;
     }
 
-    .editInput {
-        width: 80px;
-    }
-}
-
-/* hides it */
-.reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 1.0s ease, transform 1.0s ease;
-}
-
-/* when element is on screen it shows it */
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* resize table on smaller screens */
-@media (max-width: 600px) {
-    .emissionTable th,
-    .emissionTable td {
-        padding: 8px;
-        font-size: 14px;
+    .emissionTable .editInput {
+        width: 65px;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
-    .editInput {
-        width: 80px;
+    .emissionTable .tableButton {
+        padding: 6px;
+        margin: 2px;
+        font-size: 12px;
     }
 }

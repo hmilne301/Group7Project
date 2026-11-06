@@ -101,7 +101,7 @@ function renderTable() {
             amountCell.innerHTML = `<input type="number" id="editInput" class="editInput" value="${entry.amount}" min="0" step="any">`;
             actionsCell.append(
                 makeButton("Save", "tableButton saveButton", () => saveEdit(i)),
-                makeButton("Cancel", "tableButton", cancelEdit)
+                makeButton("Cancel", "tableButton cancelButton", cancelEdit)
             );
         } else {
             amountCell.textContent = entry.amount;
