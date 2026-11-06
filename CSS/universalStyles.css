@@ -23,9 +23,23 @@ main {
     padding-right: 15px;
 }
 
+h1 {
+    color: #238B45;
+    margin-bottom: 5px;
+}
+
+.header_container h1 {
+    color: white;
+}
+
+.header_container h2 {
+    color: white;
+}
+
 
 h2 {
-    font-size: 1.5em
+    font-size: 1.5em;
+    color: #238B45;
 }
 
 h3 {
@@ -90,6 +104,10 @@ li {
     max-width: 800px;
     margin: 40px auto;
     padding: 20px;
+}
+
+.emission_info_container h2 {
+    color: black;
 }
 
 .footprint_info,

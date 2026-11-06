@@ -4,11 +4,6 @@
     padding: 10px 15px;
 }
 
-.dashboard_container h1{
-    color: #238B45;
-    margin-bottom: 5px;
-}
-
 /*--Page Layout--*/
 main {
     display:grid;
@@ -93,7 +88,6 @@ main > section {
 
 /*--text in cards--*/
 main h2 {
-    color: #238B45;
     margin-top: 0;
 }
 
