@@ -182,3 +182,17 @@
 }
 .match_message.match    { color: #1a7f37; }
 .match_message.no_match { color: #c62828; }
+
+/* Messages for the Forgot and Reset passwords area and further login message */
+.login_message {
+    color: #c62828;
+}
+
+.login_form[hidden],
+.login_message[hidden] {
+    display: none;
+}
+
+.login_message.success {
+    color: #1a7f37;
+}
