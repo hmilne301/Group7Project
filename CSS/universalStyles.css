@@ -82,7 +82,6 @@ li {
 
 #logButton,
 #registerButton,
-#emissionButton,
 #dashboardButton {
     background-color: #2e7d32;
     color: white;
@@ -91,7 +90,6 @@ li {
 
 #logButton:hover,
 #registerButton:hover,
-#emissionButton:hover,
 #dashboardButton:hover {
     background-color: #1b5e20;
 }
@@ -368,47 +366,7 @@ li {
     border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-/* average IPad screen size */
-@media screen and (min-width: 768px) and (max-width:820px){
-
-    .header_container{
-        text-align: center;
-    }
-    
-}
-
-@media screen and (max-width: 426px) {
-    .naturepic {
-        height: 200px;
-    }
-
-    .emission_info_container {
-        padding: 10px;
-    }
-
-    .header_container {
-        flex-direction: column;
-        justify-content: center;
-        gap: 20px;
-        padding: 0 20px;
-        text-align: center;
-        background-attachment: scroll;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .nav_collapsed .navflex,
-    .nav_collapse span {
-        transition: none;
-    }
-}
-
-
-
-/* Making the new profile icon CSS for every page */
-
-
-
+/* Profile icon CSS */
 .top_bar {
     position: relative;   /* lets the icon be placed relative to the header bar */
 }
@@ -458,4 +416,39 @@ li {
 /* Makes sure [hidden] always hides the element */
 [hidden] {
     display: none !important;
+}
+
+/* average IPad screen size */
+@media screen and (min-width: 768px) and (max-width:820px){
+
+    .header_container{
+        text-align: center;
+    }
+    
+}
+
+@media screen and (max-width: 426px) {
+    .naturepic {
+        height: 200px;
+    }
+
+    .emission_info_container {
+        padding: 10px;
+    }
+
+    .header_container {
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        padding: 0 20px;
+        text-align: center;
+        background-attachment: scroll;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav_collapsed .navflex,
+    .nav_collapse span {
+        transition: none;
+    }
 }
