@@ -432,6 +432,12 @@ textarea {
     background-color: #388E3C;
 }
 
+/* stops user clicking add button after disabled */
+.activityButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* view records button styling */
 .activityRecordsButton{
     display: block;         
