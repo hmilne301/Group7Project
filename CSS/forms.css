@@ -719,8 +719,14 @@ textarea {
 
     #contactForm,
     .success_message {
-        width: 80%;
+        width: 95%;
     }
+
+    #contactForm input[type=submit] {
+        width: 100%;
+    }
+
+
 }
 
 /* activity resizing for smaller screens */
