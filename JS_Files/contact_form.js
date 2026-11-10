@@ -51,15 +51,11 @@ async function sendContact(event) {
     if (message === "") {
         messageError.textContent = "Please enter a message."
         validInput = false;
-    }
-
-    if (message.length < 10) {
-        messageError.textContent = "Message must be longer than 10 characters"
+    } else if (message.length < 10) {
+        messageError.textContent = "Message must be atleast 10 characters"
         validInput = false;
-    }
-
-    if (message.length > 500) {
-        messageError.textContent = "Message must be shorter than 500 characters"
+    } else if (message.length > 500) {
+        messageError.textContent = "Message must be at most 500 characters"
         validInput = false;
     }
 
