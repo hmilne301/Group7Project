@@ -1,6 +1,9 @@
 let emissions = [];        // the list of emission amounts
 let editingIndex = null;   // set intial editing index to null so it can be switched on and off when a user clicks edit button
 
+// for the error message if no connection to database
+const message = document.getElementById("activityMessage");
+
 // function to add a new emission amount
 function addEmission(entry) {
     emissions.push(entry);
@@ -135,6 +138,8 @@ async function loadEmissions() {
 
     // if error then show error message
     if (error) {
+        message.textContent = "There was an error loading the emission. Please check your connection or contact us.";
+        message.style.display = "block";
         console.error("Error loading emissions:", error);
         return;
     }
