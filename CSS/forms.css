@@ -726,7 +726,6 @@ textarea {
         width: 100%;
     }
 
-
 }
 
 /* activity resizing for smaller screens */
@@ -792,7 +791,7 @@ textarea {
         box-sizing: border-box;
     }
 
-    .emissionTable .tableButton {
+    .activityContainer .emissionTable .tableButton {
         padding: 6px;
         margin: 2px;
         font-size: 12px;
