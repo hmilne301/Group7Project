@@ -38,7 +38,6 @@ async function addEmissionActivity(event) {
     const { error } = await db.from("activity").insert([{
         activity_name: name,
         activity_date: new Date().toISOString().slice(0, 10), 
-        quantity: amount,
         co2_kg_emitted: amount,
         category_id: category, 
         user_id: myId
