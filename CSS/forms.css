@@ -26,6 +26,11 @@
     text-align: center;
 }
 
+#stepCounter {
+    text-align: center;
+    font-weight: bold;
+}
+
 #estimationMessage {
     font-size: 14px;
     font-weight: bold;
@@ -43,8 +48,10 @@
     cursor: pointer;
 }
 
+#backButton,
+#nextButton,
 #questionnaireForm input[type=submit] {
-    width: 30%;
+    min-width: 140px;
 }
 
 #calcResult {
@@ -57,8 +64,10 @@
     padding: 30px;
     border: 1px solid black;
     border-radius: 8px;
+    box-sizing: border-box;
     width: fit-content;
-    min-width: 320px;
+    max-width: 100%;
+    min-width: 0;
     scroll-margin-top: 120px;
 }
 
@@ -153,14 +162,18 @@
     margin-bottom: 10px;
 }
 
-/* Displays 2 sections side by side */
+/* Displays 1 sections */
 .form_sections {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     /* Side-by-side elements have identical height */
     align-items: stretch;
     gap: 20px;
     margin: 10px 0;
+}
+
+.form_sections[hidden] {
+    display: none;
 }
 
 .contact_inputs {
@@ -170,7 +183,8 @@
     gap: 16px;
 }
 
-.contact_inputs input {
+.contact_inputs input,
+.result_name_input {
     flex: 1 1 200px;
     padding: 10px;
     font-family: inherit;
@@ -191,10 +205,13 @@
 #buttonCenter {
     display: flex;
     justify-content: center;
+    gap: 10px;
 }
 
 /* Styling submit buttons for forms */
-input[type=submit] {
+input[type=submit],
+#backButton,
+#nextButton {
   background-color: #2e7d32;
   color: white;
   padding: 22px 30px;
@@ -206,7 +223,9 @@ input[type=submit] {
 }
 
 /* changing button colour when user floats over button */
-input[type=submit]:hover {
+input[type=submit]:hover,
+#backButton:hover,
+#nextButton:hover {
   background-color: #1b5e20;
 }
 
@@ -712,11 +731,6 @@ textarea {
 /* Mobile/Smart Phones */
 @media screen and (max-width:426px){
 
-    /* changing display type when on smaller screen */
-    .form_sections {
-        grid-template-columns: 1fr;
-    }
-
     #contactForm,
     .success_message {
         width: 95%;
@@ -734,8 +748,13 @@ textarea {
         max-width: auto;
     }
 
+    #backButton,
+    #nextButton,
     #questionnaireForm input[type=submit] {
-        width: 100%;
+        flex: 1;
+        padding: 14px 10px;
+        font-size: 16px;
+        min-width: 0;
     }
 
     .contact_inputs {

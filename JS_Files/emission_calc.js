@@ -59,6 +59,132 @@ let form = document.getElementById("questionnaireForm");
 // run calculation when form is submitted
 form.addEventListener("submit", emissionCalcUpdate);
 
+// four sections in order they appear
+const steps = document.querySelectorAll(".transport_section, .home_section, .food_section, .lifestyle_section");
+const backButton = document.getElementById("backButton");
+const nextbutton = document.getElementById("nextButton");
+const stepCounter = document.getElementById("stepCounter");
+const calcButton = document.getElementById("calculate");
+
+// first step
+let currentStep = 0;
+
+// shows current step and hides other steps
+function showStep() {
+  for (let i=0; i < steps.length; i++) {
+    steps[i].hidden = (i !== currentStep);
+  }
+
+  // hides group if both sections are hidden
+  document.querySelectorAll(".form_sections").forEach(function(group) {
+    group.hidden = (group.querySelector("section:not([hidden])") === null);
+  });
+
+  stepCounter.textContent = "Step " + (currentStep + 1) + " of " + steps.length;
+
+  // Back is hidden om first step and calculate replaces next on last step
+  backButton.hidden = (currentStep === 0);
+  nextbutton.hidden = (currentStep === steps.length - 1);
+  calcButton.hidden = (currentStep !== steps.length - 1);
+}
+
+// Moves to step and focuses on first question
+function goToStep(stepNumber) {
+  currentStep = stepNumber;
+  showStep();
+  steps[currentStep].querySelector("input").focus();
+}
+
+// moves on if answers to steps are valid
+function goNext() {
+  if (validateStep(currentStep)) {
+    goToStep(currentStep + 1);
+  }
+}
+
+nextbutton.addEventListener("click", goNext);
+backButton.addEventListener("click", function() {
+  goToStep(currentStep - 1);
+});
+
+// checks questions on step
+function validateStep(stepNumber) {
+  // clears previous error messages
+  steps[stepNumber].querySelectorAll(".validation_error").forEach(function(error) {
+    error.textContent = "";
+  });
+
+  let validInput = true;
+
+  // transport
+  if (stepNumber === 0) {
+    let car = getCheckedValue("car_travel");
+    let transport = getCheckedValue("public_transport");
+    let plane = getCheckedValue("plane_travel");
+
+    if (car === null) {
+      document.getElementById("carError").textContent = "Please select your car travel distance.";
+      validInput = false;
+    }
+
+    if (transport === null) {
+      document.getElementById("transportError").textContent = "Please select your public transport distance.";
+      validInput = false;
+    }
+
+    if (plane === null) {
+      document.getElementById("planeError").textContent = "Please select your flight frequency.";
+      validInput = false;
+    }
+  }
+
+  // home energy
+  if (stepNumber === 1) {
+    let heating = getCheckedValue("heating_type");
+    let usage = getCheckedValue("energy_usage");
+
+    if (heating === null) {
+      document.getElementById("heatingTypeError").textContent = "Please select your heating type.";
+      validInput = false;
+    }
+
+    if ((heating === "Gas" || heating === "Electricity") && usage === null) {
+      document.getElementById("usageError").textContent = "Please select your energy usage.";
+      validInput = false;
+    }
+  }
+
+  // food
+  if (stepNumber === 2) {
+    let diet = getCheckedValue("diet");
+
+    if (diet === null) {
+      document.getElementById("dietError").textContent = "Please select your diet.";
+      validInput = false;
+    }
+  }
+
+  // lifestyle
+  if (stepNumber === 3) {
+    let clothes = getCheckedValue("clothes");
+    let recycle = getCheckedValue("recycle");
+
+    if (clothes === null) {
+      document.getElementById("clothesError").textContent = "Please select how often you buy clothes.";
+      validInput = false;
+    }
+
+    if (recycle === null) {
+      document.getElementById("recycleError").textContent = "Please select how often you recycle.";
+      validInput = false;
+    }
+  }
+
+  return validInput;
+}
+
+showStep();
+
 // shows or hides section depending on heating method selected
 document.getElementById("gas").addEventListener("change", showGas)
 document.getElementById("electricity").addEventListener("change", showElectricity)
@@ -115,6 +241,11 @@ function emissionCalcUpdate(evt) {
   // stops page from being reloaded when form is submitted
   evt.preventDefault();
 
+  if (currentStep < steps.length - 1){
+    goNext();
+    return;
+  }
+
   let result = document.getElementById("calcResult");
 
   // clears the previous results
@@ -130,56 +261,12 @@ function emissionCalcUpdate(evt) {
   let clothes = getCheckedValue("clothes");
   let recycle = getCheckedValue("recycle");
 
-  // clears previous error messages
-  document.querySelectorAll(".validation_error").forEach(function(error) {
-    error.textContent = "";
-  });
-
-  let validInput = true;
-
-  // checks for unanswered questions
-  if (car === null) {
-    document.getElementById("carError").textContent = "Please select your car travel distance.";
-    validInput = false;
-  }
-
-  if (transport === null) {
-    document.getElementById("transportError").textContent = "Please select your public transport distance.";
-    validInput = false;
-  }
-
-  if (plane === null) {
-    document.getElementById("planeError").textContent = "Please select your flight frequency.";
-    validInput = false;
-  }
-
-  if (heating === null) {
-    document.getElementById("heatingTypeError").textContent = "Please select your heating type.";
-    validInput = false;
-  }
-
-  if ((heating === "Gas" || heating === "Electricity") && usage === null) {
-    document.getElementById("usageError").textContent = "Please select your energy usage.";
-    validInput = false;
-  }
-
-  if (diet === null) {
-    document.getElementById("dietError").textContent = "Please select your diet.";
-    validInput = false;
-  }
-
-  if (clothes === null) {
-    document.getElementById("clothesError").textContent = "Please select how often you buy clothes.";
-    validInput = false;
-  }
-
-  if (recycle === null) {
-    document.getElementById("recycleError").textContent = "Please select your recycling frequency.";
-    validInput = false;
-  }
-
-  if (!validInput) {
-    return;
+  // checks every step and returns to first if problem occurs
+  for (let i = 0; i < steps.length; i++) {
+    if (!validateStep(i)) {
+      goToStep(i);
+      return;
+    }
   }
 
   // calling the emissionCalculator function and passing parameters

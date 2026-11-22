@@ -93,6 +93,7 @@
             </div>
             <div id="questionnaireSection">
                 <form id="questionnaireForm" class="reveal" action="#" novalidate>
+                    <p id="stepCounter" aria-label="polite"></p>
                     <div class="form_sections">
                         <!-- Transport - car and public transport values are based on weekly km while plane travel is yearly -->
                         <section class="transport_section">
@@ -218,7 +219,9 @@
                         </section>
                     </div>
                     <div id="buttonCenter">
-                        <input type="submit" value="Calculate" href=#calcResult>
+                        <button type="button" id="backButton">Back</button>
+                        <button type="button" id="nextButton">Next</button>
+                        <input type="submit" id="calculate" value="Calculate" href=#calcResult>
                     </div>
                 </form>
             </div>
