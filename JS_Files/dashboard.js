@@ -361,8 +361,6 @@ async function showGoalsOnTrack() {
             (sum, item) => sum + Number(item.co2_kg_emitted),
              0);
 
-        console.log("Goal check:", goal.goal_id, "used:", total, "target:", goal.target_co2_kg, "start:", goal.start_date, "end:", goal.end_date);
-
         if (total <= Number(goal.target_co2_kg)) {
             count++;
         }
