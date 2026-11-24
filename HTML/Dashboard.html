@@ -94,7 +94,7 @@
            <div id="treeCard">
                 <section aria-labelledby="tree-title">
                     <h2 id="tree-title">Your Impact</h2>
-                    <p>See how your actions are making a difference by following how your emissions effect this tree.</p>
+                    <p>See how your actions are making a difference by following how your emissions affect this tree.</p>
                     <img id="treeImage" src="../Images/tree_1.png" alt="Your impact on the environment ">
                     <p id="treeText"></p>
                 </section>
@@ -104,13 +104,10 @@
             <section aria-labelledby="categories-title">
                 <h2 id="categories-title">Where it comes from</h2>
                 <button type="button" class="view_all" data-href="Emission_Menu.html">View all →</button>
-                <table>
-                    <caption>Last 7 days, by category</caption>
-                    <thead>
-                        <tr><th scope="col">Category</th><th scope="col">kg CO₂e</th></tr>
-                    </thead>
-                    <tbody id="category-rows"></tbody>
-                </table>
+                <div style ="height:300px">
+                    <canvas id="category-chart" role="img" aria-label="Pie chart showing your carbon footprint by category" width="400" height="300"></canvas> 
+                </div>
+                <p id="category-empty" style="display:none;">No data available for the last 7 days.</p>
             </section>
 
             </div>
