@@ -61,67 +61,84 @@ loadData().then((data) => {
     console.error("Error loading data:", error)
 });
 
-async function showCategoryBreakdown() {
+let categoryChart = null;
 
-    const {data: {user }, error: authError} = await db.auth.getUser();
-    if (authError || !user) {
+async function showCategoryBreakdown() {    
+    const { data: { user }, error: authError } = await db.auth.getUser();
+    if (authError) {
         console.error("Error fetching user data:", authError.message);
+        return;
+    }
+
+    if (typeof Chart === 'undefined') {
+        console.error("Chart.js is not loaded. Please check the script source.");
         return;
     }
 
     const start = new Date();
     start.setDate(start.getDate() - 6);
-
     const { data, error } = await db
         .from("activity")
-        .select("co2_kg_emitted, category ( category_name)")
-        .eq("user_id", myId)
-        .neq("category_id", "85a649bb-75de-420b-88fd-9751002f2794")
-        .gte("activity_date", start.toLocaleDateString('en-CA'));
+        .select("co2_kg_emitted, category ( category_name )")
+        .eq("user_id", user.id)
+        .gte("activity_date", start.toLocaleDateString('en-CA'))
 
-    if (error) {
-        console.error("Error fetching category data:", error.message);
-        return;
-    }
-
-        const tableBody2 = document.getElementById('category-rows');
-        tableBody2.innerHTML = "";
-        if ( !data || data.length === 0) {
-            const tr = document.createElement("tr");
-            const td = document.createElement("td");
-            td.colspan = 3;
-            td.textContent = "Nothing logged in the last 7 days";
-            tr.appendChild(td);
-            tableBody2.appendChild(tr);
-
+        if (error) {
+            console.error("Error fetching category breakdown data:", error.message);
             return;
         }
-    const categoryTotals = {};
-    let fullTotal = 0;
-    data.forEach((item) => {
-        const category = item.category.category_name;
-        const amount = Number(item.co2_kg_emitted) || 0;
-        categoryTotals[category] = (categoryTotals[category] || 0) + amount;
-        fullTotal += amount;
+
+        const canvas = document.getElementById('category-chart');
+        const emptyMessage = document.getElementById('category-empty');
+
+        if (!data || data.length === 0) {
+            canvas.style.display = 'none';
+            if (emptyMessage) emptyMessage.style.display = 'block';
+            return;
+        }
+
+        canvas.style.display = 'block';
+        if (emptyMessage) emptyMessage.style.display = 'none';
+
+        const categoryTotals = {};
+        data.forEach((item) => {
+            const category = item.category.category_name;
+            const amount = Number(item.co2_kg_emitted) || 0;
+            categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+        });
+
+        const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+        const labels = sorted.map(([category]) => category);
+        const totals = sorted.map(([, total]) => Math.round(total * 10) / 10);
+
+        if (categoryChart) {
+            categoryChart.destroy();
+        }   
+
+        categoryChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'kg CO2e',
+                    data: totals,
+                    backgroundColor: 'DarkGreen',
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {legend: { display: false }},
+                scales: {
+                    x: {title: {display: true, text: "Category"}, grid: { display: false }},
+                    y: {beginAtZero: true, title: {display: true, text: "kg CO2e"}, grid: { color: "#E5EBDD"}}
+                }
+            }
+
     });
-    
-    Object.entries(categoryTotals)
-    .sort ((a, b) => b[1] - a[1])
-    .forEach(([category, amount]) => {
-        const tr = document.createElement("tr");
-        const categoryCell = document.createElement("td");
-        categoryCell.textContent = category;
-
-        const amountCell = document.createElement("td");
-        amountCell.textContent = amount.toFixed(1);
-
-        tr.append(categoryCell, amountCell)
-        tableBody2.appendChild(tr);
-        console.log(`Category: ${category}, Amount: ${amount.toFixed(1)}`);
-    }
-    );
 }
-        
+
 showCategoryBreakdown();
 
 
@@ -288,7 +305,16 @@ async function updateTreeImage() {
     const treeImage = document.getElementById("treeImage");
     treeImage.src = TREE_levels[level].image;
     treeImage.alt = TREE_levels[level].text;
-    document.getElementById("treeText").textContent = TREE_levels[level].text;
+    let message = TREE_levels[level].text;
+    if (level === "low") {
+        message += " "+ (TREE_LOW_LIMIT - total).toFixed(1) + " Kg of room before your tree starts losing leaves.";
+    } else if (level === "medium") {
+        message += " "+ (TREE_HIGH_LIMIT - total).toFixed(1) + " Kg of room before your tree catches fire.";
+    } else {
+        message += " You're "+ (total - TREE_HIGH_LIMIT).toFixed(1) + " Kg over the limit. Your tree is on fire!";
+    }
+
+    document.getElementById("treeText").textContent = message;
 }
 
 updateTreeImage();
@@ -300,7 +326,7 @@ async function showGoalsOnTrack() {
 
     const { data: goals, error } = await db
     .from("goal")
-    .select("goal_id, target_co2_kg, start_date, end_date")
+    .select("goal_id, target_co2_kg, start_date, end_date, category_id")
     .eq("user_id", myId)
     .lte("start_date", today)
     .gte("end_date", today);
@@ -313,11 +339,18 @@ async function showGoalsOnTrack() {
     let count = 0;
 
     for (const goal of goals) {
-        const { data: activities, error: activityError } = await db
-        .from("activity")
-        .select("co2_kg_emitted")
-        .gte("activity_date", goal.start_date)
-        .lte("activity_date", goal.end_date);
+        let query = db
+            .from("activity")
+            .select("co2_kg_emitted")
+            .eq("user_id", myId)
+            .gte("activity_date", goal.start_date)
+            .lte("activity_date", goal.end_date);
+
+        if (goal.category_id) {
+            query = query.eq("category_id", goal.category_id);
+        }
+
+        const { data: activities, error: activityError } = await query;
 
         if (activityError) {
             console.error("Error fetching activities for goal:", activityError.message);
@@ -328,11 +361,12 @@ async function showGoalsOnTrack() {
             (sum, item) => sum + Number(item.co2_kg_emitted),
              0);
 
+        console.log("Goal check:", goal.goal_id, "used:", total, "target:", goal.target_co2_kg, "start:", goal.start_date, "end:", goal.end_date);
+
         if (total <= Number(goal.target_co2_kg)) {
             count++;
         }
     }
-
     document.getElementById("goalsOnTrack").textContent = 
     `${count}/${goals.length}`;
 }
@@ -404,8 +438,8 @@ async function showActivityStreak() {
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (
-        dates[0] === formatDate(today) || 
-        dates[0] === formatDate(yesterday)
+        dates[0] !== formatDate(today) && 
+        dates[0] !== formatDate(yesterday)
     ){
         element.textContent = "0";
         return;
@@ -471,11 +505,11 @@ async function showGoalPreview() {
 
     const { data, error } = await db
         .from("goal")
-        .select("goal_name, target_co2_kg, end_date")
+        .select("goal_name, target_co2_kg, start_date, end_date, category_id")
         .eq("user_id", myId)
         .neq("goal_status", "completed")
         .order("start_date", { ascending: false })
-        .limit(1);
+        .limit(3);
 
     if (error || data.length === 0) {
         if (error) console.error("Error fetching goal preview:", error.message);
@@ -483,17 +517,59 @@ async function showGoalPreview() {
         return;
     }
 
-    const goal = data[0];
-    list.replaceChildren();
+   // adds one goal with progress to list
+   async function addGoalToList(goal) {
+    const target = Number(goal.target_co2_kg);
 
-    let text = goal.goal_name + " - Target: " + goal.target_co2_kg + " kg CO2";
-    if (goal.end_date) {
-        const endText = new Date(goal.end_date + "T00:00:00")
-            .toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-        text += " by " + endText;
-    }
-    addListItem(list, text);
+    // add up emissions inside the goal's dates
+
+    let query = db
+        .from("activity")
+        .select("co2_kg_emitted")
+        .eq("user_id", myId)
+        .gte("activity_date", goal.start_date)
+
+        if (goal.category_id) {
+            query = query.eq("category_id", goal.category_id);
+        }
+
+        if (goal.end_date) {
+            query = query.lte("activity_date", goal.end_date);
+        }
+        const { data: activities, error: activityError } = await query;
+
+        let used = 0;
+        if (activityError) {
+            console.error("Error fetching goal progress:", activityError.message);
+        } else {
+            used = activities.reduce(
+                (sum, item) => sum + (Number(item.co2_kg_emitted) ||0),0);
+            }
+
+            let text = goal.goal_name + " - " + used.toFixed(1) + "/" + target + " kg CO₂e";
+            if (goal.end_date) {
+                const endText = new Date(goal.end_date)
+                .toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+                text += " (by " + endText + ")";
+            }
+            const li = addListItem(list, text);
+
+            const bar = document.createElement("progress");
+            bar.max = target;
+            bar.value = Math.min(used, target);
+            bar.classList.add(used > target ? "goal_over" : "goal_ok");
+            bar.setAttribute("aria-label", "Progress towards goal");
+            li.appendChild(bar);
+        }
+
+        // clear the list and add the goals
+        list.replaceChildren();
+
+        for (const goal of data) {
+            await addGoalToList(goal);
+        }
 }
+
 
 // Leaderboard preview - top 3 users
 async function showLeaderboardPreview() {
